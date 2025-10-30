@@ -1,93 +1,81 @@
-# 智斗单车
+# 智慧共享单车调度系统
 
+> **项目状态:** Milestone 2 (M2) - 核心功能实现与集成 
+>
+> 本项目是一款以 AI 预测为核心的智能化共享单车运营调度平台，旨在解决城市共享单车运营中的“潮汐现象”所带来的供需失衡、调度低效和站点堆积问题。
 
+---
 
-## Getting started
+## 1. 项目背景 (The Problem)
 
-To make it easy for you to get started with GitLab, here's a list of recommended next steps.
+共享单车已深度融入城市生活（日活超4000万，用户超4.5亿），但其运营挑战日益严峻：
+* **供需失衡 (潮汐现象):** 37% 的用户在通勤高峰时段遭遇“无车可骑”，而地铁口、商圈等热点区域则车辆过度堆积，导致 29% 的城市将其纳入“重点整治对象”。
+* **低效调度:** 传统的人工调度模式严重依赖经验，响应滞后、成本高昂，无法精准匹配分钟级的供需变化。
 
-Already a pro? Just edit this README.md and make it your own. Want to make it easy? [Use the template at the bottom](#editing-this-readme)!
+**我们的目标：** 缓解高峰时段的车辆堆积与缺车现象，提升车辆周转率，降低运营调度成本。
 
-## Add your files
+## 2. 解决方案 (Our Solution)
 
-- [ ] [Create](https://docs.gitlab.com/ee/user/project/repository/web_editor.html#create-a-file) or [upload](https://docs.gitlab.com/ee/user/project/repository/web_editor.html#upload-a-file) files
-- [ ] [Add files using the command line](https://docs.gitlab.com/topics/git/add_files/#add-files-to-a-git-repository) or push an existing Git repository with the following command:
+本系统是一个以 **AI 供需预测**技术为核心的智能化、全流程调度决策平台。
 
-```
-cd existing_repo
-git remote add origin https://gitlab.com/tj-cs-swe/CS10102302-2025/group1/SmartSpar_BikeHub.git
-git branch -M main
-git push -uf origin main
-```
+系统通过整合历史骑行数据、站点信息、天气、节假日等多维数据，利用 **Autoformer** 深度学习模型，精准预测未来（如24小时内）各站点的车辆供需缺口。
 
-## Integrate with your tools
+基于预测结果，系统结合运营策略（如容量、禁停区），自动为运营方生成多套候选调度方案，并利用 **A\*** 算法规划多点取送的最优路径，最终实现从“数据接入 -> AI 预测 -> 智能决策 -> 任务执行 -> 实时监控”的运营管理闭环。
 
-- [ ] [Set up project integrations](https://gitlab.com/tj-cs-swe/CS10102302-2025/group1/SmartSpar_BikeHub/-/settings/integrations)
+## 3. 核心功能 (Core Features)
 
-## Collaborate with your team
+* **AI 供需预测 (B3):**
+    * 基于 Autoformer 模型，输出分站点、分时段的车辆需求与缺口。
+    * 前端 ECharts 可视化展示预测曲线和置信度。
 
-- [ ] [Invite team members and collaborators](https://docs.gitlab.com/ee/user/project/members/)
-- [ ] [Create a new merge request](https://docs.gitlab.com/ee/user/project/merge_requests/creating_merge_requests.html)
-- [ ] [Automatically close issues from merge requests](https://docs.gitlab.com/ee/user/project/issues/managing_issues.html#closing-issues-automatically)
-- [ ] [Enable merge request approvals](https://docs.gitlab.com/ee/user/project/merge_requests/approvals/)
-- [ ] [Set auto-merge](https://docs.gitlab.com/user/project/merge_requests/auto_merge/)
+* **智能调度与路径规划 (B4, B5):**
+    * 基于 AI 预测和站点约束（容量、禁停区），自动计算并生成多套候选调度方案。
+    * 集成 A\* 算法，为运维员提供多点取送任务的最优/次优路径规划。
 
-## Test and Deploy
+* **任务管理与实时跟踪 (B6, F5):**
+    * 调度员将方案拆解为任务，派发至运维终端。
+    * 基于 **WebSocket** 实时通信，在地图上跟踪运维车辆轨迹和任务状态（待接收、进行中、已完成）。
 
-Use the built-in continuous integration in GitLab.
+* **运营数据看板 (B7, F2):**
+    * 可视化展示全城单车热力图、站点周转率、车辆缺口等核心运营指标。
+    * 支持按时间、区域筛选，并支持报表导出。
 
-- [ ] [Get started with GitLab CI/CD](https://docs.gitlab.com/ee/ci/quick_start/)
-- [ ] [Analyze your code for known vulnerabilities with Static Application Security Testing (SAST)](https://docs.gitlab.com/ee/user/application_security/sast/)
-- [ ] [Deploy to Kubernetes, Amazon EC2, or Amazon ECS using Auto Deploy](https://docs.gitlab.com/ee/topics/autodevops/requirements.html)
-- [ ] [Use pull-based deployments for improved Kubernetes management](https://docs.gitlab.com/ee/user/clusters/agent/)
-- [ ] [Set up protected environments](https://docs.gitlab.com/ee/ci/environments/protected_environments.html)
+* **站点策略管理 (F6):**
+    * 管理员可录入站点信息，设置容量上下限与告警阈值。
+    * 在地图上维护站点的停车地理围栏和禁停区。
+    * 配置特殊调度策略（如高峰优先、夜间限投）。
 
-***
+* **权限与反馈 (B1, B8):**
+    * 基于 RBAC (角色) 的用户认证与权限管理（管理员、调度员、运维员）。
+    * 接收和处理普通用户的反馈投诉工单。
 
-# Editing this README
+## 4. 系统架构
 
-When you're ready to make this README your own, just edit this file and use the handy template below (or feel free to structure it however you want - this is just a starting point!). Thanks to [makeareadme.com](https://www.makeareadme.com/) for this template.
+本系统采用**前后端分离**架构，通过 **RESTful API** 和 **WebSocket** 进行通信，部署于华为云。
 
-## Suggestions for a good README
+* **前端 (React + Vite):** 负责所有用户界面的展示和交互。
+* **后端 (Python / Flask/Django):** 负责所有业务逻辑、数据处理和 AI 算法模型。
+* **数据库 (MySQL):** 负责所有业务数据的持久化存储。
+* **并发设计:**
+    * **Web API 服务 (HTTP):** 处理常规的 RESTful 请求。
+    * **AI 预测作业 (Async):** 异步执行计算密集型的 Autoformer 预测任务。
+    * **实时通知服务 (WebSocket):** 独立进程，用于向前端推送实时任务更新。
 
-Every project is different, so consider which of these sections apply to yours. The sections used in the template are suggestions for most open source projects. Also keep in mind that while a README can be too long and detailed, too long is better than too short. If you think your README is too long, consider utilizing another form of documentation rather than cutting out information.
+## 5. 技术栈 (Tech Stack)
 
-## Name
-Choose a self-explaining name for your project.
+| 类别 | 技术 / 组件 |
+| :--- | :--- |
+| **前端框架** | `React` + `Vite` |
+| **UI 与可视化** | `Ant Design` | `ECharts` | `高德地图 JS API` |
+| **网络请求** | `Axios` (RESTful) | `WebSocket` (实时通信) |
+| **后端框架** | `Python 3.x` (`Flask` / `Django`) |
+| **核心算法** | `Autoformer` (AI 预测) | `A* 算法` (路径规划) |
+| **数据库** | `MySQL` |
+| **部署与运维** | `华为云` | `GitLab CI/CD` |
 
-## Description
-Let people know what your project can do specifically. Provide context and add a link to any reference visitors might be unfamiliar with. A list of Features or a Background subsection can also be added here. If there are alternatives to your project, this is a good place to list differentiating factors.
+## 6. 用户角色
 
-## Badges
-On some READMEs, you may see small images that convey metadata, such as whether or not all the tests are passing for the project. You can use Shields to add some to your README. Many services also have instructions for adding a badge.
-
-## Visuals
-Depending on what you are making, it can be a good idea to include screenshots or even a video (you'll frequently see GIFs rather than actual videos). Tools like ttygif can help, but check out Asciinema for a more sophisticated method.
-
-## Installation
-Within a particular ecosystem, there may be a common way of installing things, such as using Yarn, NuGet, or Homebrew. However, consider the possibility that whoever is reading your README is a novice and would like more guidance. Listing specific steps helps remove ambiguity and gets people to using your project as quickly as possible. If it only runs in a specific context like a particular programming language version or operating system or has dependencies that have to be installed manually, also add a Requirements subsection.
-
-## Usage
-Use examples liberally, and show the expected output if you can. It's helpful to have inline the smallest example of usage that you can demonstrate, while providing links to more sophisticated examples if they are too long to reasonably include in the README.
-
-## Support
-Tell people where they can go to for help. It can be any combination of an issue tracker, a chat room, an email address, etc.
-
-## Roadmap
-If you have ideas for releases in the future, it is a good idea to list them in the README.
-
-## Contributing
-State if you are open to contributions and what your requirements are for accepting them.
-
-For people who want to make changes to your project, it's helpful to have some documentation on how to get started. Perhaps there is a script that they should run or some environment variables that they need to set. Make these steps explicit. These instructions could also be useful to your future self.
-
-You can also document commands to lint the code or run tests. These steps help to ensure high code quality and reduce the likelihood that the changes inadvertently break something. Having instructions for running tests is especially helpful if it requires external setup, such as starting a Selenium server for testing in a browser.
-
-## Authors and acknowledgment
-Show your appreciation to those who have contributed to the project.
-
-## License
-For open source projects, say how it is licensed.
-
-## Project status
-If you have run out of energy or time for your project, put a note at the top of the README saying that development has slowed down or stopped completely. Someone may choose to fork your project or volunteer to step in as a maintainer or owner, allowing your project to keep going. You can also make an explicit request for maintainers.
+* **管理员 (管理方):** 系统的最高权限者。负责配置站点信息、地理围栏、调度策略和管理用户角色。
+* **调度员 (运营方):** 系统的核心使用者。负责查看 AI 预测、制定和发布调度计划、派发任务、监控实时执行进度和处理用户反馈。
+* **运维员 (一线执行者):** 调度任务的执行者。在移动端接收任务、查看 A\* 规划路径、上报任务状态和位置。
+* **普通用户 (骑行用户):** 系统的服务对象和数据来源。可注册并登录系统，提交反馈投诉。
