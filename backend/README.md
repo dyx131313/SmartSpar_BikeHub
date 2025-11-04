@@ -13,7 +13,7 @@
 
 ## 技术栈
 
-- **后端框架**: Flask 2.3.3
+- **后端框架**: Flask 3.1.0
 - **数据库**: MySQL 8.0+
 - **ORM**: SQLAlchemy
 - **认证**: JWT (JSON Web Tokens)
@@ -63,7 +63,7 @@ backend/
 
 ### 1. 环境要求
 
-- Python 3.8+
+- Python 3.10+
 - MySQL 8.0+
 - pip (Python包管理器)
 
@@ -91,23 +91,35 @@ pip install -r requirements.txt
 -- 登录MySQL
 mysql -u root -p
 
--- 创建数据库
+-- 创建生产数据库
 CREATE DATABASE bikehub CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+
+-- 创建开发数据库（开发环境使用）
+CREATE DATABASE bikehub_dev CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
 -- 创建用户（可选，推荐）
 CREATE USER 'bikehub_user'@'localhost' IDENTIFIED BY 'your_password';
 GRANT ALL PRIVILEGES ON bikehub.* TO 'bikehub_user'@'localhost';
+GRANT ALL PRIVILEGES ON bikehub_dev.* TO 'bikehub_user'@'localhost';
 FLUSH PRIVILEGES;
 ```
 
 #### 执行架构脚本
 
 ```bash
-# 导入数据库架构
+# 导入生产数据库架构
 mysql -u root -p bikehub < database/schema.sql
+
+# 导入开发数据库架构（开发环境使用）
+mysql -u root -p bikehub_dev < database/schema.sql
 ```
 
 ### 4. 环境配置
+
+**重要说明**：本项目使用不同的数据库配置环境：
+- **开发环境** (FLASK_ENV=development): 使用 `bikehub_dev` 数据库
+- **生产环境** (FLASK_ENV=production): 使用 `bikehub` 数据库
+- **测试环境** (FLASK_ENV=testing): 使用内存数据库
 
 创建 `.env` 文件（可选，用于环境变量配置）：
 
@@ -118,6 +130,7 @@ SECRET_KEY=your-secret-key-here
 JWT_SECRET_KEY=your-jwt-secret-key-here
 
 # 数据库配置
+# 注意：开发环境会自动在MYSQL_DB后添加_dev后缀，所以实际使用bikehub_dev数据库
 MYSQL_USER=root
 MYSQL_PASSWORD=your_mysql_password
 MYSQL_HOST=localhost

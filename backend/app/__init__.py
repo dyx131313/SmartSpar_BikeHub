@@ -6,6 +6,7 @@ from flask_jwt_extended import JWTManager
 import logging
 import os
 from app.config.config import config
+from app.models import *
 
 # 初始化扩展
 db = SQLAlchemy()
@@ -91,7 +92,6 @@ def register_cli_commands(app):
     @app.cli.command()
     def init_db():
         """初始化数据库"""
-        from app.models import *
         db.create_all()
         print('数据库初始化完成')
 
