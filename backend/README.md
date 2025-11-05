@@ -35,22 +35,26 @@ backend/
 │   │   ├── __init__.py
 │   │   ├── station.py          # 站点模型
 │   │   ├── demand_data.py      # 需求数据模型
-│   │   ├── user.py             # 用户模型
+│   │   ├── user.py             # 用户模型(增强版)
 │   │   ├── dispatch_task.py    # 调度任务模型
-│   │   └── prediction.py       # 预测结果模型
+│   │   ├── prediction.py       # 预测结果模型(增强版)
+│   │   ├── bike_history.py     # 站点单车历史信息模型
+│   │   └── alert.py            # 警报模型
 │   ├── routes/                  # API路由
 │   │   ├── __init__.py
 │   │   ├── stations.py         # 站点API
 │   │   ├── demand_data.py      # 需求数据API
 │   │   ├── users.py            # 用户API
 │   │   ├── dispatch_tasks.py   # 调度任务API
-│   │   └── predictions.py      # 预测结果API
+│   │   ├── predictions.py      # 预测结果API
+│   │   └── bike_history.py     # 单车历史信息API
 │   ├── utils/                   # 工具类
 │   │   ├── __init__.py
 │   │   └── data_importer.py    # 数据导入工具
 │   └── static/                  # 静态文件
 ├── database/
-│   └── schema.sql               # 数据库架构
+│   ├── schema.sql               # 原始数据库架构
+│   └── schema_final.sql         # 更新后的数据库架构
 ├── migrations/                  # 数据库迁移文件
 ├── tests/                       # 测试文件
 ├── requirements.txt             # Python依赖
@@ -107,11 +111,11 @@ FLUSH PRIVILEGES;
 #### 执行架构脚本
 
 ```bash
-# 导入生产数据库架构
-mysql -u root -p bikehub < database/schema.sql
+# 导入生产数据库架构（使用更新版本）
+mysql -u root -p bikehub < database/schema_final.sql
 
 # 导入开发数据库架构（开发环境使用）
-mysql -u root -p bikehub_dev < database/schema.sql
+mysql -u root -p bikehub_dev < database/schema_final.sql
 ```
 
 ### 4. 环境配置
@@ -212,6 +216,16 @@ Authorization: Bearer <your_jwt_token>
 - `GET /api/predictions/station/<station_id>` - 获取特定站点预测
 - `GET /api/predictions/dashboard` - 获取预测看板数据
 
+#### 单车历史信息
+- `GET /api/bike-history` - 获取单车历史数据
+- `POST /api/bike-history` - 创建单车历史记录
+- `GET /api/bike-history/<id>` - 获取单车历史记录详情
+- `PUT /api/bike-history/<id>` - 更新单车历史记录
+- `DELETE /api/bike-history/<id>` - 删除单车历史记录
+- `GET /api/bike-history/station/<station_id>/latest` - 获取站点最新记录
+- `GET /api/bike-history/statistics` - 获取历史统计信息
+- `POST /api/bike-history/batch` - 批量创建历史记录
+
 ### 用户角色权限
 
 - **管理员 (admin)**: 完全访问权限
@@ -248,6 +262,22 @@ Authorization: Bearer <your_jwt_token>
   "description": "食堂门口共享单车停放点"
 }
 ```
+
+### 单车历史信息格式
+
+```json
+{
+  "station_id": 1,
+  "timestamp": "2025-07-01 08:00:00",
+  "available_bikes": 15,
+  "available_docks": 15,
+  "total_bikes": 30,
+  "total_docks": 30,
+  "is_station_active": true,
+  "last_report_time": "2025-07-01 08:00:00"
+}
+```
+
 
 ## 数据导入
 
