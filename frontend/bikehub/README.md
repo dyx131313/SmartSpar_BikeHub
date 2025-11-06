@@ -1,73 +1,61 @@
-# React + TypeScript + Vite
+# SmartSpar BikeHub Frontend
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+智慧共享单车调度系统前端服务 - 基于Vite + React开发环境
 
-Currently, two official plugins are available:
+## 项目概述
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
 
-## React Compiler
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+## 技术栈
 
-## Expanding the ESLint configuration
+| 类别       | 技术            | 说明                             |
+| ---------- | --------------- | -------------------------------- |
+| 前端框架   | React + Vite    | 高性能、组件化开发，适合管理系统 |
+| UI框架     | Ant Design      | 提供美观的表格、图标、弹窗组件   |
+| 地图展示   | 高德地图 JS API | 中文文档友好，免费试用           |
+| 可视化图表 | EChart          | 会直折线图、柱状图、热力图       |
+| 网络请求   | Axios           | 统一管理接口调用                 |
+| 构建与部署 | 华为云          | 打包后部署在华为云服务器上       |
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+## 项目结构
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
-
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+```
+bikehub/
+├─ src/
+│  ├─ App.tsx        # 主组件
+│  ├─ main.tsx       # 入口文件
+│  ├─ vite-env.d.ts  # 类型定义
+├─ index.html        # HTML 模板
+├─ tsconfig.json     # TypeScript 配置
+├─ vite.config.ts    # Vite 配置
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+## 快速开始
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+### 1.环境要求
 
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+- Nodejs  v24.11.0
+- npm 11.6.1
+
+### 2. 安装依赖
+
 ```
+# 安装Nodejs请参考官网教程
+https://nodejs.org
+
+# 使用npm创建项目
+npm create vite@latest SmartSpar_BikeHub -- --template react-ts
+
+#进入项目目录并安装依赖
+cd SmartSpar_BikeHub
+npm install
+
+# 运行开发服务器
+npm run dev
+
+# 运行后会看到类似输出：
+VITE v5.x  ready in 300ms
+Local:   http://localhost:5173/
+访问上面的网址即可进行测试
+```
+
