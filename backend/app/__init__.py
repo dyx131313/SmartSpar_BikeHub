@@ -6,7 +6,7 @@ from flask_jwt_extended import JWTManager
 import logging
 import os
 from app.config.config import config
-from app.models import *
+#from app.models import *
 
 # 初始化扩展
 db = SQLAlchemy()
@@ -29,6 +29,11 @@ def create_app(config_name=None):
     cors.init_app(app, origins=app.config['CORS_ORIGINS'])
     jwt.init_app(app)
 
+    # **延后导入 models，避免循环导入**
+    # 这里采用相对导入，确保模型类被注册到 SQLAlchemy 中
+    with app.app_context():
+        from . import models   # 或者 from app import models
+    
     # 配置日志
     configure_logging(app)
 
