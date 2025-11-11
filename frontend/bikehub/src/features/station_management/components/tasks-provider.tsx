@@ -1,21 +1,21 @@
 import React, { useState } from 'react'
 import useDialogState from '@/hooks/use-dialog-state'
-import { type Task } from '../data/schema'
+import { type Station } from '../data/schema'
 
 type TasksDialogType = 'create' | 'update' | 'delete' | 'import'
 
 type TasksContextType = {
   open: TasksDialogType | null
   setOpen: (str: TasksDialogType | null) => void
-  currentRow: Task | null
-  setCurrentRow: React.Dispatch<React.SetStateAction<Task | null>>
+  currentRow: Station | null
+  setCurrentRow: React.Dispatch<React.SetStateAction<Station | null>>
 }
 
 const TasksContext = React.createContext<TasksContextType | null>(null)
 
 export function TasksProvider({ children }: { children: React.ReactNode }) {
   const [open, setOpen] = useDialogState<TasksDialogType>(null)
-  const [currentRow, setCurrentRow] = useState<Task | null>(null)
+  const [currentRow, setCurrentRow] = useState<Station | null>(null)
 
   return (
     <TasksContext value={{ open, setOpen, currentRow, setCurrentRow }}>

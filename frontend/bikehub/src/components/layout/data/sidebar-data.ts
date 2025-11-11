@@ -79,9 +79,9 @@ export const sidebarData: SidebarData = {
           icon: Users,
         },
         {
-          title: 'Management',
-          url: '/management',
-          icon: Users,
+          title: '站点管理',
+          url: '/station_management',
+          icon: ListTodo,
         },
         // {
         //   title: 'Secured by Clerk',

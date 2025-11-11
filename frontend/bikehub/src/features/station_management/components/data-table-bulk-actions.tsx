@@ -17,7 +17,7 @@ import {
 } from '@/components/ui/tooltip'
 import { DataTableBulkActions as BulkActionsToolbar } from '@/components/data-table'
 import { priorities, statuses } from '../data/data'
-import { type Task } from '../data/schema'
+import { type Station } from '../data/schema'
 import { TasksMultiDeleteDialog } from './tasks-multi-delete-dialog'
 
 type DataTableBulkActionsProps<TData> = {
@@ -31,7 +31,7 @@ export function DataTableBulkActions<TData>({
   const selectedRows = table.getFilteredSelectedRowModel().rows
 
   const handleBulkStatusChange = (status: string) => {
-    const selectedTasks = selectedRows.map((row) => row.original as Task)
+    const selectedTasks = selectedRows.map((row) => row.original as Station)
     toast.promise(sleep(2000), {
       loading: 'Updating status...',
       success: () => {
@@ -44,7 +44,7 @@ export function DataTableBulkActions<TData>({
   }
 
   const handleBulkPriorityChange = (priority: string) => {
-    const selectedTasks = selectedRows.map((row) => row.original as Task)
+    const selectedTasks = selectedRows.map((row) => row.original as Station)
     toast.promise(sleep(2000), {
       loading: 'Updating priority...',
       success: () => {
@@ -57,7 +57,7 @@ export function DataTableBulkActions<TData>({
   }
 
   const handleBulkExport = () => {
-    const selectedTasks = selectedRows.map((row) => row.original as Task)
+    const selectedTasks = selectedRows.map((row) => row.original as Station)
     toast.promise(sleep(2000), {
       loading: 'Exporting tasks...',
       success: () => {
