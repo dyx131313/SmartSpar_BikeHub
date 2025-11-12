@@ -205,7 +205,7 @@ export const sidebarData: SidebarData = {
       ],
     },
     {
-      title: 'Other',
+      title: '其他',
       items: [
         
         {

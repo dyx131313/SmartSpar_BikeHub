@@ -6,6 +6,8 @@ import { Link, useNavigate } from '@tanstack/react-router'
 import { Loader2, LogIn } from 'lucide-react'
 import { toast } from 'sonner'
 import { IconFacebook, IconGithub } from '@/assets/brand-icons'
+import { apiPost } from '@/lib/api'
+import { handleServerError } from '@/lib/handle-server-error'
 import { useAuthStore } from '@/stores/auth-store'
 import { sleep, cn } from '@/lib/utils'
 import { Button } from '@/components/ui/button'
@@ -41,7 +43,10 @@ export function UserAuthForm({
 }: UserAuthFormProps) {
   const [isLoading, setIsLoading] = useState(false)
   const navigate = useNavigate()
-  const { auth } = useAuthStore()
+  // const { auth } = useAuthStore()
+  const setAccessToken = useAuthStore((s) => s.auth?.setAccessToken)
+  const setUser = useAuthStore((s) => s.auth?.setUser)
+  const readAuthState = () => useAuthStore.getState()?.auth
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -52,33 +57,101 @@ export function UserAuthForm({
   })
 
   function onSubmit(data: z.infer<typeof formSchema>) {
-    setIsLoading(true)
+    // setIsLoading(true)
 
-    toast.promise(sleep(2000), {
-      loading: 'Signing in...',
-      success: () => {
-        setIsLoading(false)
+    // toast.promise(sleep(2000), {
+    //   loading: 'Signing in...',
+    //   success: () => {
+    //     setIsLoading(false)
 
-        // Mock successful authentication with expiry computed at success time
-        const mockUser = {
-          accountNo: 'ACC001',
-          email: data.email,
-          role: ['user'],
-          exp: Date.now() + 24 * 60 * 60 * 1000, // 24 hours from now
+    //     // Mock successful authentication with expiry computed at success time
+    //     const mockUser = {
+    //       accountNo: 'ACC001',
+    //       email: data.email,
+    //       role: ['user'],
+    //       exp: Date.now() + 24 * 60 * 60 * 1000, // 24 hours from now
+    //     }
+
+    //     // Set user and access token
+    //     auth.setUser(mockUser)
+    //     auth.setAccessToken('mock-access-token')
+
+    //     // Redirect to the stored location or default to dashboard
+    //     const targetPath = redirectTo || '/'
+    //     navigate({ to: targetPath, replace: true })
+
+    //     return `Welcome back, ${data.email}!`
+    //   },
+    //   error: 'Error',
+    // })
+     // 使用真实 API 登录
+     console.log('onSubmit called', data)
+     ;(async () => {
+      setIsLoading(true)
+      try {
+        console.log('calling apiPost /api/auth/login', { email: data.email })
+        // 后端可能使用 email 或 username，按实际调整 payload
+        const payload = { email: data.email, password: data.password }
+        const resp = await apiPost('/api/auth/login', payload)
+        // console.log('login resp', resp)
+        // console.log('useAuthStore.getState()', useAuthStore.getState()) 
+        // // 兼容不同字段命名
+        // const token = resp?.access_token ?? resp?.token ?? resp?.data?.token
+        // if (token) {
+        //   auth.setAccessToken(token)
+        // }
+        // if (resp?.user) {
+        //   auth.setUser(resp.user)
+        // }
+        // const currentUser = useAuthStore.getState()?.auth?.user ?? resp?.user ?? null
+
+        console.log('login resp', resp)
+        // 更鲁棒地提取 token（access_token / accessToken / token / data.*）
+        const token =
+         resp?.access_token ??
+          resp?.accessToken ??
+          resp?.token ??
+          resp?.data?.access_token ??
+          resp?.data?.accessToken ??
+          resp?.data?.token ??
+          null
+
+        if (token) {
+          setAccessToken?.(token)
+          console.log('setAccessToken called ->', token)
+        } else {
+          console.warn('No token extracted from login resp', resp)
         }
 
-        // Set user and access token
-        auth.setUser(mockUser)
-        auth.setAccessToken('mock-access-token')
+        // 取 user 并写入 store（直接保存后端返回的 user）
+        const user = resp?.user ?? resp?.data?.user ?? null
+        if (user) {
+          setUser?.(user)
+          console.log('setUser called ->', user)
+        } else {
+          console.warn('No user in login resp', resp)
+        }
 
-        // Redirect to the stored location or default to dashboard
+        // 立即读取 store 验证（调试）
+        const currentUser = readAuthState()?.user ?? user ?? null
+
+        const displayName = currentUser?.full_name ?? currentUser?.username ?? currentUser?.email ?? data.email
+        const rolePart = currentUser?.role
+          ? Array.isArray(currentUser.role)
+            ? `(${currentUser.role.join(', ')})`
+            : `(${currentUser.role})`
+          : ''
+        toast.success(`欢迎，${displayName}${rolePart}`)
+
         const targetPath = redirectTo || '/'
         navigate({ to: targetPath, replace: true })
-
-        return `Welcome back, ${data.email}!`
-      },
-      error: 'Error',
-    })
+      } catch (err) {
+        handleServerError(err)
+        toast.error('Sign in failed')
+      } finally {
+        setIsLoading(false)
+      }
+    })()
   }
 
   return (
@@ -120,7 +193,8 @@ export function UserAuthForm({
             </FormItem>
           )}
         />
-        <Button className='mt-2' disabled={isLoading}>
+        {/* <Button className='mt-2' disabled={isLoading}> */}
+        <Button type='submit' className='mt-2' disabled={isLoading}>
           {isLoading ? <Loader2 className='animate-spin' /> : <LogIn />}
           登陆
         </Button>

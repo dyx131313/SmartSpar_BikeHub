@@ -16,6 +16,13 @@ import {
 import { Input } from '@/components/ui/input'
 import { PasswordInput } from '@/components/password-input'
 
+import { apiPost } from '@/lib/api'
+import { handleServerError } from '@/lib/handle-server-error'
+import { useAuthStore } from '@/stores/auth-store'
+import { useNavigate } from '@tanstack/react-router'
+
+
+
 const formSchema = z
   .object({
     email: z.email({
@@ -39,6 +46,10 @@ export function SignUpForm({
 }: React.HTMLAttributes<HTMLFormElement>) {
   const [isLoading, setIsLoading] = useState(false)
 
+  const setAccessToken = useAuthStore((s) => s.auth.setAccessToken)
+  const setUser = useAuthStore((s) => s.auth.setUser)
+  const navigate = useNavigate()
+
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -48,16 +59,54 @@ export function SignUpForm({
     },
   })
 
-  function onSubmit(data: z.infer<typeof formSchema>) {
+  // function onSubmit(data: z.infer<typeof formSchema>) {
+  //   setIsLoading(true)
+  //   // // eslint-disable-next-line no-console
+  //   // console.log(data)
+
+  //   // setTimeout(() => {
+  //   //   setIsLoading(false)
+  //   // }, 3000)
+  //     setIsLoading(true)
+  //   try {
+  //     const payload = { email: data.email, password: data.password, name: data.name }
+  //     const resp = await apiPost('/api/auth/register', payload)
+  //     // 期望后端返回 { user, token }
+  //     if (resp?.token) {
+  //       setAccessToken(resp.token)
+  //     }
+  //     if (resp?.user) {
+  //       setUser(resp.user)
+  //     }
+  //     // 跳转到登录页或首页
+  //     navigate({ to: '/sign-in-2' })
+  //   } catch (err) {
+  //     handleServerError(err)
+  //   } finally {
+  //     setIsLoading(false)
+  //   }
+  // }
+
+  async function onSubmit(data: z.infer<typeof formSchema>) {
     setIsLoading(true)
-    // eslint-disable-next-line no-console
-    console.log(data)
-
-    setTimeout(() => {
+    try {
+      const payload = { email: data.email, password: data.password, name: (data as any).name }
+      const resp = await apiPost('/api/auth/register', payload)
+      // 期望后端返回 { user, token }
+      if (resp?.token) {
+        setAccessToken(resp.token)
+      }
+      if (resp?.user) {
+        setUser(resp.user)
+      }
+      // 跳转到登录页或首页
+      navigate({ to: '/sign-in-2' })
+    } catch (err) {
+      handleServerError(err)
+    } finally {
       setIsLoading(false)
-    }, 3000)
+    }
   }
-
   return (
     <Form {...form}>
       <form
