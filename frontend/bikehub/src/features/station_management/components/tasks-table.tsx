@@ -23,7 +23,7 @@ import {
   TableRow,
 } from '@/components/ui/table'
 import { DataTablePagination, DataTableToolbar } from '@/components/data-table'
-import { priorities, statuses } from '../data/data'
+import { station_type } from '../data/data'
 import { type Station } from '../data/schema'
 import { DataTableBulkActions } from './data-table-bulk-actions'
 import { tasksColumns as columns } from './tasks-columns'
@@ -60,8 +60,14 @@ export function TasksTable({ data }: DataTableProps) {
     pagination: { defaultPage: 1, defaultPageSize: 10 },
     globalFilter: { enabled: true, key: 'filter' },
     columnFilters: [
-      { columnId: 'status', searchKey: 'status', type: 'array' },
-      { columnId: 'priority', searchKey: 'priority', type: 'array' },
+      {columnId: 'station_type', searchKey: 'station_type', type: 'array' },
+      {columnId: 'name', searchKey: 'name', type: 'array' },
+      {columnId: 'latitude', searchKey: 'latitude', type: 'array' },
+      {columnId: 'longitude', searchKey: 'longitude', type: 'array' },
+      {columnId: 'capacity', searchKey: 'capacity', type: 'array' },
+      {columnId: 'description', searchKey: 'description', type: 'array' },
+      // { columnId: 'status', searchKey: 'status', type: 'array' },
+      // { columnId: 'priority', searchKey: 'priority', type: 'array' },
     ],
   })
 
@@ -83,10 +89,17 @@ export function TasksTable({ data }: DataTableProps) {
     onColumnVisibilityChange: setColumnVisibility,
     globalFilterFn: (row, _columnId, filterValue) => {
       const id = String(row.getValue('id')).toLowerCase()
-      const title = String(row.getValue('title')).toLowerCase()
+      const name = String(row.getValue('name')).toLowerCase()
+      const station_type = String(row.getValue('station_type')).toLowerCase()
+      const latitude = String(row.getValue('latitude')).toLowerCase()
+      const longitude = String(row.getValue('longitude')).toLowerCase()
+      const capacity = String(row.getValue('capacity')).toLowerCase()
+      const description = String(row.getValue('description')).toLowerCase()
+
+      // const title = String(row.getValue('title')).toLowerCase()
       const searchValue = String(filterValue).toLowerCase()
 
-      return id.includes(searchValue) || title.includes(searchValue)
+      return id.includes(searchValue) || name.includes(searchValue) || station_type.includes(searchValue) || latitude.includes(searchValue) || longitude.includes(searchValue) || capacity.includes(searchValue) || description.includes(searchValue)
     },
     getCoreRowModel: getCoreRowModel(),
     getFilteredRowModel: getFilteredRowModel(),
@@ -113,18 +126,23 @@ export function TasksTable({ data }: DataTableProps) {
     >
       <DataTableToolbar
         table={table}
-        searchPlaceholder='Filter by title or ID...'
+        searchPlaceholder='根据ID或标题搜索...'
         filters={[
+          // {
+          //   columnId: 'status',
+          //   title: 'Status',
+          //   options: statuses,
+          // },
           {
-            columnId: 'status',
-            title: 'Status',
-            options: statuses,
+            columnId: 'station_type',
+            title: '站点类型',
+            options: station_type,
           },
-          {
-            columnId: 'priority',
-            title: 'Priority',
-            options: priorities,
-          },
+          // {
+          //   columnId: 'priority',
+          //   title: 'Priority',
+          //   options: priorities,
+          // },
         ]}
       />
       <div className='overflow-hidden rounded-md border'>

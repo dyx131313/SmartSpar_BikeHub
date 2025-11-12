@@ -75,3 +75,18 @@ export const priorities = [
     icon: AlertCircle,
   },
 ]
+
+export const station_type = [
+  {
+    label: 'Docked',
+    value: 'Docked' as const,
+  },
+  {
+    label: 'Dockless',
+    value: 'Dockless' as const,
+  },
+  {
+    label: 'Hybrid',
+    value: 'Hybrid' as const,
+  },
+]

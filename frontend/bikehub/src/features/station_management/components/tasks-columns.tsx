@@ -62,9 +62,9 @@ export const tasksColumns: ColumnDef<Station>[] = [
   {
     accessorKey: 'name',
     header: ({ column }) => (
-      <DataTableColumnHeader column={column} title='站点姓名' />
+      <DataTableColumnHeader column={column} title='站点名称' />
     ),
-    meta: { className: 'ps-1', tdClassName: 'ps-4' },
+    meta: { title: '站点名称', className: 'ps-1', tdClassName: 'ps-4' },
     cell: ({ row }) => (
       <div className='max-w-40 truncate text-sm text-gray-700'>
         {row.getValue('name') ?? '—'}
@@ -76,7 +76,7 @@ export const tasksColumns: ColumnDef<Station>[] = [
     header: ({ column }) => (
       <DataTableColumnHeader column={column} title='站点类型' />
     ),
-    meta: { className: 'ps-1', tdClassName: 'ps-4' },
+    meta: { title: '站点类型', className: 'ps-1', tdClassName: 'ps-4' },
     cell: ({ row }) => (
       <div className='max-w-40 truncate text-sm text-gray-700'>
         {row.getValue('station_type') ?? '—'}
@@ -88,7 +88,7 @@ export const tasksColumns: ColumnDef<Station>[] = [
     header: ({ column }) => (
       <DataTableColumnHeader column={column} title='纬度' />
     ),
-    meta: { className: 'ps-1', tdClassName: 'ps-4' },
+    meta: { title:'纬度', className: 'ps-1', tdClassName: 'ps-4' },
     cell: ({ row }) => (
       <div className='max-w-40 truncate text-sm text-gray-700'>
         {row.getValue('latitude') ?? '—'}
@@ -100,7 +100,7 @@ export const tasksColumns: ColumnDef<Station>[] = [
     header: ({ column }) => (
       <DataTableColumnHeader column={column} title='经度' />
     ),
-    meta: { className: 'ps-1', tdClassName: 'ps-4' },
+    meta: { title:'经度', className: 'ps-1', tdClassName: 'ps-4' },
     cell: ({ row }) => (
       <div className='max-w-40 truncate text-sm text-gray-700'>
         {row.getValue('longitude') ?? '—'}
@@ -112,7 +112,7 @@ export const tasksColumns: ColumnDef<Station>[] = [
     header: ({ column }) => (
       <DataTableColumnHeader column={column} title='容量' />
     ),
-    meta: { className: 'ps-1', tdClassName: 'ps-4' },
+    meta: {title:'容量', className: 'ps-1', tdClassName: 'ps-4' },
     cell: ({ row }) => (
       <div className='max-w-40 truncate text-sm text-gray-700'>
         {row.getValue('capacity') ?? '—'}
@@ -124,7 +124,7 @@ export const tasksColumns: ColumnDef<Station>[] = [
     header: ({ column }) => (
       <DataTableColumnHeader column={column} title='描述' />
     ),
-    meta: { className: 'ps-1', tdClassName: 'ps-4' },
+    meta: { title:'描述',className: 'ps-1', tdClassName: 'ps-4' },
     cell: ({ row }) => (
       <div className='max-w-40 truncate text-sm text-gray-700'>
         {row.getValue('description') ?? '—'}

@@ -1,6 +1,7 @@
 import {
   Construction,
   LayoutDashboard,
+  MapPin,
   Monitor,
   Bug,
   ListTodo,
@@ -21,6 +22,7 @@ import {
   AudioWaveform,
   Command,
   GalleryVerticalEnd,
+  BarChart2,
 } from 'lucide-react'
 import { ClerkLogo } from '@/assets/clerk-logo'
 import { type SidebarData } from '../types'
@@ -53,36 +55,31 @@ export const sidebarData: SidebarData = {
       title: '控制面板',
       items: [
         {
-          title: '仪表盘',
+          title: '数据展示面板',
           url: '/',
-          icon: LayoutDashboard,
-        },
-        {
-          title: '调度任务',
-          url: '/tasks',
-          icon: ListTodo,
-        },
-        {
-          title: 'Apps',
-          url: '/apps',
-          icon: Package,
-        },
-        {
-          title: 'Chats',
-          url: '/chats',
-          badge: '3',
-          icon: MessagesSquare,
-        },
-        {
-          title: 'Users',
-          url: '/users',
-          icon: Users,
-        },
+          icon: BarChart2,
+        },        
         {
           title: '站点管理',
           url: '/station_management',
+          icon: MapPin,
+        },
+        {
+          title: '调度管理',
+          url: '/task_management',
           icon: ListTodo,
         },
+        // {
+        //   title: 'Apps',
+        //   url: '/apps',
+        //   icon: Package,
+        // },
+        {
+          title: '用户管理',
+          url: '/users',
+          icon: Users,
+        },
+
         // {
         //   title: 'Secured by Clerk',
         //   icon: ClerkLogo,
@@ -104,26 +101,68 @@ export const sidebarData: SidebarData = {
       ],
     },
     {
+      title: "个人",
+      items: [
+        {
+          title: '私信',
+          url: '/chats',
+          badge: '3',
+          icon: MessagesSquare,
+        },
+        {
+          title: '设置',
+          icon: Settings,
+          items: [
+            {
+              title: '个人资料',
+              url: '/settings',
+              icon: UserCog,
+            },
+            {
+              title: '账户',
+              url: '/settings/account',
+              icon: Wrench,
+            },
+            {
+              title: '外观',
+              url: '/settings/appearance',
+              icon: Palette,
+            },
+            {
+              title: '通知',
+              url: '/settings/notifications',
+              icon: Bell,
+            },
+            {
+              title: '显示',
+              url: '/settings/display',
+              icon: Monitor,
+            },
+          ],
+        },
+      ],
+    },
+    {
       title: 'Pages',
       items: [
         {
           title: 'Auth',
           icon: ShieldCheck,
           items: [
+            // {
+            //   title: 'Sign In',
+            //   url: '/sign-in',
+            // },
             {
-              title: 'Sign In',
-              url: '/sign-in',
-            },
-            {
-              title: 'Sign In (2 Col)',
+              title: '登录',
               url: '/sign-in-2',
             },
             {
-              title: 'Sign Up',
+              title: '注册',
               url: '/sign-up',
             },
             {
-              title: 'Forgot Password',
+              title: '忘记密码',
               url: '/forgot-password',
             },
             {
@@ -132,75 +171,45 @@ export const sidebarData: SidebarData = {
             },
           ],
         },
-        {
-          title: 'Errors',
-          icon: Bug,
-          items: [
-            {
-              title: 'Unauthorized',
-              url: '/errors/unauthorized',
-              icon: Lock,
-            },
-            {
-              title: 'Forbidden',
-              url: '/errors/forbidden',
-              icon: UserX,
-            },
-            {
-              title: 'Not Found',
-              url: '/errors/not-found',
-              icon: FileX,
-            },
-            {
-              title: 'Internal Server Error',
-              url: '/errors/internal-server-error',
-              icon: ServerOff,
-            },
-            {
-              title: 'Maintenance Error',
-              url: '/errors/maintenance-error',
-              icon: Construction,
-            },
-          ],
-        },
+        // {
+        //   title: 'Errors',
+        //   icon: Bug,
+        //   items: [
+        //     {
+        //       title: 'Unauthorized',
+        //       url: '/errors/unauthorized',
+        //       icon: Lock,
+        //     },
+        //     {
+        //       title: 'Forbidden',
+        //       url: '/errors/forbidden',
+        //       icon: UserX,
+        //     },
+        //     {
+        //       title: 'Not Found',
+        //       url: '/errors/not-found',
+        //       icon: FileX,
+        //     },
+        //     {
+        //       title: 'Internal Server Error',
+        //       url: '/errors/internal-server-error',
+        //       icon: ServerOff,
+        //     },
+        //     {
+        //       title: 'Maintenance Error',
+        //       url: '/errors/maintenance-error',
+        //       icon: Construction,
+        //     },
+        //   ],
+        // },
       ],
     },
     {
       title: 'Other',
       items: [
+        
         {
-          title: 'Settings',
-          icon: Settings,
-          items: [
-            {
-              title: 'Profile',
-              url: '/settings',
-              icon: UserCog,
-            },
-            {
-              title: 'Account',
-              url: '/settings/account',
-              icon: Wrench,
-            },
-            {
-              title: 'Appearance',
-              url: '/settings/appearance',
-              icon: Palette,
-            },
-            {
-              title: 'Notifications',
-              url: '/settings/notifications',
-              icon: Bell,
-            },
-            {
-              title: 'Display',
-              url: '/settings/display',
-              icon: Monitor,
-            },
-          ],
-        },
-        {
-          title: 'Help Center',
+          title: '帮助中心',
           url: '/help-center',
           icon: HelpCircle,
         },
