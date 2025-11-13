@@ -131,6 +131,7 @@ import {
   ChevronsUpDown,
   CreditCard,
   LogOut,
+  LogIn,
   Sparkles,
 } from 'lucide-react'
 import useDialogState from '@/hooks/use-dialog-state'
@@ -157,7 +158,7 @@ type NavUserProps = {
   user?: {
     name?: string
     email?: string
-    avatar?: string
+    // avatar?: string
     // 兼容后端更多字段
     username?: string
     full_name?: string
@@ -170,14 +171,74 @@ function getInitials(name?: string) {
   return (parts[0]?.[0] ?? '') + (parts[1]?.[0] ?? parts[0]?.[1] ?? '')
 }
 
-export function NavUser({ user }: NavUserProps) {
-  const { isMobile } = useSidebar()
+export function NavUser() {
+  // const { isMobile } = useSidebar()
+
+  // 读取侧栏 state，判断是否折叠
+  const { isMobile, state } = useSidebar()
   const [open, setOpen] = useDialogState()
 
 
-  // 从全局 store 读取 user（优先 props）
+    // 从全局 store 读取 user（只使用 store 的 user；若未登录则显示 登录/注册 按钮）
   const storeUser = useAuthStore((s) => s.auth?.user)
-  const effectiveUser = storeUser ?? user ?? {}
+
+  // if (!storeUser) {
+  //   return (
+  //     <SidebarMenu>
+  //       <SidebarMenuItem>
+  //         <div className='w-full px-3 py-2'>
+  //           <div className='flex gap-2 w-full'>
+  //             {/* 两个按钮 flex-1 ，合起来占满侧栏条目宽度 */}
+  //             <Link
+  //               to='/sign-in-2'
+  //               className='flex-1 text-base font-semibold text-center px-4 py-2 rounded-md border border-neutral-700 hover:opacity-90'
+  //             >
+  //               登录
+  //             </Link>
+  //             <Link
+  //               to='/sign-up'
+  //               className='flex-1 text-base font-semibold text-center px-4 py-2 rounded-md bg-primary text-primary-foreground hover:opacity-95'
+  //             >
+  //               注册
+  //             </Link>
+  //           </div>
+  //         </div>
+  //       </SidebarMenuItem>
+  //     </SidebarMenu>
+  //   )
+  // }
+
+  if (!storeUser) {
+    const isCollapsed = state === 'collapsed'
+
+    return (
+      <SidebarMenu>
+        <SidebarMenuItem>
+          {/* SidebarMenuButton 自带尺寸/hover/tooltip 行为，asChild 用来包裹 Link */}
+          <SidebarMenuButton
+            asChild
+            className='w-full'
+            // tooltip 在侧栏折叠时会显示（TooltipContent 中已控制）
+            tooltip='登录 / 注册'
+            aria-label='登录或注册'
+          >
+            <Link
+              to='/sign-in-2'
+              className='w-full inline-flex items-center justify-start gap-3 text-sm font-semibold px-3 py-2 rounded-md border border-neutral-700 hover:opacity-90 h-10 leading-5 overflow-hidden'
+            >
+              <LogIn className='size-4' />
+              {/* 折叠时隐藏文本，展开时展示；文本使用 truncate 防止换行 */}
+              <span className={`${isCollapsed ? 'sr-only' : 'truncate'}`}>
+                登录 / 注册
+              </span>
+            </Link>
+          </SidebarMenuButton>
+        </SidebarMenuItem>
+      </SidebarMenu>
+    )
+  }
+  // 已登录：使用 storeUser 显示用户信息（忽略父组件传入的 sidebarData.user）
+  const effectiveUser = storeUser
 
   // console.log('NavUser effectiveUser:', effectiveUser)
 

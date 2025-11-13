@@ -133,44 +133,44 @@ export const sidebarData: SidebarData = {
               url: '/settings/notifications',
               icon: Bell,
             },
-            {
-              title: '显示',
-              url: '/settings/display',
-              icon: Monitor,
-            },
+              // {
+              //   title: '显示',
+              //   url: '/settings/display',
+              //   icon: Monitor,
+              // },
           ],
         },
       ],
     },
-    {
-      title: 'Pages',
-      items: [
-        {
-          title: 'Auth',
-          icon: ShieldCheck,
-          items: [
-            // {
-            //   title: 'Sign In',
-            //   url: '/sign-in',
-            // },
-            {
-              title: '登录',
-              url: '/sign-in-2',
-            },
-            {
-              title: '注册',
-              url: '/sign-up',
-            },
-            {
-              title: '忘记密码',
-              url: '/forgot-password',
-            },
-            {
-              title: 'OTP',
-              url: '/otp',
-            },
-          ],
-        },
+    // {
+    //   title: 'Pages',
+    //   items: [
+    //     {
+    //       title: 'Auth',
+    //       icon: ShieldCheck,
+    //       items: [
+    //         // {
+    //         //   title: 'Sign In',
+    //         //   url: '/sign-in',
+    //         // },
+    //         {
+    //           title: '登录',
+    //           url: '/sign-in-2',
+    //         },
+    //         {
+    //           title: '注册',
+    //           url: '/sign-up',
+    //         },
+    //         {
+    //           title: '忘记密码',
+    //           url: '/forgot-password',
+    //         },
+    //         {
+    //           title: 'OTP',
+    //           url: '/otp',
+    //         },
+    //       ],
+    //     },
         // {
         //   title: 'Errors',
         //   icon: Bug,
@@ -202,8 +202,8 @@ export const sidebarData: SidebarData = {
         //     },
         //   ],
         // },
-      ],
-    },
+      // ],
+    // },
     {
       title: '其他',
       items: [

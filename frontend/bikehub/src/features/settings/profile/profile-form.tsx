@@ -79,13 +79,13 @@ export function ProfileForm() {
           name='username'
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Username</FormLabel>
+              <FormLabel>用户名称</FormLabel>
               <FormControl>
-                <Input placeholder='shadcn' {...field} />
+                <Input placeholder='xxxx' {...field} />
               </FormControl>
               <FormDescription>
-                This is your public display name. It can be your real name or a
-                pseudonym. You can only change this once every 30 days.
+                这是您的公开显示名称。可以是您的真实姓名或化名。
+                {/* 您只能每 30 天更改一次。 */}
               </FormDescription>
               <FormMessage />
             </FormItem>
@@ -96,11 +96,11 @@ export function ProfileForm() {
           name='email'
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Email</FormLabel>
+              <FormLabel>邮箱</FormLabel>
               <Select onValueChange={field.onChange} defaultValue={field.value}>
                 <FormControl>
                   <SelectTrigger>
-                    <SelectValue placeholder='Select a verified email to display' />
+                    <SelectValue placeholder='选择一个已验证的邮箱进行显示' />
                   </SelectTrigger>
                 </FormControl>
                 <SelectContent>
@@ -110,14 +110,14 @@ export function ProfileForm() {
                 </SelectContent>
               </Select>
               <FormDescription>
-                You can manage verified email addresses in your{' '}
-                <Link to='/'>email settings</Link>.
+                您可以在{' '}
+                <Link to='/'>邮箱设置</Link>中管理已验证的邮箱地址。
               </FormDescription>
               <FormMessage />
             </FormItem>
           )}
         />
-        <FormField
+        {/* <FormField
           control={form.control}
           name='bio'
           render={({ field }) => (
@@ -137,8 +137,8 @@ export function ProfileForm() {
               <FormMessage />
             </FormItem>
           )}
-        />
-        <div>
+        /> */}
+        {/* <div>
           {fields.map((field, index) => (
             <FormField
               control={form.control}
@@ -169,8 +169,8 @@ export function ProfileForm() {
           >
             Add URL
           </Button>
-        </div>
-        <Button type='submit'>Update profile</Button>
+        </div> */}
+        <Button type='submit'>更新个人资料</Button>
       </form>
     </Form>
   )

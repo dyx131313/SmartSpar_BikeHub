@@ -11,13 +11,16 @@ import { sidebarData } from './data/sidebar-data'
 import { NavGroup } from './nav-group'
 import { NavUser } from './nav-user'
 import { TeamSwitcher } from './team-switcher'
+import { useAuthStore } from '@/stores/auth-store'
 
 export function AppSidebar() {
   const { collapsible, variant } = useLayout()
+  // const storeUser = useAuthStore((s) => s.auth?.user)
+
   return (
     <Sidebar collapsible={collapsible} variant={variant}>
       <SidebarHeader>
-        <NavUser user={sidebarData.user} />
+        <NavUser/>
 
 
         {/* Replace <TeamSwitch /> with the following <AppTitle />

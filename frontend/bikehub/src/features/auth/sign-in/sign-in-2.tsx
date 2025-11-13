@@ -3,6 +3,7 @@ import { cn } from '@/lib/utils'
 import dashboardDark from './assets/dashboard-dark.png'
 import dashboardLight from './assets/dashboard-light.png'
 import { UserAuthForm } from './components/user-auth-form'
+import { Link } from '@tanstack/react-router'
 
 export function SignIn2() {
   return (
@@ -19,6 +20,15 @@ export function SignIn2() {
             <h2 className='text-lg font-semibold tracking-tight'>登陆</h2>
             <p className='text-muted-foreground text-sm'>
               请输入您的邮箱和密码以登录您的账户
+              <span className='ms-2'>
+                              没有账号？{' '}
+                              <Link
+                                to='/sign-up'
+                                className='hover:text-primary underline underline-offset-4'
+                              >
+                                立即注册
+                              </Link>
+                            </span>
             </p>
           </div>
           <UserAuthForm />

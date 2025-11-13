@@ -77,19 +77,18 @@ export function AccountForm() {
           name='name'
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Name</FormLabel>
+              <FormLabel>姓名</FormLabel>
               <FormControl>
-                <Input placeholder='Your name' {...field} />
+                <Input placeholder='请输入姓名' {...field} />
               </FormControl>
               <FormDescription>
-                This is the name that will be displayed on your profile and in
-                emails.
+                这是将显示在您的个人资料和电子邮件上的名称。
               </FormDescription>
               <FormMessage />
             </FormItem>
           )}
         />
-        <FormField
+        {/* <FormField
           control={form.control}
           name='dob'
           render={({ field }) => (
@@ -165,8 +164,8 @@ export function AccountForm() {
               <FormMessage />
             </FormItem>
           )}
-        />
-        <Button type='submit'>Update account</Button>
+        /> */}
+        <Button type='submit'>更新账户</Button>
       </form>
     </Form>
   )
