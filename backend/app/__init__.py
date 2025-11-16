@@ -121,3 +121,73 @@ def register_cli_commands(app):
         db.session.add(admin)
         db.session.commit()
         print('管理员用户创建成功 - 用户名: admin, 密码: admin123')
+
+    @app.cli.command()
+    def create_dispatcher():
+        """创建调度员用户"""
+        from app.models.user import User
+        dispatcher = User(
+            username='dispatcher',
+            email='dispatcher@bikehub.com',
+            role='dispatcher',
+            full_name='调度员'
+        )
+        dispatcher.set_password('dispatcher123')
+        db.session.add(dispatcher)
+        db.session.commit()
+        print('调度员用户创建成功 - 用户名: dispatcher, 密码: dispatcher123')
+
+    @app.cli.command()
+    def create_operator():
+        """创建运维员用户"""
+        from app.models.user import User
+        operator = User(
+            username='operator',
+            email='operator@bikehub.com',
+            role='operator',
+            full_name='运维员'
+        )
+        operator.set_password('operator123')
+        db.session.commit()
+        print('运维员用户创建成功 - 用户名: operator, 密码: operator123')
+
+    @app.cli.command()
+    def create_test_users():
+        """创建测试用户"""
+        from app.models.user import User
+
+        # 创建管理员
+        admin = User(
+            username='admin',
+            email='admin@bikehub.com',
+            role='admin',
+            full_name='系统管理员'
+        )
+        admin.set_password('admin123')
+        db.session.add(admin)
+
+        # 创建调度员
+        dispatcher = User(
+            username='dispatcher',
+            email='dispatcher@bikehub.com',
+            role='dispatcher',
+            full_name='调度员'
+        )
+        dispatcher.set_password('dispatcher123')
+        db.session.add(dispatcher)
+
+        # 创建运维员
+        operator = User(
+            username='operator',
+            email='operator@bikehub.com',
+            role='operator',
+            full_name='运维员'
+        )
+        operator.set_password('operator123')
+        db.session.add(operator)
+
+        db.session.commit()
+        print('测试用户创建成功:')
+        print('管理员 - 用户名: admin, 密码: admin123')
+        print('调度员 - 用户名: dispatcher, 密码: dispatcher123')
+        print('运维员 - 用户名: operator, 密码: operator123')

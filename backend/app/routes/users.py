@@ -160,3 +160,71 @@ def update_user(id):
     except Exception as e:
         db.session.rollback()
         return jsonify({'error': str(e)}), 500
+
+@api_bp.route('/users/<int:id>', methods=['DELETE'])
+@jwt_required()
+def delete_user(id):
+    """删除用户"""
+    try:
+        current_user_id = get_jwt_identity()
+        current_user = User.query.get(current_user_id)
+
+        # 只有管理员可以删除用户
+        if current_user.role != 'admin':
+            return jsonify({'error': '权限不足'}), 403
+
+        # 不能删除自己
+        if current_user_id == id:
+            return jsonify({'error': '不能删除自己的账户'}), 400
+
+        user = User.query.get_or_404(id)
+
+        # 检查用户是否有未完成的调度任务
+        from app.models.dispatch_task import DispatchTask
+        pending_tasks = DispatchTask.query.filter(
+            DispatchTask.assigned_to == id,
+            DispatchTask.status.in_(['pending', 'in_progress'])
+        ).count()
+
+        if pending_tasks > 0:
+            return jsonify({
+                'error': f'该用户有 {pending_tasks} 个未完成的调度任务，无法删除'
+            }), 400
+
+        # 记录用户信息用于日志（可选）
+        user_info = {
+            'id': user.id,
+            'username': user.username,
+            'email': user.email,
+            'role': user.role
+        }
+
+        db.session.delete(user)
+        db.session.commit()
+
+        return jsonify({
+            'message': '用户删除成功',
+            'deleted_user': user_info
+        })
+
+    except Exception as e:
+        db.session.rollback()
+        return jsonify({'error': str(e)}), 500
+
+@api_bp.route('/users/<int:id>', methods=['GET'])
+@jwt_required()
+def get_user_by_id(id):
+    """根据ID获取单个用户信息"""
+    try:
+        current_user_id = get_jwt_identity()
+        current_user = User.query.get(current_user_id)
+
+        # 只有管理员可以查看其他用户信息，或者用户查看自己
+        if current_user.role != 'admin' and current_user_id != id:
+            return jsonify({'error': '权限不足'}), 403
+
+        user = User.query.get_or_404(id)
+        return jsonify({'data': user.to_dict()})
+
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
