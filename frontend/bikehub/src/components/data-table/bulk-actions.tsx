@@ -34,13 +34,17 @@ export function DataTableBulkActions<TData>({
 }: DataTableBulkActionsProps<TData>): React.ReactNode | null {
   const selectedRows = table.getFilteredSelectedRowModel().rows
   const selectedCount = selectedRows.length
+  const isEnglishEntity = /^[A-Za-z\s-]+$/.test(entityName)
+  const pluralSuffix = isEnglishEntity && selectedCount > 1 ? 's' : ''
   const toolbarRef = useRef<HTMLDivElement>(null)
   const [announcement, setAnnouncement] = useState('')
 
   // Announce selection changes to screen readers
   useEffect(() => {
     if (selectedCount > 0) {
-      const message = `${selectedCount} ${entityName}${selectedCount > 1 ? 's' : ''} selected. Bulk actions toolbar is available.`
+      // const message = `${selectedCount} ${entityName}${selectedCount > 1 ? 's' : ''} selected. Bulk actions toolbar is available.`
+      const message = `${selectedCount} ${entityName}${pluralSuffix} selected. Bulk actions toolbar is available.`
+  
 
       // Use queueMicrotask to defer state update and avoid cascading renders
       queueMicrotask(() => {
@@ -138,7 +142,8 @@ export function DataTableBulkActions<TData>({
       <div
         ref={toolbarRef}
         role='toolbar'
-        aria-label={`Bulk actions for ${selectedCount} selected ${entityName}${selectedCount > 1 ? 's' : ''}`}
+        // aria-label={`Bulk actions for ${selectedCount} selected ${entityName}${selectedCount > 1 ? 's' : ''}`}
+        aria-label={`Bulk actions for ${selectedCount} selected ${entityName}${pluralSuffix}`}
         aria-describedby='bulk-actions-description'
         tabIndex={-1}
         onKeyDown={handleKeyDown}
@@ -164,14 +169,14 @@ export function DataTableBulkActions<TData>({
                 onClick={handleClearSelection}
                 className='size-6 rounded-full'
                 aria-label='Clear selection'
-                title='Clear selection (Escape)'
+                title='清除选择'
               >
                 <X />
-                <span className='sr-only'>Clear selection</span>
+                <span className='sr-only'>清除选择</span>
               </Button>
             </TooltipTrigger>
             <TooltipContent>
-              <p>Clear selection (Escape)</p>
+              <p>清除选择</p>
             </TooltipContent>
           </Tooltip>
 
@@ -188,15 +193,16 @@ export function DataTableBulkActions<TData>({
             <Badge
               variant='default'
               className='min-w-8 rounded-lg'
-              aria-label={`${selectedCount} selected`}
+              aria-label={`${selectedCount} 已选择`}
             >
               {selectedCount}
             </Badge>{' '}
             <span className='hidden sm:inline'>
-              {entityName}
-              {selectedCount > 1 ? 's' : ''}
+              {/* {entityName} */}
+              {/* {selectedCount > 1 ? 's' : ''} */}
+              {entityName}{pluralSuffix}
             </span>{' '}
-            selected
+            已选择
           </div>
 
           <Separator

@@ -1,35 +1,55 @@
-import { Shield, UserCheck, Users, CreditCard } from 'lucide-react'
+import { Shield, UserCheck, MapPin } from 'lucide-react'
 import { type UserStatus } from './schema'
+import { M } from 'node_modules/@clerk/clerk-react/dist/useAuth-BAhNYMIt.d.mts'
 
 export const callTypes = new Map<UserStatus, string>([
-  ['active', 'bg-teal-100/30 text-teal-900 dark:text-teal-200 border-teal-200'],
-  ['inactive', 'bg-neutral-300/40 border-neutral-300'],
-  ['invited', 'bg-sky-200/40 text-sky-900 dark:text-sky-100 border-sky-300'],
+  ['已激活', 'bg-teal-100/30 text-teal-900 dark:text-teal-200 border-teal-200'],
+  ['未激活', 'bg-neutral-300/40 border-neutral-300'],
+  // ['已邀请', 'bg-sky-200/40 text-sky-900 dark:text-sky-100 border-sky-300'],
   [
-    'suspended',
+    '被暂停',
     'bg-destructive/10 dark:bg-destructive/50 text-destructive dark:text-primary border-destructive/10',
   ],
 ])
 
+export const status = [
+  {
+    label: '已激活',
+    value: '已激活',
+  },
+  {
+    label: '未激活',
+    value: '未激活',
+  },
+  // {
+  //   label: '已邀请',
+  //   value: '已邀请',
+  // },
+  {
+    label: '被暂停',
+    value: '被暂停',
+  },
+] as const  
+
 export const roles = [
   {
-    label: 'Superadmin',
-    value: 'superadmin',
+    label: '超级管理员',
+    value: '超级管理员',
     icon: Shield,
   },
   {
-    label: 'Admin',
-    value: 'admin',
+    label: '管理员',
+    value: '管理员',
     icon: UserCheck,
   },
   {
-    label: 'Manager',
-    value: 'manager',
-    icon: Users,
+    label: '调度员',
+    value: '调度员',
+    icon: MapPin,
   },
-  {
-    label: 'Cashier',
-    value: 'cashier',
-    icon: CreditCard,
-  },
+  // {
+  //   label: '收银员',
+  //   value: 'cashier',
+  //   icon: CreditCard,
+  // },
 ] as const

@@ -26,9 +26,9 @@ export function Management() {
         <div className='flex flex-wrap items-end justify-between gap-2'>
           <div>
             <h2 className='text-2xl font-bold tracking-tight'>站点管理</h2>
-            <p className='text-muted-foreground'>
+            {/* <p className='text-muted-foreground'>
               进行站点管理
-            </p>
+            </p> */}
           </div>
           <TasksPrimaryButtons />
         </div>

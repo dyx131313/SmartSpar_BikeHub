@@ -31,9 +31,9 @@ export function Users() {
       <Main className='flex flex-1 flex-col gap-4 sm:gap-6'>
         <div className='flex flex-wrap items-end justify-between gap-2'>
           <div>
-            <h2 className='text-2xl font-bold tracking-tight'>User List</h2>
+            <h2 className='text-2xl font-bold tracking-tight'>用户列表</h2>
             <p className='text-muted-foreground'>
-              Manage your users and their roles here.
+              管理用户及其角色。
             </p>
           </div>
           <UsersPrimaryButtons />

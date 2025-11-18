@@ -71,7 +71,7 @@ export function DataTableBulkActions<TData>({
 
   return (
     <>
-      <BulkActionsToolbar table={table} entityName='task'>
+      <BulkActionsToolbar table={table} entityName='站点'>
         <DropdownMenu>
           <Tooltip>
             <TooltipTrigger asChild>
@@ -84,12 +84,12 @@ export function DataTableBulkActions<TData>({
                   title='Update status'
                 >
                   <CircleArrowUp />
-                  <span className='sr-only'>Update status</span>
+                  <span className='sr-only'>更新状态</span>
                 </Button>
               </DropdownMenuTrigger>
             </TooltipTrigger>
             <TooltipContent>
-              <p>Update status</p>
+              <p>更新状态</p>
             </TooltipContent>
           </Tooltip>
           <DropdownMenuContent sideOffset={14}>
@@ -109,7 +109,7 @@ export function DataTableBulkActions<TData>({
         </DropdownMenu>
 
         <DropdownMenu>
-          <Tooltip>
+          {/* <Tooltip>
             <TooltipTrigger asChild>
               <DropdownMenuTrigger asChild>
                 <Button
@@ -120,14 +120,14 @@ export function DataTableBulkActions<TData>({
                   title='Update priority'
                 >
                   <ArrowUpDown />
-                  <span className='sr-only'>Update priority</span>
+                  <span className='sr-only'>更新优先级</span>
                 </Button>
               </DropdownMenuTrigger>
             </TooltipTrigger>
             <TooltipContent>
-              <p>Update priority</p>
+              <p>更新优先级</p>
             </TooltipContent>
-          </Tooltip>
+          </Tooltip> */}
           <DropdownMenuContent sideOffset={14}>
             {priorities.map((priority) => (
               <DropdownMenuItem
@@ -152,14 +152,14 @@ export function DataTableBulkActions<TData>({
               onClick={() => handleBulkExport()}
               className='size-8'
               aria-label='Export tasks'
-              title='Export tasks'
+              title='导出任务'
             >
               <Download />
-              <span className='sr-only'>Export tasks</span>
+              <span className='sr-only'>导出站点</span>
             </Button>
           </TooltipTrigger>
           <TooltipContent>
-            <p>Export tasks</p>
+            <p>导出站点</p>
           </TooltipContent>
         </Tooltip>
 
@@ -171,14 +171,14 @@ export function DataTableBulkActions<TData>({
               onClick={() => setShowDeleteConfirm(true)}
               className='size-8'
               aria-label='Delete selected tasks'
-              title='Delete selected tasks'
+              title='删除选中的站点'
             >
               <Trash2 />
-              <span className='sr-only'>Delete selected tasks</span>
+              <span className='sr-only'>删除选中的站点</span>
             </Button>
           </TooltipTrigger>
           <TooltipContent>
-            <p>Delete selected tasks</p>
+            <p>删除选中的站点</p>
           </TooltipContent>
         </Tooltip>
       </BulkActionsToolbar>
