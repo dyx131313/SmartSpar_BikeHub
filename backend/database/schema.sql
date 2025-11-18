@@ -89,6 +89,84 @@ CREATE TABLE IF NOT EXISTS predictions (
     INDEX idx_prediction_time (prediction_time)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='预测结果表';
 
+-- 路径规划表
+CREATE TABLE IF NOT EXISTS route_plans (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    plan_name VARCHAR(100) NOT NULL COMMENT '规划名称',
+    start_station_id INT NOT NULL COMMENT '起点站点ID',
+    end_station_id INT NOT NULL COMMENT '终点站点ID',
+
+    -- 路径信息
+    path_data JSON NOT NULL COMMENT '路径数据JSON',
+    total_distance FLOAT NOT NULL DEFAULT 0 COMMENT '总距离(米)',
+    estimated_time INT NOT NULL DEFAULT 0 COMMENT '预估时间(分钟)',
+    algorithm_used VARCHAR(50) NOT NULL DEFAULT 'A*' COMMENT '使用的算法',
+
+    -- 多点路径信息
+    waypoints JSON COMMENT '途径点数据JSON',
+    is_multi_point TINYINT(1) DEFAULT 0 COMMENT '是否多点路径',
+
+    -- 业务信息
+    task_id INT COMMENT '关联的调度任务ID',
+    bike_capacity INT DEFAULT 20 COMMENT '单车容量',
+    optimization_goal VARCHAR(20) DEFAULT 'shortest' COMMENT '优化目标(shortest/fastest/balanced)',
+
+    -- 状态信息
+    status ENUM('planned','in_progress','completed','cancelled') NOT NULL DEFAULT 'planned' COMMENT '路径状态',
+    priority TINYINT DEFAULT 1 COMMENT '优先级(1-5)',
+
+    -- 创建信息
+    created_by INT NOT NULL COMMENT '创建者ID',
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+
+    FOREIGN KEY (start_station_id) REFERENCES stations(id) ON DELETE CASCADE,
+    FOREIGN KEY (end_station_id) REFERENCES stations(id) ON DELETE CASCADE,
+    FOREIGN KEY (task_id) REFERENCES dispatch_tasks(id) ON DELETE SET NULL,
+    FOREIGN KEY (created_by) REFERENCES users(id) ON DELETE CASCADE,
+
+    INDEX idx_status (status),
+    INDEX idx_priority (priority),
+    INDEX idx_created_by (created_by),
+    INDEX idx_task_id (task_id),
+    INDEX idx_stations (start_station_id, end_station_id),
+    INDEX idx_created_at (created_at)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='路径规划表';
+
+-- 路径历史记录表
+CREATE TABLE IF NOT EXISTS route_history (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    route_plan_id INT NOT NULL COMMENT '路径规划ID',
+
+    -- 执行信息
+    actual_start_time TIMESTAMP NULL COMMENT '实际开始时间',
+    actual_end_time TIMESTAMP NULL COMMENT '实际结束时间',
+    actual_distance FLOAT COMMENT '实际距离(米)',
+    actual_time INT COMMENT '实际用时(分钟)',
+
+    -- 执行结果
+    completion_status ENUM('success','partial','failed') COMMENT '完成状态',
+    bikes_transported INT DEFAULT 0 COMMENT '实际运输单车数量',
+    notes TEXT COMMENT '执行备注',
+
+    -- 评价信息
+    driver_rating TINYINT COMMENT '驾驶员评分(1-5)',
+    route_difficulty TINYINT COMMENT '路径难度评分(1-5)',
+    traffic_conditions VARCHAR(20) COMMENT '交通状况',
+
+    -- 反馈信息
+    feedback_notes TEXT COMMENT '反馈备注',
+    issues_encountered JSON COMMENT '遇到的问题',
+
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+
+    FOREIGN KEY (route_plan_id) REFERENCES route_plans(id) ON DELETE CASCADE,
+
+    INDEX idx_route_plan_id (route_plan_id),
+    INDEX idx_completion_status (completion_status),
+    INDEX idx_actual_start_time (actual_start_time)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='路径历史记录表';
+
 -- 插入示例站点数据
 INSERT INTO stations (name, station_type, latitude, longitude, capacity, description) VALUES
 ('食堂站点', 'canteen', 31.2304, 121.4737, 30, '食堂门口共享单车停放点'),
