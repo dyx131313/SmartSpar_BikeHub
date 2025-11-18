@@ -4,6 +4,73 @@ from app import db
 from app.models.user import User
 from app.routes import api_bp
 
+@api_bp.route('/auth/register', methods=['POST'])
+def register():
+    """用户注册"""
+    try:
+        data = request.get_json()
+
+        # 验证必填字段
+        required_fields = ['username', 'email', 'password']
+        for field in required_fields:
+            if not data or not data.get(field):
+                return jsonify({'error': f'{field} 不能为空'}), 400
+
+        # 验证用户名格式
+        username = data['username'].strip()
+        if len(username) < 3 or len(username) > 20:
+            return jsonify({'error': '用户名长度必须在3-20个字符之间'}), 400
+        if not username.replace('_', '').replace('-', '').isalnum():
+            return jsonify({'error': '用户名只能包含字母、数字、下划线和连字符'}), 400
+
+        # 验证密码强度
+        password = data['password']
+        if len(password) < 6:
+            return jsonify({'error': '密码长度至少6个字符'}), 400
+
+        # 验证邮箱格式
+        email = data['email'].strip().lower()
+        import re
+        email_pattern = r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$'
+        if not re.match(email_pattern, email):
+            return jsonify({'error': '邮箱格式不正确'}), 400
+
+        # 检查用户名是否已存在
+        if User.query.filter_by(username=username).first():
+            return jsonify({'error': '用户名已存在'}), 400
+
+        # 检查邮箱是否已存在
+        if User.query.filter_by(email=email).first():
+            return jsonify({'error': '邮箱已被注册'}), 400
+
+        # 创建新用户，默认角色为 'user'
+        user = User(
+            username=username,
+            email=email,
+            role='user',  # 注册用户默认为普通用户
+            full_name=data.get('full_name', '').strip(),
+            phone=data.get('phone', '').strip(),
+            is_active=True,
+            email_verified=False  # 需要邮箱验证
+        )
+        user.set_password(password)
+
+        db.session.add(user)
+        db.session.commit()
+
+        # 创建访问令牌
+        access_token = create_access_token(identity=str(user.id))
+
+        return jsonify({
+            'message': '注册成功',
+            'access_token': access_token,
+            'user': user.to_dict()
+        }), 201
+
+    except Exception as e:
+        db.session.rollback()
+        return jsonify({'error': f'注册失败: {str(e)}'}), 500
+
 @api_bp.route('/auth/login', methods=['POST'])
 def login():
     """用户登录"""

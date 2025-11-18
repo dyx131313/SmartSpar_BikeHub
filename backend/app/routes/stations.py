@@ -3,9 +3,11 @@ from flask_jwt_extended import jwt_required
 from app import db
 from app.models.station import Station
 from app.routes import api_bp
+from app.utils.permissions import require_admin, require_any_role
 
 @api_bp.route('/stations', methods=['GET'])
 @jwt_required()
+@require_any_role()
 def get_stations():
     """获取所有站点"""
     try:
@@ -31,6 +33,7 @@ def get_stations():
 
 @api_bp.route('/stations', methods=['POST'])
 @jwt_required()
+@require_admin()
 def create_station():
     """创建站点"""
     try:
@@ -58,6 +61,7 @@ def create_station():
 
 @api_bp.route('/stations/<int:id>', methods=['GET'])
 @jwt_required()
+@require_any_role()
 def get_station(id):
     """获取单个站点"""
     try:
@@ -68,6 +72,7 @@ def get_station(id):
 
 @api_bp.route('/stations/<int:id>', methods=['PUT'])
 @jwt_required()
+@require_admin()
 def update_station(id):
     """更新站点"""
     try:
@@ -98,6 +103,7 @@ def update_station(id):
 
 @api_bp.route('/stations/<int:id>', methods=['DELETE'])
 @jwt_required()
+@require_admin()
 def delete_station(id):
     """删除站点"""
     try:

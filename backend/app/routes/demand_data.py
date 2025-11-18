@@ -5,10 +5,12 @@ from app import db
 from app.models.demand_data import DemandData
 from app.models.station import Station
 from app.routes import api_bp
+from app.utils.permissions import require_role
 import json
 
 @api_bp.route('/demand-data', methods=['GET'])
 @jwt_required()
+@require_role('admin', 'dispatcher')
 def get_demand_data():
     """获取需求数据"""
     try:
@@ -55,6 +57,7 @@ def get_demand_data():
 
 @api_bp.route('/demand-data', methods=['POST'])
 @jwt_required()
+@require_role('admin', 'dispatcher', 'user', 'operator')
 def create_demand_data():
     """创建需求数据"""
     try:
@@ -109,6 +112,7 @@ def create_demand_data():
 
 @api_bp.route('/demand-data/import', methods=['POST'])
 @jwt_required()
+@require_role('admin', 'dispatcher')
 def import_demand_data():
     """从JSON文件导入需求数据"""
     try:
@@ -157,6 +161,7 @@ def import_demand_data():
 
 @api_bp.route('/demand-data/<int:id>', methods=['GET'])
 @jwt_required()
+@require_role('admin', 'dispatcher')
 def get_demand_data_by_id(id):
     """根据ID获取需求数据"""
     try:
@@ -167,6 +172,7 @@ def get_demand_data_by_id(id):
 
 @api_bp.route('/demand-data/<int:id>', methods=['PUT'])
 @jwt_required()
+@require_role('admin', 'dispatcher')
 def update_demand_data(id):
     """更新需求数据"""
     try:
@@ -206,6 +212,7 @@ def update_demand_data(id):
 
 @api_bp.route('/demand-data/<int:id>', methods=['DELETE'])
 @jwt_required()
+@require_role('admin', 'dispatcher')
 def delete_demand_data(id):
     """删除需求数据"""
     try:
@@ -219,6 +226,7 @@ def delete_demand_data(id):
 
 @api_bp.route('/demand-data/statistics', methods=['GET'])
 @jwt_required()
+@require_role('admin', 'dispatcher')
 def get_demand_statistics():
     """获取需求数据统计"""
     try:

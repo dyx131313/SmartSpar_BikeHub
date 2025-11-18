@@ -24,7 +24,7 @@ class Alert(db.Model):
     resolution_notes = db.Column(db.Text, comment='解决备注')
     acknowledged_by = db.Column(db.Integer, db.ForeignKey('users.id'), comment='确认用户ID')
     acknowledged_at = db.Column(db.DateTime, comment='确认时间')
-    metadata = db.Column(db.JSON, comment='附加数据')
+    alert_data = db.Column(db.JSON, comment='附加数据')
     created_at = db.Column(db.TIMESTAMP, default=datetime.utcnow, comment='创建时间')
     updated_at = db.Column(db.TIMESTAMP, default=datetime.utcnow, onupdate=datetime.utcnow, comment='更新时间')
 
@@ -55,7 +55,7 @@ class Alert(db.Model):
             'acknowledged_by': self.acknowledged_by,
             'acknowledger': self.acknowledger.to_dict() if self.acknowledger else None,
             'acknowledged_at': self.acknowledged_at.isoformat() if self.acknowledged_at else None,
-            'metadata': self.metadata,
+            'alert_data': self.alert_data,
             'created_at': self.created_at.isoformat() if self.created_at else None,
             'updated_at': self.updated_at.isoformat() if self.updated_at else None
         }
