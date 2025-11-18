@@ -5,11 +5,13 @@ from app import db
 from app.models.bike_history import BikeHistory
 from app.models.station import Station
 from app.models.user import User
+from app.utils.permissions import require_dispatcher_operator
 
 bike_history_bp = Blueprint('bike_history', __name__)
 
 @bike_history_bp.route('/api/bike-history', methods=['GET'])
 @jwt_required()
+@require_dispatcher_operator()
 def get_bike_history():
     """获取单车历史数据"""
     try:
@@ -52,6 +54,7 @@ def get_bike_history():
 
 @bike_history_bp.route('/api/bike-history', methods=['POST'])
 @jwt_required()
+@require_dispatcher_operator()
 def create_bike_history():
     """创建单车历史记录"""
     try:
@@ -92,6 +95,7 @@ def create_bike_history():
 
 @bike_history_bp.route('/api/bike-history/<int:history_id>', methods=['GET'])
 @jwt_required()
+@require_dispatcher_operator()
 def get_bike_history_detail(history_id):
     """获取单车历史记录详情"""
     try:
@@ -103,6 +107,7 @@ def get_bike_history_detail(history_id):
 
 @bike_history_bp.route('/api/bike-history/<int:history_id>', methods=['PUT'])
 @jwt_required()
+@require_dispatcher_operator()
 def update_bike_history(history_id):
     """更新单车历史记录"""
     try:
@@ -131,6 +136,7 @@ def update_bike_history(history_id):
 
 @bike_history_bp.route('/api/bike-history/<int:history_id>', methods=['DELETE'])
 @jwt_required()
+@require_dispatcher_operator()
 def delete_bike_history(history_id):
     """删除单车历史记录"""
     try:
@@ -148,6 +154,7 @@ def delete_bike_history(history_id):
 
 @bike_history_bp.route('/api/bike-history/station/<int:station_id>/latest', methods=['GET'])
 @jwt_required()
+@require_dispatcher_operator()
 def get_latest_bike_history(station_id):
     """获取站点最新的单车历史记录"""
     try:
@@ -169,6 +176,7 @@ def get_latest_bike_history(station_id):
 
 @bike_history_bp.route('/api/bike-history/statistics', methods=['GET'])
 @jwt_required()
+@require_dispatcher_operator()
 def get_bike_history_statistics():
     """获取单车历史统计信息"""
     try:
@@ -224,6 +232,7 @@ def get_bike_history_statistics():
 
 @bike_history_bp.route('/api/bike-history/batch', methods=['POST'])
 @jwt_required()
+@require_dispatcher_operator()
 def batch_create_bike_history():
     """批量创建单车历史记录"""
     try:

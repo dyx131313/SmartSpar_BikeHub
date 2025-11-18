@@ -188,7 +188,7 @@ CREATE TABLE IF NOT EXISTS alerts (
     resolution_notes TEXT COMMENT '解决备注',
     acknowledged_by INT COMMENT '确认用户ID',
     acknowledged_at DATETIME COMMENT '确认时间',
-    metadata JSON COMMENT '附加数据',
+    alert_data JSON COMMENT '附加数据',
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     FOREIGN KEY (station_id) REFERENCES stations(id) ON DELETE SET NULL,

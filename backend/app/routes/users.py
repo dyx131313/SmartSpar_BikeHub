@@ -4,6 +4,73 @@ from app import db
 from app.models.user import User
 from app.routes import api_bp
 
+@api_bp.route('/auth/register', methods=['POST'])
+def register():
+    """用户注册"""
+    try:
+        data = request.get_json()
+
+        # 验证必填字段
+        required_fields = ['username', 'email', 'password']
+        for field in required_fields:
+            if not data or not data.get(field):
+                return jsonify({'error': f'{field} 不能为空'}), 400
+
+        # 验证用户名格式
+        username = data['username'].strip()
+        if len(username) < 3 or len(username) > 20:
+            return jsonify({'error': '用户名长度必须在3-20个字符之间'}), 400
+        if not username.replace('_', '').replace('-', '').isalnum():
+            return jsonify({'error': '用户名只能包含字母、数字、下划线和连字符'}), 400
+
+        # 验证密码强度
+        password = data['password']
+        if len(password) < 6:
+            return jsonify({'error': '密码长度至少6个字符'}), 400
+
+        # 验证邮箱格式
+        email = data['email'].strip().lower()
+        import re
+        email_pattern = r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$'
+        if not re.match(email_pattern, email):
+            return jsonify({'error': '邮箱格式不正确'}), 400
+
+        # 检查用户名是否已存在
+        if User.query.filter_by(username=username).first():
+            return jsonify({'error': '用户名已存在'}), 400
+
+        # 检查邮箱是否已存在
+        if User.query.filter_by(email=email).first():
+            return jsonify({'error': '邮箱已被注册'}), 400
+
+        # 创建新用户，默认角色为 'user'
+        user = User(
+            username=username,
+            email=email,
+            role='user',  # 注册用户默认为普通用户
+            full_name=data.get('full_name', '').strip(),
+            phone=data.get('phone', '').strip(),
+            is_active=True,
+            email_verified=False  # 需要邮箱验证
+        )
+        user.set_password(password)
+
+        db.session.add(user)
+        db.session.commit()
+
+        # 创建访问令牌
+        access_token = create_access_token(identity=str(user.id))
+
+        return jsonify({
+            'message': '注册成功',
+            'access_token': access_token,
+            'user': user.to_dict()
+        }), 201
+
+    except Exception as e:
+        db.session.rollback()
+        return jsonify({'error': f'注册失败: {str(e)}'}), 500
+
 @api_bp.route('/auth/login', methods=['POST'])
 def login():
     """用户登录"""
@@ -159,4 +226,72 @@ def update_user(id):
         })
     except Exception as e:
         db.session.rollback()
+        return jsonify({'error': str(e)}), 500
+
+@api_bp.route('/users/<int:id>', methods=['DELETE'])
+@jwt_required()
+def delete_user(id):
+    """删除用户"""
+    try:
+        current_user_id = get_jwt_identity()
+        current_user = User.query.get(current_user_id)
+
+        # 只有管理员可以删除用户
+        if current_user.role != 'admin':
+            return jsonify({'error': '权限不足'}), 403
+
+        # 不能删除自己
+        if current_user_id == id:
+            return jsonify({'error': '不能删除自己的账户'}), 400
+
+        user = User.query.get_or_404(id)
+
+        # 检查用户是否有未完成的调度任务
+        from app.models.dispatch_task import DispatchTask
+        pending_tasks = DispatchTask.query.filter(
+            DispatchTask.assigned_to == id,
+            DispatchTask.status.in_(['pending', 'in_progress'])
+        ).count()
+
+        if pending_tasks > 0:
+            return jsonify({
+                'error': f'该用户有 {pending_tasks} 个未完成的调度任务，无法删除'
+            }), 400
+
+        # 记录用户信息用于日志（可选）
+        user_info = {
+            'id': user.id,
+            'username': user.username,
+            'email': user.email,
+            'role': user.role
+        }
+
+        db.session.delete(user)
+        db.session.commit()
+
+        return jsonify({
+            'message': '用户删除成功',
+            'deleted_user': user_info
+        })
+
+    except Exception as e:
+        db.session.rollback()
+        return jsonify({'error': str(e)}), 500
+
+@api_bp.route('/users/<int:id>', methods=['GET'])
+@jwt_required()
+def get_user_by_id(id):
+    """根据ID获取单个用户信息"""
+    try:
+        current_user_id = get_jwt_identity()
+        current_user = User.query.get(current_user_id)
+
+        # 只有管理员可以查看其他用户信息，或者用户查看自己
+        if current_user.role != 'admin' and current_user_id != id:
+            return jsonify({'error': '权限不足'}), 403
+
+        user = User.query.get_or_404(id)
+        return jsonify({'data': user.to_dict()})
+
+    except Exception as e:
         return jsonify({'error': str(e)}), 500

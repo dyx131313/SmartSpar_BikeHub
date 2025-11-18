@@ -5,9 +5,11 @@ from app import db
 from app.models.prediction import Prediction
 from app.models.station import Station
 from app.routes import api_bp
+from app.utils.permissions import require_dispatcher_or_admin
 
 @api_bp.route('/predictions', methods=['GET'])
 @jwt_required()
+@require_dispatcher_or_admin()
 def get_predictions():
     """获取预测结果"""
     try:
@@ -42,6 +44,7 @@ def get_predictions():
 
 @api_bp.route('/predictions', methods=['POST'])
 @jwt_required()
+@require_dispatcher_or_admin()
 def create_prediction():
     """创建预测结果"""
     try:
@@ -73,6 +76,7 @@ def create_prediction():
 
 @api_bp.route('/predictions/station/<int:station_id>', methods=['GET'])
 @jwt_required()
+@require_dispatcher_or_admin()
 def get_station_predictions(station_id):
     """获取特定站点的预测结果"""
     try:
@@ -103,6 +107,7 @@ def get_station_predictions(station_id):
 
 @api_bp.route('/predictions/dashboard', methods=['GET'])
 @jwt_required()
+@require_dispatcher_or_admin()
 def get_prediction_dashboard():
     """获取预测看板数据"""
     try:
