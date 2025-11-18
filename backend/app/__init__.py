@@ -1,10 +1,13 @@
+import os
+#from dotenv import load_dotenv
+#load_dotenv()  # ✅ 关键：加载 .env 文件
+
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
 from flask_cors import CORS
 from flask_jwt_extended import JWTManager
 import logging
-import os
 from app.config.config import config
 #from app.models import *
 

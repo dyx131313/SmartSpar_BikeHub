@@ -40,3 +40,6 @@ openpyxl==3.1.5
 
 # 数据序列化
 jsonschema==4.24.0
+
+# 地理计算
+geopy==2.4.1

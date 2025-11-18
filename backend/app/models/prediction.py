@@ -25,8 +25,8 @@ class Prediction(db.Model):
     updated_at = db.Column(db.TIMESTAMP, default=datetime.utcnow, onupdate=datetime.utcnow, comment='更新时间')
 
     # 关系
-    station = db.relationship('Station', backref='predictions', lazy=True)
-
+    station = db.relationship('Station', backref='station_predictions', lazy=True)
+    
     def to_dict(self):
         """转换为字典格式"""
         return {
