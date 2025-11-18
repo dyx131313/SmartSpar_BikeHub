@@ -6,124 +6,96 @@ import {
   CardTitle,
 } from '@/components/ui/card'
 import { AnalyticsChart } from './analytics-chart'
+import { ListTodo, HelpCircle, Timer, CheckCircle } from 'lucide-react'
+import { tasks } from '@/features/task_management/data/tasks'
+import { priorities, statuses } from '@/features/task_management/data/data'
 
 export function Analytics() {
+  // 统计调度任务实时数据（使用模拟 tasks）
+  const totalTasks = tasks.length
+  let backlogTasks = 0
+  let inProgressTasks = 0
+  let completedTasks = 0
+  for (const t of tasks) {
+    switch (t.status) {
+      case '积压':
+        backlogTasks++
+        break
+      case '正在进行':
+        inProgressTasks++
+        break
+      case '已完成':
+        completedTasks++
+        break
+      default:
+        break
+    }
+  }
   return (
     <div className='space-y-4'>
       <Card>
         <CardHeader>
-          <CardTitle>Traffic Overview</CardTitle>
-          <CardDescription>Weekly clicks and unique visitors</CardDescription>
+          <CardTitle>调度数曲线</CardTitle>
+          <CardDescription>本周的各项调度数统计。</CardDescription>
         </CardHeader>
         <CardContent className='px-6'>
           <AnalyticsChart />
         </CardContent>
       </Card>
       <div className='grid gap-4 sm:grid-cols-2 lg:grid-cols-4'>
-        <Card>
-          <CardHeader className='flex flex-row items-center justify-between space-y-0 pb-2'>
-            <CardTitle className='text-sm font-medium'>Total Clicks</CardTitle>
-            <svg
-              xmlns='http://www.w3.org/2000/svg'
-              viewBox='0 0 24 24'
-              fill='none'
-              stroke='currentColor'
-              strokeLinecap='round'
-              strokeLinejoin='round'
-              strokeWidth='2'
-              className='text-muted-foreground h-4 w-4'
-            >
-              <path d='M3 3v18h18' />
-              <path d='M7 15l4-4 4 4 4-6' />
-            </svg>
+        <Card className='gap-3'>
+          <CardHeader className='flex flex-row items-center justify-between space-y-0 pb-1'>
+            <CardTitle className='text-sm font-medium'>总调度数</CardTitle>
+            <ListTodo className='text-muted-foreground h-5 w-5' />
           </CardHeader>
           <CardContent>
-            <div className='text-2xl font-bold'>1,248</div>
-            <p className='text-muted-foreground text-xs'>+12.4% vs last week</p>
+            <div className='text-4xl font-extrabold md:text-5xl'>{totalTasks}</div>
+            <p className='text-muted-foreground text-xs'>+20.1% from last day</p>
           </CardContent>
         </Card>
-        <Card>
-          <CardHeader className='flex flex-row items-center justify-between space-y-0 pb-2'>
-            <CardTitle className='text-sm font-medium'>
-              Unique Visitors
-            </CardTitle>
-            <svg
-              xmlns='http://www.w3.org/2000/svg'
-              viewBox='0 0 24 24'
-              fill='none'
-              stroke='currentColor'
-              strokeLinecap='round'
-              strokeLinejoin='round'
-              strokeWidth='2'
-              className='text-muted-foreground h-4 w-4'
-            >
-              <circle cx='12' cy='7' r='4' />
-              <path d='M6 21v-2a6 6 0 0 1 12 0v2' />
-            </svg>
+        <Card className='gap-3'>
+          <CardHeader className='flex flex-row items-center justify-between space-y-0 pb-1'>
+            <CardTitle className='text-sm font-medium'>积压调度数</CardTitle>
+            <HelpCircle className='text-muted-foreground h-5 w-5' />
           </CardHeader>
           <CardContent>
-            <div className='text-2xl font-bold'>832</div>
-            <p className='text-muted-foreground text-xs'>+5.8% vs last week</p>
+            <div className='text-4xl font-extrabold md:text-5xl'>{backlogTasks}</div>
+            <p className='text-muted-foreground text-xs'>+180.1% from last day</p>
           </CardContent>
         </Card>
-        <Card>
-          <CardHeader className='flex flex-row items-center justify-between space-y-0 pb-2'>
-            <CardTitle className='text-sm font-medium'>Bounce Rate</CardTitle>
-            <svg
-              xmlns='http://www.w3.org/2000/svg'
-              viewBox='0 0 24 24'
-              fill='none'
-              stroke='currentColor'
-              strokeLinecap='round'
-              strokeLinejoin='round'
-              strokeWidth='2'
-              className='text-muted-foreground h-4 w-4'
-            >
-              <path d='M3 12h6l3 6 3-6h6' />
-            </svg>
+        <Card className='gap-3'>
+          <CardHeader className='flex flex-row items-center justify-between space-y-0 pb-1'>
+            <CardTitle className='text-sm font-medium'>正在进行调度数</CardTitle>
+            <Timer className='text-muted-foreground h-5 w-5' />
           </CardHeader>
           <CardContent>
-            <div className='text-2xl font-bold'>42%</div>
-            <p className='text-muted-foreground text-xs'>-3.2% vs last week</p>
+            <div className='text-4xl font-extrabold md:text-5xl'>{inProgressTasks}</div>
+            <p className='text-muted-foreground text-xs'>+19% from last day</p>
           </CardContent>
         </Card>
-        <Card>
-          <CardHeader className='flex flex-row items-center justify-between space-y-0 pb-2'>
-            <CardTitle className='text-sm font-medium'>Avg. Session</CardTitle>
-            <svg
-              xmlns='http://www.w3.org/2000/svg'
-              viewBox='0 0 24 24'
-              fill='none'
-              stroke='currentColor'
-              strokeLinecap='round'
-              strokeLinejoin='round'
-              strokeWidth='2'
-              className='text-muted-foreground h-4 w-4'
-            >
-              <circle cx='12' cy='12' r='10' />
-              <path d='M12 6v6l4 2' />
-            </svg>
+        <Card className='gap-3'>
+          <CardHeader className='flex flex-row items-center justify-between space-y-0 pb-1'>
+            <CardTitle className='text-sm font-medium'>已完成调度数</CardTitle>
+            <CheckCircle className='text-muted-foreground h-5 w-5' />
           </CardHeader>
           <CardContent>
-            <div className='text-2xl font-bold'>3m 24s</div>
-            <p className='text-muted-foreground text-xs'>+18s vs last week</p>
+            <div className='text-4xl font-extrabold md:text-5xl'>{completedTasks}</div>
+            <p className='text-muted-foreground text-xs'>+201 since last day</p>
           </CardContent>
         </Card>
       </div>
       <div className='grid grid-cols-1 gap-4 lg:grid-cols-7'>
         <Card className='col-span-1 lg:col-span-4'>
           <CardHeader>
-            <CardTitle>Referrers</CardTitle>
-            <CardDescription>Top sources driving traffic</CardDescription>
+            <CardTitle>状态统计</CardTitle>
+            <CardDescription>按调度状态统计任务数量</CardDescription>
           </CardHeader>
           <CardContent>
             <SimpleBarList
-              items={[
-                { name: 'Direct', value: 512 },
-                { name: 'Product Hunt', value: 238 },
-                { name: 'Twitter', value: 174 },
-                { name: 'Blog', value: 104 },
-              ]}
+              items={statuses.map((s) => ({
+                name: s.label,
+                value: tasks.filter((t) => t.status === s.label).length,
+              }))}
               barClass='bg-primary'
               valueFormatter={(n) => `${n}`}
             />
@@ -131,18 +103,17 @@ export function Analytics() {
         </Card>
         <Card className='col-span-1 lg:col-span-3'>
           <CardHeader>
-            <CardTitle>Devices</CardTitle>
-            <CardDescription>How users access your app</CardDescription>
+            <CardTitle>优先级统计</CardTitle>
+            <CardDescription>按优先级统计任务数量</CardDescription>
           </CardHeader>
           <CardContent>
             <SimpleBarList
-              items={[
-                { name: 'Desktop', value: 74 },
-                { name: 'Mobile', value: 22 },
-                { name: 'Tablet', value: 4 },
-              ]}
+              items={priorities.map((p) => ({
+                name: p.label,
+                value: tasks.filter((t) => t.priority === p.label).length,
+              }))}
               barClass='bg-muted-foreground'
-              valueFormatter={(n) => `${n}%`}
+              valueFormatter={(n) => `${n}`}
             />
           </CardContent>
         </Card>
