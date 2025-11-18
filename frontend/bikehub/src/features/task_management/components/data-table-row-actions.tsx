@@ -48,9 +48,9 @@ export function DataTableRowActions<TData>({
             setOpen('update')
           }}
         >
-          Edit
+          编辑
         </DropdownMenuItem>
-        <DropdownMenuItem disabled>Make a copy</DropdownMenuItem>
+        {/* <DropdownMenuItem disabled>Make a copy</DropdownMenuItem>
         <DropdownMenuItem disabled>Favorite</DropdownMenuItem>
         <DropdownMenuSeparator />
         <DropdownMenuSub>
@@ -64,7 +64,7 @@ export function DataTableRowActions<TData>({
               ))}
             </DropdownMenuRadioGroup>
           </DropdownMenuSubContent>
-        </DropdownMenuSub>
+        </DropdownMenuSub> */}
         <DropdownMenuSeparator />
         <DropdownMenuItem
           onClick={() => {
@@ -72,7 +72,7 @@ export function DataTableRowActions<TData>({
             setOpen('delete')
           }}
         >
-          Delete
+          删除
           <DropdownMenuShortcut>
             <Trash2 size={16} />
           </DropdownMenuShortcut>

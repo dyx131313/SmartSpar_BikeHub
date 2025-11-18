@@ -16,17 +16,19 @@ export const users = Array.from({ length: 500 }, () => {
     email: faker.internet.email({ firstName }).toLocaleLowerCase(),
     phoneNumber: faker.phone.number({ style: 'international' }),
     status: faker.helpers.arrayElement([
-      'active',
-      'inactive',
-      'invited',
-      'suspended',
+      '已激活',
+      '未激活',
+      // 'invited',
+      '被暂停',
     ]),
     role: faker.helpers.arrayElement([
-      'superadmin',
-      'admin',
-      'cashier',
-      'manager',
+      '超级管理员',
+      '管理员',
+      '调度员',
     ]),
+    last_login: faker.datatype.boolean()
+      ? faker.date.past()
+      : null,
     createdAt: faker.date.past(),
     updatedAt: faker.date.recent(),
   }

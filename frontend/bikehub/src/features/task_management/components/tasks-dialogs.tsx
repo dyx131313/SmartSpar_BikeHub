@@ -55,15 +55,15 @@ export function TasksDialogs() {
               )
             }}
             className='max-w-md'
-            title={`Delete this task: ${currentRow.id} ?`}
+            title={`删除任务: ${currentRow.id} ?`}
             desc={
               <>
-                You are about to delete a task with the ID{' '}
+                你确定你要删除ID为{' '}
                 <strong>{currentRow.id}</strong>. <br />
-                This action cannot be undone.
+                这个操作无法撤销。
               </>
             }
-            confirmText='Delete'
+            confirmText='删除'
           />
         </>
       )}

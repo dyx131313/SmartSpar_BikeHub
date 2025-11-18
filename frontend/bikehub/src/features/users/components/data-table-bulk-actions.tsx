@@ -51,7 +51,7 @@ export function DataTableBulkActions<TData>({
 
   return (
     <>
-      <BulkActionsToolbar table={table} entityName='user'>
+      <BulkActionsToolbar table={table} entityName='用户'>
         <Tooltip>
           <TooltipTrigger asChild>
             <Button
@@ -60,14 +60,14 @@ export function DataTableBulkActions<TData>({
               onClick={handleBulkInvite}
               className='size-8'
               aria-label='Invite selected users'
-              title='Invite selected users'
+              title='邀请选择的用户'
             >
               <Mail />
-              <span className='sr-only'>Invite selected users</span>
+              <span className='sr-only'>邀请选择的用户</span>
             </Button>
           </TooltipTrigger>
           <TooltipContent>
-            <p>Invite selected users</p>
+            <p>邀请选择的用户</p>
           </TooltipContent>
         </Tooltip>
 
@@ -79,14 +79,14 @@ export function DataTableBulkActions<TData>({
               onClick={() => handleBulkStatusChange('active')}
               className='size-8'
               aria-label='Activate selected users'
-              title='Activate selected users'
+              title='激活选择的用户'
             >
               <UserCheck />
-              <span className='sr-only'>Activate selected users</span>
+              <span className='sr-only'>激活选择的用户</span>
             </Button>
           </TooltipTrigger>
           <TooltipContent>
-            <p>Activate selected users</p>
+            <p>激活选择的用户</p>
           </TooltipContent>
         </Tooltip>
 
@@ -98,14 +98,14 @@ export function DataTableBulkActions<TData>({
               onClick={() => handleBulkStatusChange('inactive')}
               className='size-8'
               aria-label='Deactivate selected users'
-              title='Deactivate selected users'
+              title='停用选择的用户'
             >
               <UserX />
-              <span className='sr-only'>Deactivate selected users</span>
+              <span className='sr-only'>停用选择的用户</span>
             </Button>
           </TooltipTrigger>
           <TooltipContent>
-            <p>Deactivate selected users</p>
+            <p>停用选择的用户</p>
           </TooltipContent>
         </Tooltip>
 
@@ -117,14 +117,14 @@ export function DataTableBulkActions<TData>({
               onClick={() => setShowDeleteConfirm(true)}
               className='size-8'
               aria-label='Delete selected users'
-              title='Delete selected users'
+              title='删除选择的用户'
             >
               <Trash2 />
-              <span className='sr-only'>Delete selected users</span>
+              <span className='sr-only'>删除选择的用户</span>
             </Button>
           </TooltipTrigger>
           <TooltipContent>
-            <p>Delete selected users</p>
+            <p>删除选择的用户</p>
           </TooltipContent>
         </Tooltip>
       </BulkActionsToolbar>

@@ -201,7 +201,7 @@ export function TasksTable({ data }: DataTableProps) {
                   colSpan={columns.length}
                   className='h-24 text-center'
                 >
-                  No results.
+                  没有搜索结果。
                 </TableCell>
               </TableRow>
             )}

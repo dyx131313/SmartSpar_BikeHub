@@ -28,7 +28,7 @@ export function DataTableRowActions({ row }: DataTableRowActionsProps) {
             className='data-[state=open]:bg-muted flex h-8 w-8 p-0'
           >
             <DotsHorizontalIcon className='h-4 w-4' />
-            <span className='sr-only'>Open menu</span>
+            <span className='sr-only'>打开菜单</span>
           </Button>
         </DropdownMenuTrigger>
         <DropdownMenuContent align='end' className='w-[160px]'>
@@ -38,7 +38,7 @@ export function DataTableRowActions({ row }: DataTableRowActionsProps) {
               setOpen('edit')
             }}
           >
-            Edit
+            编辑
             <DropdownMenuShortcut>
               <UserPen size={16} />
             </DropdownMenuShortcut>
@@ -51,7 +51,7 @@ export function DataTableRowActions({ row }: DataTableRowActionsProps) {
             }}
             className='text-red-500!'
           >
-            Delete
+            删除
             <DropdownMenuShortcut>
               <Trash2 size={16} />
             </DropdownMenuShortcut>

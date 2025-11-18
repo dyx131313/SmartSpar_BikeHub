@@ -145,10 +145,10 @@ export function UsersActionDialog({
     >
       <DialogContent className='sm:max-w-lg'>
         <DialogHeader className='text-start'>
-          <DialogTitle>{isEdit ? 'Edit User' : 'Add New User'}</DialogTitle>
+          <DialogTitle>{isEdit ? '编辑用户' : '添加新用户'}</DialogTitle>
           <DialogDescription>
-            {isEdit ? 'Update the user here. ' : 'Create new user here. '}
-            Click save when you&apos;re done.
+            {isEdit ? '在这里编辑用户。' : '在这里添加新用户。'}
+            点击保存完成操作。
           </DialogDescription>
         </DialogHeader>
         <div className='h-[26.25rem] w-[calc(100%+0.75rem)] overflow-y-auto py-1 pe-3'>
@@ -164,7 +164,7 @@ export function UsersActionDialog({
                 render={({ field }) => (
                   <FormItem className='grid grid-cols-6 items-center space-y-0 gap-x-4 gap-y-1'>
                     <FormLabel className='col-span-2 text-end'>
-                      First Name
+                      名
                     </FormLabel>
                     <FormControl>
                       <Input
@@ -184,7 +184,7 @@ export function UsersActionDialog({
                 render={({ field }) => (
                   <FormItem className='grid grid-cols-6 items-center space-y-0 gap-x-4 gap-y-1'>
                     <FormLabel className='col-span-2 text-end'>
-                      Last Name
+                      姓
                     </FormLabel>
                     <FormControl>
                       <Input
@@ -204,7 +204,7 @@ export function UsersActionDialog({
                 render={({ field }) => (
                   <FormItem className='grid grid-cols-6 items-center space-y-0 gap-x-4 gap-y-1'>
                     <FormLabel className='col-span-2 text-end'>
-                      Username
+                      用户名
                     </FormLabel>
                     <FormControl>
                       <Input
@@ -222,7 +222,7 @@ export function UsersActionDialog({
                 name='email'
                 render={({ field }) => (
                   <FormItem className='grid grid-cols-6 items-center space-y-0 gap-x-4 gap-y-1'>
-                    <FormLabel className='col-span-2 text-end'>Email</FormLabel>
+                    <FormLabel className='col-span-2 text-end'>电子邮箱</FormLabel>
                     <FormControl>
                       <Input
                         placeholder='john.doe@gmail.com'
@@ -240,7 +240,7 @@ export function UsersActionDialog({
                 render={({ field }) => (
                   <FormItem className='grid grid-cols-6 items-center space-y-0 gap-x-4 gap-y-1'>
                     <FormLabel className='col-span-2 text-end'>
-                      Phone Number
+                      电话号码
                     </FormLabel>
                     <FormControl>
                       <Input
@@ -258,11 +258,11 @@ export function UsersActionDialog({
                 name='role'
                 render={({ field }) => (
                   <FormItem className='grid grid-cols-6 items-center space-y-0 gap-x-4 gap-y-1'>
-                    <FormLabel className='col-span-2 text-end'>Role</FormLabel>
+                    <FormLabel className='col-span-2 text-end'>角色</FormLabel>
                     <SelectDropdown
                       defaultValue={field.value}
                       onValueChange={field.onChange}
-                      placeholder='Select a role'
+                      placeholder='选择一个角色'
                       className='col-span-4'
                       items={roles.map(({ label, value }) => ({
                         label,
@@ -279,7 +279,7 @@ export function UsersActionDialog({
                 render={({ field }) => (
                   <FormItem className='grid grid-cols-6 items-center space-y-0 gap-x-4 gap-y-1'>
                     <FormLabel className='col-span-2 text-end'>
-                      Password
+                      密码
                     </FormLabel>
                     <FormControl>
                       <PasswordInput
@@ -298,7 +298,7 @@ export function UsersActionDialog({
                 render={({ field }) => (
                   <FormItem className='grid grid-cols-6 items-center space-y-0 gap-x-4 gap-y-1'>
                     <FormLabel className='col-span-2 text-end'>
-                      Confirm Password
+                      确认密码
                     </FormLabel>
                     <FormControl>
                       <PasswordInput
@@ -317,7 +317,7 @@ export function UsersActionDialog({
         </div>
         <DialogFooter>
           <Button type='submit' form='user-form'>
-            Save changes
+            保存更改
           </Button>
         </DialogFooter>
       </DialogContent>

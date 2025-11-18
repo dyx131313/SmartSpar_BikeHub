@@ -27,51 +27,51 @@ export const labels = [
 
 export const statuses = [
   {
-    label: 'Backlog',
-    value: 'backlog' as const,
+    label: '积压',
+    value: '积压' as const,
     icon: HelpCircle,
   },
   {
-    label: 'Todo',
-    value: 'todo' as const,
+    label: '待办',
+    value: '待办' as const,
     icon: Circle,
   },
   {
-    label: 'In Progress',
-    value: 'in progress' as const,
+    label: '正在进行',
+    value: '正在进行' as const,
     icon: Timer,
   },
   {
-    label: 'Done',
-    value: 'done' as const,
+    label: '已完成',
+    value: '已完成' as const,
     icon: CheckCircle,
   },
   {
-    label: 'Canceled',
-    value: 'canceled' as const,
+    label: '已取消',
+    value: '已取消' as const,
     icon: CircleOff,
   },
 ]
 
 export const priorities = [
   {
-    label: 'Low',
-    value: 'low' as const,
+    label: '低',
+    value: '低' as const,
     icon: ArrowDown,
   },
   {
-    label: 'Medium',
-    value: 'medium' as const,
+    label: '中',
+    value: '中' as const,
     icon: ArrowRight,
   },
   {
-    label: 'High',
-    value: 'high' as const,
+    label: '高',
+    value: '高' as const,
     icon: ArrowUp,
   },
   {
-    label: 'Critical',
-    value: 'critical' as const,
+    label: '紧急',
+    value: '紧急' as const,
     icon: AlertCircle,
   },
 ]

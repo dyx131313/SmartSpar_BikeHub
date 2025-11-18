@@ -98,7 +98,7 @@ export function TasksMutateDrawer({
           <SheetDescription>
             {isUpdate
               ? '更新站点信息。'
-              : '通过提供必要的信息来添加一个新站点。'}
+              : '添加新的站点信息。'}
             点击保存完成操作。
           </SheetDescription>
         </SheetHeader>

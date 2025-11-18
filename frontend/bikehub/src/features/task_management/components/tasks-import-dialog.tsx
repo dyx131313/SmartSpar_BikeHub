@@ -74,9 +74,9 @@ export function TasksImportDialog({
     >
       <DialogContent className='gap-2 sm:max-w-sm'>
         <DialogHeader className='text-start'>
-          <DialogTitle>Import Tasks</DialogTitle>
+          <DialogTitle>导入调度任务数据</DialogTitle>
           <DialogDescription>
-            Import tasks quickly from a CSV file.
+            快速从CSV文件导入调度任务。
           </DialogDescription>
         </DialogHeader>
         <Form {...form}>
@@ -86,7 +86,7 @@ export function TasksImportDialog({
               name='file'
               render={() => (
                 <FormItem className='my-2'>
-                  <FormLabel>File</FormLabel>
+                  <FormLabel>文件</FormLabel>
                   <FormControl>
                     <Input type='file' {...fileRef} className='h-8 py-0' />
                   </FormControl>
@@ -98,10 +98,10 @@ export function TasksImportDialog({
         </Form>
         <DialogFooter className='gap-2'>
           <DialogClose asChild>
-            <Button variant='outline'>Close</Button>
+            <Button variant='outline'>关闭</Button>
           </DialogClose>
           <Button type='submit' form='task-import-form'>
-            Import
+            导入
           </Button>
         </DialogFooter>
       </DialogContent>

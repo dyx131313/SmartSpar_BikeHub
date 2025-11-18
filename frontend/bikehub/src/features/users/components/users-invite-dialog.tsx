@@ -68,11 +68,11 @@ export function UsersInviteDialog({
       <DialogContent className='sm:max-w-md'>
         <DialogHeader className='text-start'>
           <DialogTitle className='flex items-center gap-2'>
-            <MailPlus /> Invite User
+            <MailPlus /> 邀请用户
           </DialogTitle>
           <DialogDescription>
-            Invite new user to join your team by sending them an email
-            invitation. Assign a role to define their access level.
+            邀请新用户加入您的团队，通过发送电子邮件邀请他们。分配一个角色以定义他们的访问级别。
+            {/* invitation. Assign a role to define their access level. */}
           </DialogDescription>
         </DialogHeader>
         <Form {...form}>
@@ -86,7 +86,7 @@ export function UsersInviteDialog({
               name='email'
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Email</FormLabel>
+                  <FormLabel>电子邮箱</FormLabel>
                   <FormControl>
                     <Input
                       type='email'
@@ -103,11 +103,11 @@ export function UsersInviteDialog({
               name='role'
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Role</FormLabel>
+                  <FormLabel>角色</FormLabel>
                   <SelectDropdown
                     defaultValue={field.value}
                     onValueChange={field.onChange}
-                    placeholder='Select a role'
+                    placeholder='选择一个角色'
                     items={roles.map(({ label, value }) => ({
                       label,
                       value,
@@ -117,7 +117,7 @@ export function UsersInviteDialog({
                 </FormItem>
               )}
             />
-            <FormField
+            {/* <FormField
               control={form.control}
               name='desc'
               render={({ field }) => (
@@ -133,15 +133,15 @@ export function UsersInviteDialog({
                   <FormMessage />
                 </FormItem>
               )}
-            />
+            /> */}
           </form>
         </Form>
         <DialogFooter className='gap-y-2'>
           <DialogClose asChild>
-            <Button variant='outline'>Cancel</Button>
+            <Button variant='outline'>取消</Button>
           </DialogClose>
           <Button type='submit' form='user-invite-form'>
-            Invite <Send />
+            邀请 <Send />
           </Button>
         </DialogFooter>
       </DialogContent>
