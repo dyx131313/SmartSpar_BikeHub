@@ -70,6 +70,14 @@ export const tasksColumns: ColumnDef<Task>[] = [
     // enableHiding: false,
   },
   {
+    accessorKey: 'assigned_to',
+    header: ({ column }) => (
+      <DataTableColumnHeader column={column} title='执行人ID' />
+    ),
+    meta: { title: '执行人ID', className: 'ps-1', tdClassName: 'ps-4' },
+    cell: ({ row }) => <div className='w-[100px]'>{row.getValue('assigned_to') || '-'}</div>,
+  },
+  {
     accessorKey: 'bike_count',
     header: ({ column }) => (
       <DataTableColumnHeader column={column} title='车辆数量' />

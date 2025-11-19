@@ -49,7 +49,7 @@ export const roles = [
   },
   {
     label: '运维员',
-    value: 'maintenance',
+    value: 'operator',
     icon: Wrench,
   },
 ] as const

@@ -23,6 +23,7 @@ import {
 import { type Station } from '../data/schema'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { createStation, updateStation } from '../service'
+import { toast } from 'sonner'
 
 type TaskMutateDrawerProps = {
   open: boolean
@@ -72,18 +73,34 @@ export function TasksMutateDrawer({
     mutationFn: createStation,
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['stations'] })
+      toast.success('Station created', {
+        description: 'The new station has been created successfully.',
+      })
       onOpenChange(false)
       form.reset()
     },
+    onError: (error: any) => {
+      toast.error('Error', {
+        description: error.message || 'Failed to create station.',
+      })
+    }
   })
 
   const updateMutation = useMutation({
     mutationFn: (data: TaskForm) => updateStation(currentRow!.id, data),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['stations'] })
+      toast.success('Station updated', {
+        description: 'The station has been updated successfully.',
+      })
       onOpenChange(false)
       form.reset()
     },
+    onError: (error: any) => {
+      toast.error('Error', {
+        description: error.message || 'Failed to update station.',
+      })
+    }
   })
 
   const onSubmit = (data: TaskForm) => {

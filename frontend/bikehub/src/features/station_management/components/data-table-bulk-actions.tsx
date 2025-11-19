@@ -73,7 +73,7 @@ export function DataTableBulkActions<TData>({
     <>
       <BulkActionsToolbar table={table} entityName='站点'>
         <DropdownMenu>
-          <Tooltip>
+          {/* <Tooltip>
             <TooltipTrigger asChild>
               <DropdownMenuTrigger asChild>
                 <Button
@@ -91,7 +91,7 @@ export function DataTableBulkActions<TData>({
             <TooltipContent>
               <p>更新状态</p>
             </TooltipContent>
-          </Tooltip>
+          </Tooltip> */}
           <DropdownMenuContent sideOffset={14}>
             {statuses.map((status) => (
               <DropdownMenuItem

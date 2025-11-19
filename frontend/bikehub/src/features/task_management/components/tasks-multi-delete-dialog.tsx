@@ -4,11 +4,12 @@ import { useState } from 'react'
 import { type Table } from '@tanstack/react-table'
 import { AlertTriangle } from 'lucide-react'
 import { toast } from 'sonner'
-import { sleep } from '@/lib/utils'
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { ConfirmDialog } from '@/components/confirm-dialog'
+import { useMutation, useQueryClient } from '@tanstack/react-query'
+import { deleteTask } from '../service'
 
 type TaskMultiDeleteDialogProps<TData> = {
   open: boolean
@@ -24,27 +25,38 @@ export function TasksMultiDeleteDialog<TData>({
   table,
 }: TaskMultiDeleteDialogProps<TData>) {
   const [value, setValue] = useState('')
-
+  const queryClient = useQueryClient()
   const selectedRows = table.getFilteredSelectedRowModel().rows
+
+  // 批量删除逻辑：循环调用删除接口
+  const batchDeleteMutation = useMutation({
+    mutationFn: async (rows: typeof selectedRows) => {
+      const promises = rows.map((row) => deleteTask((row.original as any).id))
+      return Promise.all(promises)
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['tasks'] })
+      table.resetRowSelection()
+      toast.success('批量删除成功', {
+        description: `已成功删除 ${selectedRows.length} 个任务。`,
+      })
+      onOpenChange(false)
+    },
+    onError: (error: any) => {
+      toast.error('批量删除失败', {
+        description: error.message || '部分任务可能未被删除。',
+      })
+      onOpenChange(false)
+    }
+  })
 
   const handleDelete = () => {
     if (value.trim() !== CONFIRM_WORD) {
-      toast.error(`Please type "${CONFIRM_WORD}" to confirm.`)
+      toast.error(`请输入 "${CONFIRM_WORD}" 来确认。`)
       return
     }
 
-    onOpenChange(false)
-
-    toast.promise(sleep(2000), {
-      loading: 'Deleting tasks...',
-      success: () => {
-        table.resetRowSelection()
-        return `Deleted ${selectedRows.length} ${
-          selectedRows.length > 1 ? 'tasks' : 'task'
-        }`
-      },
-      error: 'Error',
-    })
+    batchDeleteMutation.mutate(selectedRows)
   }
 
   return (
@@ -52,7 +64,7 @@ export function TasksMultiDeleteDialog<TData>({
       open={open}
       onOpenChange={onOpenChange}
       handleConfirm={handleDelete}
-      disabled={value.trim() !== CONFIRM_WORD}
+      disabled={value.trim() !== CONFIRM_WORD || batchDeleteMutation.isPending}
       title={
         <span className='text-destructive'>
           <AlertTriangle
@@ -80,14 +92,14 @@ export function TasksMultiDeleteDialog<TData>({
           </Label>
 
           <Alert variant='destructive'>
-            <AlertTitle>Warning!</AlertTitle>
+            <AlertTitle>警告！</AlertTitle>
             <AlertDescription>
               请注意，这个操作无法撤销。
             </AlertDescription>
           </Alert>
         </div>
       }
-      confirmText='删除'
+      confirmText={batchDeleteMutation.isPending ? '删除中...' : '删除'}
       destructive
     />
   )

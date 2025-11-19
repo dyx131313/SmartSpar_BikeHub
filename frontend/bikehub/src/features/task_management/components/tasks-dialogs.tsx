@@ -1,11 +1,34 @@
-import { showSubmittedData } from '@/lib/show-submitted-data'
 import { ConfirmDialog } from '@/components/confirm-dialog'
 import { TasksImportDialog } from './tasks-import-dialog'
 import { TasksMutateDrawer } from './tasks-mutate-drawer'
 import { useTasks } from './tasks-provider'
+import { useMutation, useQueryClient } from '@tanstack/react-query'
+import { deleteTask } from '../service'
+import { toast } from 'sonner'
 
 export function TasksDialogs() {
   const { open, setOpen, currentRow, setCurrentRow } = useTasks()
+  const queryClient = useQueryClient()
+
+  const deleteMutation = useMutation({
+    mutationFn: deleteTask,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['tasks'] })
+      toast.success('任务已删除', {
+        description: `任务 ${currentRow?.id} 已成功删除。`,
+      })
+      setOpen(null)
+      setTimeout(() => {
+        setCurrentRow(null)
+      }, 500)
+    },
+    onError: (error: any) => {
+      toast.error('删除失败', {
+        description: error.message || '无法删除该任务。',
+      })
+    }
+  })
+
   return (
     <>
       <TasksMutateDrawer
@@ -45,21 +68,14 @@ export function TasksDialogs() {
               }, 500)
             }}
             handleConfirm={() => {
-              setOpen(null)
-              setTimeout(() => {
-                setCurrentRow(null)
-              }, 500)
-              showSubmittedData(
-                currentRow,
-                'The following task has been deleted:'
-              )
+              deleteMutation.mutate(currentRow.id)
             }}
             className='max-w-md'
             title={`删除任务: ${currentRow.id} ?`}
             desc={
               <>
                 你确定你要删除ID为{' '}
-                <strong>{currentRow.id}</strong>. <br />
+                <strong>{currentRow.id}</strong> 的任务吗？ <br />
                 这个操作无法撤销。
               </>
             }
