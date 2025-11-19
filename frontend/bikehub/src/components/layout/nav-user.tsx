@@ -125,6 +125,7 @@
 
 
 import { Link } from '@tanstack/react-router'
+import { useEffect, useState } from 'react'
 import {
   BadgeCheck,
   Bell,
@@ -153,6 +154,20 @@ import {
 } from '@/components/ui/sidebar'
 import { SignOutDialog } from '@/components/sign-out-dialog'
 import { useAuthStore } from '@/stores/auth-store'
+import { apiGet, readToken } from '@/lib/api'
+
+// function isJwtValid(token?: string) {
+//   if (!token || token.split('.').length !== 3) return false
+//   try {
+//     const payload = JSON.parse(atob(token.split('.')[1].replace(/-/g, '+').replace(/_/g, '/')))
+//     if (!payload || !payload.exp) return true // 没有 exp 就无法本地判断，返回 true 由后端判断
+//     const now = Math.floor(Date.now() / 1000)
+//     return payload.exp > now
+//   } catch {
+//     return false
+//   }
+// }
+
 
 type NavUserProps = {
   user?: {
@@ -180,7 +195,49 @@ export function NavUser() {
 
 
     // 从全局 store 读取 user（只使用 store 的 user；若未登录则显示 登录/注册 按钮）
-  const storeUser = useAuthStore((s) => s.auth?.user)
+  // const storeUser = useAuthStore((s) => s.auth?.user)
+  const [fetchedUser, setFetchedUser] = useState<any | null>(null)
+  const [loadingUser, setLoadingUser] = useState(false)
+
+  useEffect(() => {
+    let mounted = true
+    ;(async () => {
+      setLoadingUser(true)
+      const token = readToken()
+      // console.log('[NavUser] token raw:', token, 'type:', typeof token)
+      if(!token) {
+        if(mounted) {
+          setFetchedUser(null)
+          setLoadingUser(false)
+        }
+        return
+      }
+    //   if (!isJwtValid(token)) {
+    //   // token 明显过期或损坏，清除本地并不请求后端
+    //   useAuthStore.getState()?.auth?.resetAccessToken?.()
+    //   if (mounted) {
+    //     setFetchedUser(null)
+    //     setLoadingUser(false)
+    //   }
+    //   return
+    // }
+      try {
+        const resp = await apiGet('/api/users/profile')
+        if (!mounted) return
+        // 兼容后端直接返回 user 或 { user: ... }
+        setFetchedUser(resp?.data ?? resp ?? null)
+        // console.log('[NavUser] fetched user:', resp)
+      } catch (err) {
+        console.warn('fetch current user failed', err)
+        if (mounted) setFetchedUser(null)
+      } finally {
+        if (mounted) setLoadingUser(false)
+      }
+    })()
+    return () => {
+      mounted = false
+    }
+  }, [])
 
   // if (!storeUser) {
   //   return (
@@ -208,7 +265,7 @@ export function NavUser() {
   //   )
   // }
 
-  if (!storeUser) {
+  if (!fetchedUser) {
     const isCollapsed = state === 'collapsed'
 
     return (
@@ -238,7 +295,7 @@ export function NavUser() {
     )
   }
   // 已登录：使用 storeUser 显示用户信息（忽略父组件传入的 sidebarData.user）
-  const effectiveUser = storeUser
+  const effectiveUser = fetchedUser
 
   // console.log('NavUser effectiveUser:', effectiveUser)
 
@@ -249,6 +306,7 @@ export function NavUser() {
     (effectiveUser as any).username ??
     (effectiveUser as any).email ??
     'User'
+
 
   const displayEmail = (effectiveUser as any).email ?? (effectiveUser as any).username ?? ''
 
