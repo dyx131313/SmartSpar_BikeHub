@@ -8,6 +8,7 @@ import { ProfileDropdown } from '@/components/profile-dropdown'
 import { Search } from '@/components/search'
 import { ThemeSwitch } from '@/components/theme-switch'
 import { SidebarNav } from './components/sidebar-nav'
+import { RequireAuth } from '@/components/require-auth'
 
 const sidebarNavItems = [
   {
@@ -15,11 +16,11 @@ const sidebarNavItems = [
     href: '/settings',
     icon: <UserCog size={18} />,
   },
-  {
-    title: '账户',
-    href: '/settings/account',
-    icon: <Wrench size={18} />,
-  },
+  // {
+  //   title: '账户',
+  //   href: '/settings/account',
+  //   icon: <Wrench size={18} />,
+  // },
   {
     title: '外观',
     href: '/settings/appearance',
@@ -39,6 +40,7 @@ const sidebarNavItems = [
 
 export function Settings() {
   return (
+    <RequireAuth>
     <>
       {/* ===== Top Heading ===== */}
       <Header>
@@ -70,5 +72,6 @@ export function Settings() {
         </div>
       </Main>
     </>
+    </RequireAuth>
   )
 }

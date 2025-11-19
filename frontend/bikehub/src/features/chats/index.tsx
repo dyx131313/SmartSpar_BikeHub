@@ -29,6 +29,7 @@ import { NewChat } from './components/new-chat'
 import { type ChatUser, type Convo } from './data/chat-types'
 // Fake Data
 import { conversations } from './data/convo.json'
+import { RequireAuth } from '@/components/require-auth'
 
 export function Chats() {
   const [search, setSearch] = useState('')
@@ -65,6 +66,7 @@ export function Chats() {
 
   return (
     <>
+    <RequireAuth>
       {/* ===== Top Heading ===== */}
       <Header>
         <Search />
@@ -344,6 +346,7 @@ export function Chats() {
           open={createConversationDialogOpened}
         />
       </Main>
+      </RequireAuth>
     </>
   )
 }

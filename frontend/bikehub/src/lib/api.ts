@@ -107,3 +107,24 @@ export async function apiGet(path: string) {
   }
   return data
 }
+
+export async function apiPut(path: string, body: any) {
+  const url = buildUrl(path)
+  // console.log('apiPut url:', url)
+  const res = await fetchWithAuth(url, {
+    method: 'PUT',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(body),
+  })
+  const data = await res.json().catch(() => ({}))
+  if (!res.ok) {
+    const err: any = new Error(data?.message ?? 'Request failed')
+    err.status = res.status
+    err.data = data
+    if (res.status === 401) {
+      useAuthStore.getState().auth.reset?.()
+    }
+    throw err
+  }
+  return data
+}

@@ -23,6 +23,7 @@ import { tasks } from '@/features/task_management/data/tasks'
 import { stations } from '@/features/station_management/data/stations'
 import { users } from '@/features/users/data/users'
 import { status as userStatuses, roles as userRoles } from '@/features/users/data/data'
+import { RequireAuth } from '@/components/require-auth'
 
 export function Dashboard() {
   // 基于模拟任务数据的实时统计
@@ -64,6 +65,7 @@ export function Dashboard() {
     .map((s) => ({ name: s.name, value: s.capacity }))
   return (
     <>
+    <RequireAuth>
       {/* ===== Top Heading ===== */}
       <Header>
         <TopNav links={topNav} />
@@ -78,10 +80,10 @@ export function Dashboard() {
       {/* ===== Main ===== */}
       <Main>
         <div className='mb-2 flex items-center justify-between space-y-2'>
-          <h1 className='text-2xl font-bold tracking-tight'>Dashboard</h1>
-          <div className='flex items-center space-x-2'>
+          <h1 className='text-2xl font-bold tracking-tight'>数据展示面板</h1>
+          {/* <div className='flex items-center space-x-2'>
             <Button>Download</Button>
-          </div>
+          </div> */}
         </div>
         <Tabs
           orientation='vertical'
@@ -281,35 +283,36 @@ export function Dashboard() {
           </TabsContent>
         </Tabs>
       </Main>
+      </RequireAuth>
     </>
   )
 }
 
 const topNav = [
   {
-    title: 'Overview',
+    title: '总览',
     href: 'dashboard/overview',
     isActive: true,
     disabled: false,
   },
-  {
-    title: 'Customers',
-    href: 'dashboard/customers',
-    isActive: false,
-    disabled: true,
-  },
-  {
-    title: 'Products',
-    href: 'dashboard/products',
-    isActive: false,
-    disabled: true,
-  },
-  {
-    title: 'Settings',
-    href: 'dashboard/settings',
-    isActive: false,
-    disabled: true,
-  },
+  // {
+  //   title: 'Customers',
+  //   href: 'dashboard/customers',
+  //   isActive: false,
+  //   disabled: true,
+  // },
+  // {
+  //   title: 'Products',
+  //   href: 'dashboard/products',
+  //   isActive: false,
+  //   disabled: true,
+  // },
+  // {
+  //   title: 'Settings',
+  //   href: 'dashboard/settings',
+  //   isActive: false,
+  //   disabled: true,
+  // },
 ]
 
 function SimpleBarList({

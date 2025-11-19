@@ -118,11 +118,11 @@ export const sidebarData: SidebarData = {
               url: '/settings',
               icon: UserCog,
             },
-            {
-              title: '账户',
-              url: '/settings/account',
-              icon: Wrench,
-            },
+            // {
+            //   title: '账户',
+            //   url: '/settings/account',
+            //   icon: Wrench,
+            // },
             {
               title: '外观',
               url: '/settings/appearance',
