@@ -74,16 +74,13 @@
     const [loadingUser, setLoadingUser] = useState(false)
 
     useEffect(() => {
-      let mounted = true
       ;(async () => {
         setLoadingUser(true)
         const token = readToken()
         // console.log('[NavUser] token raw:', token, 'type:', typeof token)
         if(!token) {
-          if(mounted) {
             setFetchedUser(null)
             setLoadingUser(false)
-          }
           return
         }
       //   if (!isJwtValid(token)) {
@@ -97,19 +94,16 @@
       // }
         try {
           const resp = await apiGet('/api/users/profile')
-          if (!mounted) return
           // 兼容后端直接返回 user 或 { user: ... }
-          setFetchedUser(resp?.data ?? resp ?? null)
-          // console.log('[NavUser] fetched user:', resp)
+          setFetchedUser(resp.data)
+          // console.log('resp',resp.data)
+          // console.log('[NavUser] fetched user:', fetchedUser)
         } catch (err) {
           console.warn('fetch current user failed', err)
-          if (mounted) setFetchedUser(null)
         } finally {
-          if (mounted) setLoadingUser(false)
         }
       })()
       return () => {
-        mounted = false
       }
     }, [])
 
@@ -171,6 +165,8 @@
     // 已登录：使用 storeUser 显示用户信息（忽略父组件传入的 sidebarData.user）
     const effectiveUser = fetchedUser
 
+    // console.log('fetchedUser:', fetchedUser)
+
     // console.log('NavUser effectiveUser:', effectiveUser)
 
     const displayUserName =
@@ -183,13 +179,15 @@
 
     const displayName = (effectiveUser as any).full_name ?? displayUserName
 
+    // console.log('displayName: ', displayName)
+
     const displayEmail = (effectiveUser as any).email ?? (effectiveUser as any).username ?? ''
 
     const avatarSrc = (effectiveUser as any).avatar ?? (effectiveUser as any).picture ?? ''
 
     const initials = getInitials(displayName)
 
-    // console.log(displayName, displayEmail, avatarSrc, initials)
+    // console.log(displayUserName, displayName, displayEmail,  initials)
 
     return (
       <>
@@ -246,7 +244,7 @@
                 <DropdownMenuSeparator />
                 <DropdownMenuGroup>
                   <DropdownMenuItem asChild>
-                    <Link to='/settings/account'>
+                    <Link to='/settings'>
                       <BadgeCheck />
                       账户
                     </Link>
