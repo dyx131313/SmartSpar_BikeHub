@@ -10,6 +10,7 @@ import { UsersPrimaryButtons } from './components/users-primary-buttons'
 import { UsersProvider } from './components/users-provider'
 import { UsersTable } from './components/users-table'
 import { users } from './data/users'
+import { RequireAuth } from '@/components/require-auth'
 
 const route = getRouteApi('/_authenticated/users/')
 
@@ -18,6 +19,7 @@ export function Users() {
   const navigate = route.useNavigate()
 
   return (
+    <RequireAuth>
     <UsersProvider>
       <Header fixed>
         <Search />
@@ -43,5 +45,6 @@ export function Users() {
 
       <UsersDialogs />
     </UsersProvider>
+    </RequireAuth>
   )
 }

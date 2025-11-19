@@ -19,7 +19,7 @@ export function SignIn2() {
           <div className='flex flex-col space-y-2 text-start'>
             <h2 className='text-lg font-semibold tracking-tight'>登陆</h2>
             <p className='text-muted-foreground text-sm'>
-              请输入您的邮箱和密码以登录您的账户
+              请输入您的用户名和密码以登录您的账户
               <span className='ms-2'>
                               没有账号？{' '}
                               <Link

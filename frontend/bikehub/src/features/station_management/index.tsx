@@ -9,9 +9,11 @@ import { TasksPrimaryButtons } from './components/tasks-primary-buttons'
 import { TasksProvider } from './components/tasks-provider'
 import { TasksTable } from './components/tasks-table'
 import { stations } from './data/stations'
+import { RequireAuth } from '@/components/require-auth'
 
 export function Management() {
   return (
+    <RequireAuth>
     <TasksProvider>
       <Header fixed>
         <Search />
@@ -37,5 +39,6 @@ export function Management() {
 
       <TasksDialogs />
     </TasksProvider>
+    </RequireAuth>
   )
 }
