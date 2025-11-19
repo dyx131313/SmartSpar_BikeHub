@@ -1,5 +1,6 @@
 from flask import request, jsonify
-from flask_jwt_extended import create_access_token, jwt_required, get_jwt_identity
+from flask_jwt_extended import create_access_token, jwt_required, get_jwt_identity, get_jwt
+from datetime import datetime
 from app import db
 from app.models.user import User
 from app.routes import api_bp
@@ -90,6 +91,72 @@ def login():
             })
         else:
             return jsonify({'error': '用户名或密码错误'}), 401
+
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+
+@api_bp.route('/auth/logout', methods=['POST'])
+@jwt_required()
+def logout():
+    """用户登出"""
+    try:
+        current_user_id = get_jwt_identity()
+        jti = get_jwt()['jti']  # 获取JWT ID
+
+        # 在实际应用中，你可以将jti添加到黑名单中
+        # 这里简化处理，只返回成功消息
+        # 客户端应该删除本地存储的token
+
+        # 更新用户最后登录时间（可选）
+        user = User.query.get(current_user_id)
+        if user:
+            # 可以在这里记录登出时间等日志信息
+            pass
+
+        return jsonify({
+            'message': '登出成功',
+            'logout_time': datetime.now().isoformat()
+        })
+
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+
+@api_bp.route('/auth/refresh', methods=['POST'])
+@jwt_required(refresh=True)
+def refresh():
+    """刷新访问令牌"""
+    try:
+        current_user_id = get_jwt_identity()
+        user = User.query.get(current_user_id)
+
+        if not user or not user.is_active:
+            return jsonify({'error': '用户不存在或已被禁用'}), 401
+
+        # 创建新的访问令牌
+        new_token = create_access_token(identity=str(user.id))
+
+        return jsonify({
+            'access_token': new_token,
+            'user': user.to_dict()
+        })
+
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+
+@api_bp.route('/auth/me', methods=['GET'])
+@jwt_required()
+def get_current_user():
+    """获取当前登录用户信息"""
+    try:
+        current_user_id = get_jwt_identity()
+        user = User.query.get(current_user_id)
+
+        if not user:
+            return jsonify({'error': '用户不存在'}), 404
+
+        return jsonify({
+            'data': user.to_dict()
+        })
 
     except Exception as e:
         return jsonify({'error': str(e)}), 500
