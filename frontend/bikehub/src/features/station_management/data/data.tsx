@@ -78,15 +78,23 @@ export const priorities = [
 
 export const station_type = [
   {
-    label: 'Docked',
-    value: 'Docked' as const,
+    label: '食堂',
+    value: 'canteen' as const,
   },
   {
-    label: 'Dockless',
-    value: 'Dockless' as const,
+    label: '教学楼',
+    value: 'teaching_building' as const,
   },
   {
-    label: 'Hybrid',
-    value: 'Hybrid' as const,
+    label: '图书馆',
+    value: 'library' as const,
+  },
+  {
+    label: '宿舍',
+    value: 'dormitory' as const,
+  },
+  {
+    label: '其他',
+    value: 'other' as const,
   },
 ]

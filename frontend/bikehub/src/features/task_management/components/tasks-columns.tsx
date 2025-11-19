@@ -36,36 +36,25 @@ export const tasksColumns: ColumnDef<Task>[] = [
     header: ({ column }) => (
       <DataTableColumnHeader column={column} title='调度任务ID' />
     ),
-    meta: { title:'调度任务ID', className: 'ps-1', tdClassName: 'ps-4' },
+    meta: { title: '调度任务ID', className: 'ps-1', tdClassName: 'ps-4' },
     cell: ({ row }) => <div className='w-[80px]'>{row.getValue('id')}</div>,
     enableSorting: false,
     enableHiding: false,
   },
-  // {
-  //   accessorKey: 'title',
-  //   header: ({ column }) => (
-  //     <DataTableColumnHeader column={column} title='Title' />
-  //   ),
-  //   meta: { className: 'ps-1', tdClassName: 'ps-4' },
-  //   cell: ({ row }) => {
-  //     const label = labels.find((label) => label.value === row.original.label)
-
-  //     return (
-  //       <div className='flex space-x-2'>
-  //         {label && <Badge variant='outline'>{label.label}</Badge>}
-  //         <span className='max-w-32 truncate font-medium sm:max-w-72 md:max-w-[31rem]'>
-  //           {row.getValue('title')}
-  //         </span>
-  //       </div>
-  //     )
-  //   },
-  // },
+  {
+    accessorKey: 'task_name',
+    header: ({ column }) => (
+      <DataTableColumnHeader column={column} title='任务名称' />
+    ),
+    meta: { title: '任务名称', className: 'ps-1', tdClassName: 'ps-4' },
+    cell: ({ row }) => <div className='w-[150px] truncate'>{row.getValue('task_name')}</div>,
+  },
   {
     accessorKey: 'from_station_id',
     header: ({ column }) => (
       <DataTableColumnHeader column={column} title='起始站点ID' />
     ),
-    meta: { title:'起始站点ID', className: 'ps-1', tdClassName: 'ps-4' },
+    meta: { title: '起始站点ID', className: 'ps-1', tdClassName: 'ps-4' },
     cell: ({ row }) => <div className='w-[120px]'>{row.getValue('from_station_id')}</div>,
     // enableSorting: false,
     // enableHiding: false,
@@ -75,7 +64,7 @@ export const tasksColumns: ColumnDef<Task>[] = [
     header: ({ column }) => (
       <DataTableColumnHeader column={column} title='终点站点ID' />
     ),
-    meta: { title:'终点站点ID', className: 'ps-1', tdClassName: 'ps-4' },
+    meta: { title: '终点站点ID', className: 'ps-1', tdClassName: 'ps-4' },
     cell: ({ row }) => <div className='w-[120px]'>{row.getValue('to_station_id')}</div>,
     // enableSorting: false,
     // enableHiding: false,
@@ -85,7 +74,7 @@ export const tasksColumns: ColumnDef<Task>[] = [
     header: ({ column }) => (
       <DataTableColumnHeader column={column} title='车辆数量' />
     ),
-    meta: { title:'车辆数量', className: 'ps-1', tdClassName: 'ps-4' },
+    meta: { title: '车辆数量', className: 'ps-1', tdClassName: 'ps-4' },
     cell: ({ row }) => <div className='w-[100px]'>{row.getValue('bike_count')}</div>,
     // enableSorting: false,
     // enableHiding: false,
@@ -95,7 +84,7 @@ export const tasksColumns: ColumnDef<Task>[] = [
     header: ({ column }) => (
       <DataTableColumnHeader column={column} title='状态' />
     ),
-    meta: { title:'状态', className: 'ps-1', tdClassName: 'ps-4' },
+    meta: { title: '状态', className: 'ps-1', tdClassName: 'ps-4' },
     cell: ({ row }) => {
       const status = statuses.find(
         (status) => status.value === row.getValue('status')
@@ -123,7 +112,7 @@ export const tasksColumns: ColumnDef<Task>[] = [
     header: ({ column }) => (
       <DataTableColumnHeader column={column} title='优先级' />
     ),
-    meta: { title:'优先级', className: 'ps-1', tdClassName: 'ps-3' },
+    meta: { title: '优先级', className: 'ps-1', tdClassName: 'ps-3' },
     cell: ({ row }) => {
       const priority = priorities.find(
         (priority) => priority.value === row.getValue('priority')
