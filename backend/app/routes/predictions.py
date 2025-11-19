@@ -1,3 +1,4 @@
+import os
 from flask import request, jsonify
 from flask_jwt_extended import jwt_required
 from datetime import datetime, timedelta
@@ -6,6 +7,7 @@ from app.models.prediction import Prediction
 from app.models.station import Station
 from app.routes import api_bp
 from app.utils.permissions import require_dispatcher_or_admin
+from app.services.demand_predictor import get_demand_predictor, predict_demand_for_station
 
 @api_bp.route('/predictions', methods=['GET'])
 @jwt_required()
@@ -153,3 +155,139 @@ def get_prediction_dashboard():
         })
     except Exception as e:
         return jsonify({'error': str(e)}), 500
+
+@api_bp.route('/predictions/ai', methods=['POST'])
+@jwt_required()
+@require_dispatcher_or_admin()
+def ai_predict_demand():
+    """使用AI模型进行需求预测"""
+    try:
+        data = request.get_json()
+
+        # 验证必需字段
+        required_fields = ['station_type', 'temp', 'is_holiday', 'weather', 'weekday', 'date']
+        for field in required_fields:
+            if field not in data:
+                return jsonify({
+                    'error': f'缺少必需字段: {field}'
+                }), 400
+
+        # 调用AI预测服务
+        try:
+            prediction_result = predict_demand_for_station(
+                station_type=data['station_type'],
+                temp=data['temp'],
+                is_holiday=data['is_holiday'],
+                weather=data['weather'],
+                weekday=data['weekday'],
+                date_str=data['date']
+            )
+
+            return jsonify({
+                'success': True,
+                'prediction': prediction_result,
+                'input': data,
+                'message': 'AI预测成功'
+            })
+
+        except Exception as e:
+            return jsonify({
+                'success': False,
+                'error': f'AI预测失败: {str(e)}',
+                'message': '预测服务暂时不可用'
+            }), 500
+
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+
+@api_bp.route('/predictions/ai/batch', methods=['POST'])
+@jwt_required()
+@require_dispatcher_or_admin()
+def ai_predict_batch():
+    """批量AI需求预测"""
+    try:
+        data = request.get_json()
+
+        if 'predictions' not in data or not isinstance(data['predictions'], list):
+            return jsonify({
+                'error': '请求格式错误，需要predictions数组'
+            }), 400
+
+        input_data_list = data['predictions']
+        predictor = get_demand_predictor()
+
+        try:
+            batch_results = predictor.predict_batch(input_data_list)
+
+            return jsonify({
+                'success': True,
+                'results': batch_results,
+                'total': len(batch_results),
+                'successful': len(batch_results),
+                'failed': 0,
+                'message': '批量AI预测成功'
+            })
+
+        except Exception as e:
+            return jsonify({
+                'success': False,
+                'error': f'批量AI预测失败: {str(e)}',
+                'message': '预测服务暂时不可用'
+            }), 500
+
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+
+@api_bp.route('/predictions/ai/model/info', methods=['GET'])
+@jwt_required()
+@require_dispatcher_or_admin()
+def get_ai_model_info():
+    """获取AI模型信息"""
+    try:
+        predictor = get_demand_predictor()
+        model_info = predictor.get_model_info()
+
+        return jsonify({
+            'success': True,
+            'model_info': model_info
+        })
+
+    except Exception as e:
+        return jsonify({
+            'success': False,
+            'error': str(e)
+        }), 500
+
+@api_bp.route('/predictions/ai/model/retrain', methods=['POST'])
+@jwt_required()
+@require_dispatcher_or_admin()
+def retrain_ai_model():
+    """重新训练AI模型"""
+    try:
+        predictor = get_demand_predictor()
+
+        # 检查训练数据文件是否存在
+        train_data_path = 'train.csv'
+        if not os.path.exists(train_data_path):
+            return jsonify({
+                'success': False,
+                'error': '训练数据文件不存在',
+                'message': f'请确保 {train_data_path} 文件存在'
+            }), 400
+
+        # 重新训练模型
+        training_results = predictor.train(train_data_path)
+
+        return jsonify({
+            'success': True,
+            'message': 'AI模型重新训练完成',
+            'training_results': training_results,
+            'timestamp': datetime.now().isoformat()
+        })
+
+    except Exception as e:
+        return jsonify({
+            'success': False,
+            'error': f'重新训练失败: {str(e)}',
+            'message': '模型重新训练过程中出现错误'
+        }), 500

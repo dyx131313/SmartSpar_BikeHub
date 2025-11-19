@@ -1,6 +1,6 @@
 from functools import wraps
 from flask import jsonify
-from flask_jwt_extended import get_jwt_identity
+from flask_jwt_extended import get_jwt_identity, get_jwt
 from app.models.user import User
 
 
@@ -36,7 +36,16 @@ def require_role(*allowed_roles):
 
                 return f(*args, **kwargs)
             except Exception as e:
-                return jsonify({'error': f'权限验证失败: {str(e)}'}), 500
+                # 特殊处理JWT相关错误
+                error_msg = str(e)
+                if 'Not enough segments' in error_msg:
+                    return jsonify({'msg': '无效的Token格式，请重新登录'}), 401
+                elif 'Invalid header string' in error_msg:
+                    return jsonify({'msg': '无效的请求头格式'}), 401
+                elif 'Token has expired' in error_msg:
+                    return jsonify({'msg': 'Token已过期，请重新登录'}), 401
+                else:
+                    return jsonify({'error': f'权限验证失败: {str(e)}'}), 500
 
         return decorated_function
     return decorator
