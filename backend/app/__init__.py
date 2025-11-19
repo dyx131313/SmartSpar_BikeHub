@@ -29,8 +29,13 @@ def create_app(config_name=None):
     # 初始化扩展
     db.init_app(app)
     migrate.init_app(app, db)
-    cors.init_app(app, origins=app.config['CORS_ORIGINS'])
+    cors.init_app(app, origins=app.config['CORS_ORIGINS'],
+                  allow_headers=['Content-Type', 'Authorization', 'X-Requested-With'],
+                  methods=['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'])
     jwt.init_app(app)
+
+    # 配置JWT错误处理
+    configure_jwt_errors(app)
 
     # **延后导入 models，避免循环导入**
     # 这里采用相对导入，确保模型类被注册到 SQLAlchemy 中
@@ -71,6 +76,36 @@ def register_blueprints(app):
     """注册蓝图"""
     from app.routes import api_bp
     app.register_blueprint(api_bp, url_prefix='/api')
+
+def configure_jwt_errors(app):
+    """配置JWT错误处理"""
+    from flask_jwt_extended import verify_jwt_in_request, get_jwt_identity
+
+    @jwt.expired_token_loader
+    def expired_token_callback(jwt_header, jwt_payload):
+        """Token过期回调"""
+        return {'msg': 'Token已过期，请重新登录'}, 401
+
+    @jwt.invalid_token_loader
+    def invalid_token_callback(error):
+        """无效Token回调"""
+        return {'msg': '无效的Token，请重新登录'}, 401
+
+    @jwt.unauthorized_loader
+    def missing_token_callback(error):
+        """缺少Token回调"""
+        return {'msg': '需要提供Token才能访问此接口'}, 401
+
+    @jwt.needs_fresh_token_loader
+    def token_not_fresh_callback(jwt_header, jwt_payload):
+        """Token需要刷新回调"""
+        return {'msg': '需要新鲜的Token，请重新登录'}, 401
+
+    @jwt.revoked_token_loader
+    def revoked_token_callback(jwt_header, jwt_payload):
+        """Token被撤销回调"""
+        return {'msg': 'Token已被撤销，请重新登录'}, 401
+
 
 def register_error_handlers(app):
     """注册错误处理器"""

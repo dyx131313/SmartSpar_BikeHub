@@ -182,6 +182,46 @@ def get_user_profile():
     except Exception as e:
         return jsonify({'error': str(e)}), 500
 
+@api_bp.route('/auth/debug-headers', methods=['GET', 'POST'])
+def debug_headers():
+    """调试请求头 - 不验证JWT"""
+    from flask import request
+
+    auth_header = request.headers.get('Authorization', '')
+    headers_dict = dict(request.headers)
+
+    return jsonify({
+        'message': '请求头调试信息',
+        'auth_header': auth_header,
+        'auth_header_type': type(auth_header).__name__,
+        'auth_header_length': len(auth_header) if auth_header else 0,
+        'has_bearer': auth_header.startswith('Bearer ') if auth_header else False,
+        'raw_headers': {k: v for k, v in headers_dict.items() if k.lower() != 'authorization'},
+        'authorization_exists': 'Authorization' in headers_dict,
+        'authorization_value': auth_header[:50] + '...' if len(auth_header) > 50 else auth_header
+    })
+
+@api_bp.route('/auth/test', methods=['GET'])
+@jwt_required()
+def test_jwt():
+    """测试JWT验证 - 用于调试"""
+    try:
+        current_user_id = get_jwt_identity()
+        from flask_jwt_extended import get_jwt
+        jwt_data = get_jwt()
+
+        return jsonify({
+            'message': 'JWT验证成功',
+            'user_id': current_user_id,
+            'jwt_data': jwt_data,
+            'timestamp': str(jwt_data.get('iat'))
+        })
+    except Exception as e:
+        return jsonify({
+            'message': 'JWT验证失败',
+            'error': str(e)
+        }), 401
+
 @api_bp.route('/users/<int:id>', methods=['PUT'])
 @jwt_required()
 def update_user(id):
