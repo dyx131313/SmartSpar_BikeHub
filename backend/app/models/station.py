@@ -17,10 +17,10 @@ class Station(db.Model):
     updated_at = db.Column(db.TIMESTAMP, default=datetime.utcnow, onupdate=datetime.utcnow, comment='更新时间')
 
     # 关系
-    demand_data = db.relationship('DemandData', backref='station', lazy=True, cascade='all, delete-orphan')
+    demand_data = db.relationship('DemandData', backref='demand_station', lazy=True, cascade='all, delete-orphan')
     from_tasks = db.relationship('DispatchTask', foreign_keys='DispatchTask.from_station_id', backref='from_station', lazy=True)
     to_tasks = db.relationship('DispatchTask', foreign_keys='DispatchTask.to_station_id', backref='to_station', lazy=True)
-    predictions = db.relationship('Prediction', backref='station', lazy=True, cascade='all, delete-orphan')
+    predictions = db.relationship('Prediction', backref='prediction_station', lazy=True, cascade='all, delete-orphan')
 
     def to_dict(self):
         """转换为字典格式"""
