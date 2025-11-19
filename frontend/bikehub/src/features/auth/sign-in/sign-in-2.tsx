@@ -2,12 +2,14 @@ import { Logo } from '@/assets/logo'
 import { cn } from '@/lib/utils'
 import dashboardDark from './assets/dashboard-dark.png'
 import dashboardLight from './assets/dashboard-light.png'
+import image from './assets/image.png'
 import { UserAuthForm } from './components/user-auth-form'
 import { Link } from '@tanstack/react-router'
 
 export function SignIn2() {
   return (
-    <div className='relative container grid h-svh flex-col items-center justify-center lg:max-w-none lg:grid-cols-2 lg:px-0'>
+    // <div className='relative container grid h-svh flex-col items-center justify-center lg:max-w-none lg:grid-cols-2 lg:px-0'>
+    <div className='container relative flex min-h-svh flex-col items-center justify-center px-4'>
       <div className='lg:p-8'>
         <div className='mx-auto flex w-full flex-col justify-center space-y-2 py-8 sm:w-[480px] sm:p-8'>
           <div className='mb-4 flex items-center justify-center'>
@@ -21,14 +23,14 @@ export function SignIn2() {
             <p className='text-muted-foreground text-sm'>
               请输入您的用户名和密码以登录您的账户
               <span className='ms-2'>
-                              没有账号？{' '}
-                              <Link
-                                to='/sign-up'
-                                className='hover:text-primary underline underline-offset-4'
-                              >
-                                立即注册
-                              </Link>
-                            </span>
+                没有账号？{' '}
+                <Link
+                  to='/sign-up'
+                  className='hover:text-primary underline underline-offset-4'
+                >
+                  立即注册
+                </Link>
+              </span>
             </p>
           </div>
           <UserAuthForm />
@@ -52,7 +54,7 @@ export function SignIn2() {
         </div>
       </div>
 
-      <div
+      {/* <div
         className={cn(
           'bg-muted relative h-full overflow-hidden max-lg:hidden',
           '[&>img]:absolute [&>img]:top-[15%] [&>img]:left-20 [&>img]:h-full [&>img]:w-full [&>img]:object-cover [&>img]:object-top-left [&>img]:select-none'
@@ -66,13 +68,13 @@ export function SignIn2() {
           alt='Shadcn-Admin'
         />
         <img
-          src={dashboardDark}
+          src={image}
           className='hidden dark:block'
           width={1024}
-          height={1138}
+          height={1024}
           alt='Shadcn-Admin'
         />
-      </div>
+      </div> */}
     </div>
   )
 }

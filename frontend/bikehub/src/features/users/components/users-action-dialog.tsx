@@ -3,7 +3,6 @@
 import { z } from 'zod'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { showSubmittedData } from '@/lib/show-submitted-data'
 import { Button } from '@/components/ui/button'
 import {
   Dialog,
@@ -26,13 +25,15 @@ import { PasswordInput } from '@/components/password-input'
 import { SelectDropdown } from '@/components/select-dropdown'
 import { roles } from '../data/data'
 import { type User } from '../data/schema'
+import { useMutation, useQueryClient } from '@tanstack/react-query'
+import { createUser, updateUser } from '../service'
+import { toast } from 'sonner'
 
 const formSchema = z
   .object({
-    firstName: z.string().min(1, 'First Name is required.'),
-    lastName: z.string().min(1, 'Last Name is required.'),
+    full_name: z.string().min(1, 'Full Name is required.'),
     username: z.string().min(1, 'Username is required.'),
-    phoneNumber: z.string().min(1, 'Phone number is required.'),
+    phone: z.string().min(1, 'Phone number is required.'),
     email: z.email({
       error: (iss) => (iss.input === '' ? 'Email is required.' : undefined),
     }),
@@ -54,17 +55,18 @@ const formSchema = z
   .refine(
     ({ isEdit, password }) => {
       if (isEdit && !password) return true
-      return password.length >= 8
+      return password.length >= 6
     },
     {
-      message: 'Password must be at least 8 characters long.',
+      message: 'Password must be at least 6 characters long.',
       path: ['password'],
     }
   )
   .refine(
     ({ isEdit, password }) => {
       if (isEdit && !password) return true
-      return /[a-z]/.test(password)
+      // return /[a-z]/.test(password)
+      return true
     },
     {
       message: 'Password must contain at least one lowercase letter.',
@@ -74,7 +76,8 @@ const formSchema = z
   .refine(
     ({ isEdit, password }) => {
       if (isEdit && !password) return true
-      return /\d/.test(password)
+      // return /\d/.test(password)
+      return true
     },
     {
       message: 'Password must contain at least one number.',
@@ -105,32 +108,67 @@ export function UsersActionDialog({
   onOpenChange,
 }: UserActionDialogProps) {
   const isEdit = !!currentRow
+  const queryClient = useQueryClient()
+
   const form = useForm<UserForm>({
     resolver: zodResolver(formSchema),
     defaultValues: isEdit
       ? {
-          ...currentRow,
-          password: '',
-          confirmPassword: '',
-          isEdit,
-        }
+        ...currentRow,
+        full_name: currentRow.full_name || '',
+        phone: currentRow.phone || '',
+        password: '',
+        confirmPassword: '',
+        isEdit,
+      }
       : {
-          firstName: '',
-          lastName: '',
-          username: '',
-          email: '',
-          role: '',
-          phoneNumber: '',
-          password: '',
-          confirmPassword: '',
-          isEdit,
-        },
+        full_name: '',
+        username: '',
+        email: '',
+        role: '',
+        phone: '',
+        password: '',
+        confirmPassword: '',
+        isEdit,
+      },
+  })
+
+  const createMutation = useMutation({
+    mutationFn: (data: any) => createUser(data),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['users'] })
+      toast.success('用户创建成功')
+      onOpenChange(false)
+      form.reset()
+    },
+    onError: (error: any) => {
+      toast.error('创建失败', { description: error.message || '请检查输入数据' })
+    },
+  })
+
+  const updateMutation = useMutation({
+    mutationFn: (data: any) => updateUser(currentRow!.id, data),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['users'] })
+      toast.success('用户更新成功')
+      onOpenChange(false)
+    },
+    onError: (error: any) => {
+      toast.error('更新失败', { description: error.message })
+    },
   })
 
   const onSubmit = (values: UserForm) => {
-    form.reset()
-    showSubmittedData(values)
-    onOpenChange(false)
+    const payload = {
+      ...values,
+      password: values.password || undefined, // 如果为空则不发送
+    }
+
+    if (isEdit) {
+      updateMutation.mutate(payload)
+    } else {
+      createMutation.mutate(payload)
+    }
   }
 
   const isPasswordTouched = !!form.formState.dirtyFields.password
@@ -160,35 +198,15 @@ export function UsersActionDialog({
             >
               <FormField
                 control={form.control}
-                name='firstName'
+                name='full_name'
                 render={({ field }) => (
                   <FormItem className='grid grid-cols-6 items-center space-y-0 gap-x-4 gap-y-1'>
                     <FormLabel className='col-span-2 text-end'>
-                      名
+                      姓名
                     </FormLabel>
                     <FormControl>
                       <Input
-                        placeholder='John'
-                        className='col-span-4'
-                        autoComplete='off'
-                        {...field}
-                      />
-                    </FormControl>
-                    <FormMessage className='col-span-4 col-start-3' />
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={form.control}
-                name='lastName'
-                render={({ field }) => (
-                  <FormItem className='grid grid-cols-6 items-center space-y-0 gap-x-4 gap-y-1'>
-                    <FormLabel className='col-span-2 text-end'>
-                      姓
-                    </FormLabel>
-                    <FormControl>
-                      <Input
-                        placeholder='Doe'
+                        placeholder='John Doe'
                         className='col-span-4'
                         autoComplete='off'
                         {...field}
@@ -236,7 +254,7 @@ export function UsersActionDialog({
               />
               <FormField
                 control={form.control}
-                name='phoneNumber'
+                name='phone'
                 render={({ field }) => (
                   <FormItem className='grid grid-cols-6 items-center space-y-0 gap-x-4 gap-y-1'>
                     <FormLabel className='col-span-2 text-end'>

@@ -81,7 +81,7 @@ export async function apiPost(path: string, body: any) {
   })
   const data = await res.json().catch(() => ({}))
   if (!res.ok) {
-    const err: any = new Error(data?.message ?? 'Request failed')
+    const err: any = new Error(data?.error || data?.message || 'Request failed')
     err.status = res.status
     err.data = data
     if (res.status === 401) {
@@ -97,7 +97,7 @@ export async function apiGet(path: string) {
   const res = await fetchWithAuth(url, { method: 'GET' })
   const data = await res.json().catch(() => ({}))
   if (!res.ok) {
-    const err: any = new Error(data?.message ?? 'Request failed')
+    const err: any = new Error(data?.error || data?.message || 'Request failed')
     err.status = res.status
     err.data = data
     if (res.status === 401) {
@@ -118,7 +118,7 @@ export async function apiPut(path: string, body: any) {
   })
   const data = await res.json().catch(() => ({}))
   if (!res.ok) {
-    const err: any = new Error(data?.message ?? 'Request failed')
+    const err: any = new Error(data?.error || data?.message || 'Request failed')
     err.status = res.status
     err.data = data
     if (res.status === 401) {
@@ -134,7 +134,7 @@ export async function apiDelete(path: string) {
   const res = await fetchWithAuth(url, { method: 'DELETE' })
   const data = await res.json().catch(() => ({}))
   if (!res.ok) {
-    const err: any = new Error(data?.message ?? 'Request failed')
+    const err: any = new Error(data?.error || data?.message || 'Request failed')
     err.status = res.status
     err.data = data
     if (res.status === 401) {
