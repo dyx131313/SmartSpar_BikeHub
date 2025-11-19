@@ -54,14 +54,12 @@ export const usersColumns: ColumnDef<User>[] = [
     // enableHiding: false,
   },
   {
-    id: 'fullName',
+    accessorKey: 'full_name',
     header: ({ column }) => (
       <DataTableColumnHeader column={column} title='姓名' />
     ),
     cell: ({ row }) => {
-      const { firstName, lastName } = row.original
-      const fullName = `${firstName} ${lastName}`
-      return <LongText className='max-w-36'>{fullName}</LongText>
+      return <LongText className='max-w-36'>{row.getValue('full_name') || '-'}</LongText>
     },
     meta: { title: '姓名', className: 'w-36' },
   },
@@ -76,26 +74,27 @@ export const usersColumns: ColumnDef<User>[] = [
     meta: { title: '电子邮箱' },
   },
   {
-    accessorKey: 'phoneNumber',
+    accessorKey: 'phone',
     header: ({ column }) => (
       <DataTableColumnHeader column={column} title='电话号码' />
     ),
-    cell: ({ row }) => <div>{row.getValue('phoneNumber')}</div>,
+    cell: ({ row }) => <div>{row.getValue('phone') || '-'}</div>,
     meta: { title: '电话号码' },
     enableSorting: false,
   },
   {
-    accessorKey: 'status',
+    id: 'is_active',
+    accessorFn: (row) => (row.is_active ? '已激活' : '未激活'),
     header: ({ column }) => (
       <DataTableColumnHeader column={column} title='状态' />
     ),
     cell: ({ row }) => {
-      const { status } = row.original
-      const badgeColor = callTypes.get(status)
+      const status = row.getValue('is_active') as string
+      const isActive = status === '已激活'
       return (
         <div className='flex space-x-2'>
-          <Badge variant='outline' className={cn('capitalize', badgeColor)}>
-            {row.getValue('status')}
+          <Badge variant='outline' className={cn('capitalize', isActive ? 'text-green-600 border-green-600' : 'text-red-600 border-red-600')}>
+            {status}
           </Badge>
         </div>
       )
@@ -104,8 +103,7 @@ export const usersColumns: ColumnDef<User>[] = [
       return value.includes(row.getValue(id))
     },
     meta: { title: '状态' },
-    // enableHiding: false,
-    // enableSorting: false,
+    enableSorting: false,
   },
   {
     accessorKey: 'role',

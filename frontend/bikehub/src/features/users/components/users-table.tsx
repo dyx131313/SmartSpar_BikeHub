@@ -59,7 +59,7 @@ export function UsersTable({ data, search, navigate }: DataTableProps) {
     columnFilters: [
       // username per-column text filter
       { columnId: 'username', searchKey: 'username', type: 'string' },
-      { columnId: 'status', searchKey: 'status', type: 'array' },
+      { columnId: 'is_active', searchKey: 'status', type: 'array' },
       { columnId: 'role', searchKey: 'role', type: 'array' },
     ],
   })
@@ -106,10 +106,10 @@ export function UsersTable({ data, search, navigate }: DataTableProps) {
         searchKey='username'
         filters={[
           {
-            columnId: 'status',
+            columnId: 'is_active',
             title: '状态',
-            options: 
-            status.map((status) => ({ ...status })),
+            options:
+              status.map((status) => ({ ...status })),
             // [  
             //   // { label: 'Active', value: 'active' },
             //   // { label: 'Inactive', value: 'inactive' },
@@ -143,9 +143,9 @@ export function UsersTable({ data, search, navigate }: DataTableProps) {
                       {header.isPlaceholder
                         ? null
                         : flexRender(
-                            header.column.columnDef.header,
-                            header.getContext()
-                          )}
+                          header.column.columnDef.header,
+                          header.getContext()
+                        )}
                     </TableHead>
                   )
                 })}

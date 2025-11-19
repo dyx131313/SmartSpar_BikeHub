@@ -8,37 +8,51 @@ import { TasksDialogs } from './components/tasks-dialogs'
 import { TasksPrimaryButtons } from './components/tasks-primary-buttons'
 import { TasksProvider } from './components/tasks-provider'
 import { TasksTable } from './components/tasks-table'
-import { stations } from './data/stations'
 import { RequireAuth } from '@/components/require-auth'
+import { useQuery } from '@tanstack/react-query'
+import { getStations } from './service'
 
 export function Management() {
+  const { data, isLoading, error } = useQuery({
+    queryKey: ['stations'],
+    queryFn: () => getStations({ per_page: 100 }),
+  })
+
+  const stations = data?.data || []
+
   return (
     <RequireAuth>
-    <TasksProvider>
-      <Header fixed>
-        <Search />
-        <div className='ms-auto flex items-center space-x-4'>
-          {/* <ThemeSwitch /> */}
-          <ConfigDrawer />
-          {/* <ProfileDropdown /> */}
-        </div>
-      </Header>
+      <TasksProvider>
+        <Header fixed>
+          <Search />
+          <div className='ms-auto flex items-center space-x-4'>
+            {/* <ThemeSwitch /> */}
+            <ConfigDrawer />
+            {/* <ProfileDropdown /> */}
+          </div>
+        </Header>
 
-      <Main className='flex flex-1 flex-col gap-4 sm:gap-6'>
-        <div className='flex flex-wrap items-end justify-between gap-2'>
-          <div>
-            <h2 className='text-2xl font-bold tracking-tight'>站点管理</h2>
-            {/* <p className='text-muted-foreground'>
+        <Main className='flex flex-1 flex-col gap-4 sm:gap-6'>
+          <div className='flex flex-wrap items-end justify-between gap-2'>
+            <div>
+              <h2 className='text-2xl font-bold tracking-tight'>站点管理</h2>
+              {/* <p className='text-muted-foreground'>
               进行站点管理
             </p> */}
+            </div>
+            <TasksPrimaryButtons />
           </div>
-          <TasksPrimaryButtons />
-        </div>
-        <TasksTable data={stations} />
-      </Main>
+          {isLoading ? (
+            <div>加载中...</div>
+          ) : error ? (
+            <div>加载失败</div>
+          ) : (
+            <TasksTable data={stations} />
+          )}
+        </Main>
 
-      <TasksDialogs />
-    </TasksProvider>
+        <TasksDialogs />
+      </TasksProvider>
     </RequireAuth>
   )
 }

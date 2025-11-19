@@ -24,13 +24,13 @@ export function readToken(): string {
   try {
     const storeToken = useAuthStore.getState()?.auth?.accessToken
     if (storeToken && storeToken !== 'null' && storeToken !== 'undefined') return storeToken
-  } catch {}
+  } catch { }
   const fromCookie = readTokenFromCookie()
   if (fromCookie) return fromCookie
   try {
     const ls = typeof localStorage !== 'undefined' ? localStorage.getItem('access_token') : ''
     if (ls && ls !== 'null' && ls !== 'undefined') return ls
-  } catch {}
+  } catch { }
   return ''
 }
 
@@ -43,7 +43,7 @@ function buildUrl(path: string) {
 
 async function fetchWithAuth(url: string, options: RequestInit = {}, retry = true) {
   const token = readToken()
-  const headers = { ...(options.headers as Record<string,string> || {}) }
+  const headers = { ...(options.headers as Record<string, string> || {}) }
   if (token) headers['Authorization'] = `Bearer ${token}`
 
   const res = await fetch(url, { ...options, headers, credentials: 'include' })
@@ -60,7 +60,7 @@ async function fetchWithAuth(url: string, options: RequestInit = {}, retry = tru
         const newToken = refreshData?.access_token ?? refreshData?.token ?? ''
         if (newToken) {
           useAuthStore.getState().auth.setAccessToken?.(newToken)
-          try { localStorage.setItem('access_token', newToken) } catch {}
+          try { localStorage.setItem('access_token', newToken) } catch { }
           return fetchWithAuth(url, options, false)
         }
       }
@@ -116,6 +116,22 @@ export async function apiPut(path: string, body: any) {
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify(body),
   })
+  const data = await res.json().catch(() => ({}))
+  if (!res.ok) {
+    const err: any = new Error(data?.message ?? 'Request failed')
+    err.status = res.status
+    err.data = data
+    if (res.status === 401) {
+      useAuthStore.getState().auth.reset?.()
+    }
+    throw err
+  }
+  return data
+}
+
+export async function apiDelete(path: string) {
+  const url = buildUrl(path)
+  const res = await fetchWithAuth(url, { method: 'DELETE' })
   const data = await res.json().catch(() => ({}))
   if (!res.ok) {
     const err: any = new Error(data?.message ?? 'Request failed')

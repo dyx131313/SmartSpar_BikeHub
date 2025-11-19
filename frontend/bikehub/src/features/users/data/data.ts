@@ -1,4 +1,4 @@
-import { Shield, UserCheck, MapPin } from 'lucide-react'
+import { Shield, UserCheck, MapPin, Wrench } from 'lucide-react'
 import { type UserStatus } from './schema'
 import { M } from 'node_modules/@clerk/clerk-react/dist/useAuth-BAhNYMIt.d.mts'
 
@@ -29,27 +29,27 @@ export const status = [
     label: '被暂停',
     value: '被暂停',
   },
-] as const  
+] as const
 
 export const roles = [
   {
-    label: '超级管理员',
-    value: '超级管理员',
+    label: '管理员',
+    value: 'admin',
     icon: Shield,
   },
   {
-    label: '管理员',
-    value: '管理员',
+    label: '普通用户',
+    value: 'user',
     icon: UserCheck,
   },
   {
     label: '调度员',
-    value: '调度员',
+    value: 'dispatcher',
     icon: MapPin,
   },
-  // {
-  //   label: '收银员',
-  //   value: 'cashier',
-  //   icon: CreditCard,
-  // },
+  {
+    label: '运维员',
+    value: 'maintenance',
+    icon: Wrench,
+  },
 ] as const

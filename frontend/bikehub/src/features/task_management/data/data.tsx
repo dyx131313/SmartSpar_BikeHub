@@ -28,27 +28,27 @@ export const labels = [
 export const statuses = [
   {
     label: '积压',
-    value: '积压' as const,
+    value: 'backlog',
     icon: HelpCircle,
   },
   {
     label: '待办',
-    value: '待办' as const,
+    value: 'pending',
     icon: Circle,
   },
   {
-    label: '正在进行',
-    value: '正在进行' as const,
+    label: '进行中',
+    value: 'in_progress',
     icon: Timer,
   },
   {
     label: '已完成',
-    value: '已完成' as const,
+    value: 'completed',
     icon: CheckCircle,
   },
   {
     label: '已取消',
-    value: '已取消' as const,
+    value: 'cancelled',
     icon: CircleOff,
   },
 ]
@@ -56,22 +56,22 @@ export const statuses = [
 export const priorities = [
   {
     label: '低',
-    value: '低' as const,
+    value: 1,
     icon: ArrowDown,
   },
   {
     label: '中',
-    value: '中' as const,
+    value: 2,
     icon: ArrowRight,
   },
   {
     label: '高',
-    value: '高' as const,
+    value: 3,
     icon: ArrowUp,
   },
   {
     label: '紧急',
-    value: '紧急' as const,
+    value: 4,
     icon: AlertCircle,
   },
 ]
