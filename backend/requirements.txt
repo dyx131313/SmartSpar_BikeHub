@@ -43,3 +43,6 @@ jsonschema==4.24.0
 
 # 地理计算
 geopy==2.4.1
+
+# 机器学习 (用于需求预测)
+scikit-learn>=1.6.0

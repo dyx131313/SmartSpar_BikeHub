@@ -194,3 +194,79 @@ def register_cli_commands(app):
         print('管理员 - 用户名: admin, 密码: admin123')
         print('调度员 - 用户名: dispatcher, 密码: dispatcher123')
         print('运维员 - 用户名: operator, 密码: operator123')
+
+    @app.cli.command()
+    def train_demand_model():
+        """训练需求预测模型"""
+        from app.services.demand_predictor import get_demand_predictor
+
+        print("开始训练需求预测模型...")
+        try:
+            predictor = get_demand_predictor()
+            train_data_path = 'train.csv'
+
+            if not os.path.exists(train_data_path):
+                print(f"错误: 训练数据文件 {train_data_path} 不存在")
+                return
+
+            results = predictor.train(train_data_path)
+
+            print("\n=== 模型训练完成 ===")
+            print(f"最佳模型: {results['best_model']}")
+            print("训练结果:")
+            for model_name, metrics in results['training_results'].items():
+                print(f"  {model_name}: MAE={metrics['mae']:.2f}, R2={metrics['r2']:.3f}")
+
+            print(f"\n模型已保存到: {predictor.model_path}")
+            print("特征重要性:")
+
+            importance = predictor.get_feature_importance()
+            sorted_importance = sorted(importance.items(), key=lambda x: x[1], reverse=True)
+            for feature, score in sorted_importance[:10]:
+                print(f"  {feature}: {score:.4f}")
+
+        except Exception as e:
+            print(f"训练失败: {e}")
+
+    @app.cli.command()
+    def test_demand_prediction():
+        """测试需求预测功能"""
+        from app.services.demand_predictor import predict_demand_for_station
+
+        print("测试需求预测功能...")
+
+        test_cases = [
+            {
+                'name': '早高峰工作日',
+                'params': {
+                    'station_type': 1,
+                    'temp': 22.0,
+                    'is_holiday': 0,
+                    'weather': 0,
+                    'weekday': 1,
+                    'date_str': '2024/9/2 8:00'
+                }
+            },
+            {
+                'name': '周末午后',
+                'params': {
+                    'station_type': 2,
+                    'temp': 28.0,
+                    'is_holiday': 0,
+                    'weather': 0,
+                    'weekday': 6,
+                    'date_str': '2024/9/7 14:00'
+                }
+            }
+        ]
+
+        try:
+            for test_case in test_cases:
+                result = predict_demand_for_station(**test_case['params'])
+                print(f"\n{test_case['name']}:")
+                print(f"  预测需求量: {result['prediction']}")
+                print(f"  置信度: {result['confidence']:.3f}")
+                print(f"  模型类型: {result['model_type']}")
+
+        except Exception as e:
+            print(f"测试失败: {e}")
