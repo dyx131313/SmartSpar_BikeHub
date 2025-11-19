@@ -27,24 +27,15 @@ import { Textarea } from '@/components/ui/textarea'
 import { toast } from 'sonner'
 import { useAuthStore } from '@/stores/auth-store' 
 import { apiPut, apiGet } from '@/lib/api'
+import { F } from 'node_modules/@faker-js/faker/dist/airline-DF6RqYmq'
 
 const profileFormSchema = z.object({
-  username: z
-    .string('Please enter your username.')
-    .min(2, 'Username must be at least 2 characters.')
-    .max(30, 'Username must not be longer than 30 characters.'),
-  email: z.email({
-    error: (iss) =>
-      iss.input === undefined
-        ? 'Please select an email to display.'
-        : undefined,
-  }),
-  // email: z.string().optional(),
-  full_name: z
-  .string()
-  .min(1, 'Please enter your name.')
-  .min(2, 'Name must be at least 2 characters.')
-  .max(30, 'Name must not be longer than 30 characters.'),
+  username: z.string('请输入您的用户名。').optional(),
+  email: z.string('请输入您的电子邮件地址。').optional(),
+  full_name: z.string('请输入您的全名。').optional(),
+  current_password: z.string().optional(),
+  new_password: z.string().min(8, '新密码至少 8 字符').optional(),
+  confirm_password: z.string().optional()
   // bio: z.string().max(160).min(4),
   // urls: z
   //   .array(
@@ -97,6 +88,19 @@ export function ProfileForm() {
 
       const current_user = current.data
 
+      if(data.new_password && current_user){
+        // if(!data.current_password){
+        //   toast.error('当前密码不正确，无法修改密码')
+        //   setIsSubmitting(false)
+        //   return
+        // }
+        if(data.new_password !== data.confirm_password){
+          toast.error('新密码与确认密码不匹配')
+          setIsSubmitting(false)
+          return
+        }
+      } 
+
       // 从返回中尽量取到用户 id（兼容多种字段名）
       const id =
         current_user?.id ??
@@ -109,14 +113,23 @@ export function ProfileForm() {
         return
       }
     
-    // 构建 PUT 所需的完整 payload：以后端返回的 current 为基础，只修改需要更新的字段
-      const payload: any = {
-        // 复制后端返回的字段，覆盖 full_name（或 name）为表单值
-        ...current,
-        user_name: data.username ?? current.user_name ?? current.username,
-        email: data.email ?? current.email ?? current.email,
-        full_name: data.full_name ?? current.full_name ?? current.full_name,
-      }
+    // 构建 PUT 所需的完整 payload：以后端返回的 current_user 为基础，只修改需要更新的字段
+          const payload: any = {
+            // 复制后端返回的字段，覆盖 full_name（或 name）为表单值
+            ...current_user,
+            // user_name: data.username ?? current_user.user_name ?? current_user.username,
+            // email: data.email ?? current_user.email,
+            // full_name: data.full_name ?? current_user.full_name ?? current_user.name,
+            // // 仅在表单提供新密码时才包含 password 字段
+            ...(data.new_password ? { password: data.new_password } : {}),
+            ...(data.current_password ? { current_password: data.current_password } : {}),
+            ...(data.email ? { email: data.email } : {}),
+            ...(data.username ? { username: data.username } : {}),
+            ...(data.full_name ? { full_name: data.full_name } : {}),
+          }
+
+      // console.log('Update payload:', payload)
+
 
       // 调用后端 PUT 更新指定用户（注意 API 路径需要 id）
       const resp = await apiPut(`/api/users/${encodeURIComponent(String(id))}`, payload)
@@ -189,6 +202,67 @@ export function ProfileForm() {
               <FormDescription>
                 您可以在{' '}
                 <Link to='/'>邮箱设置</Link>中管理已验证的邮箱地址。
+              </FormDescription>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        <FormField
+          control={form.control}
+          name='current_password'
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>当前密码</FormLabel>
+              <FormControl>
+                <Input
+                  type='password'
+                  placeholder='输入当前密码以确认更改'
+                  {...field}
+                />
+              </FormControl>
+              <FormDescription>
+                为了安全起见，请输入您的当前密码以确认更改。
+              </FormDescription>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        <FormField
+          control={form.control}
+          name='new_password'
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>新密码</FormLabel>
+              <FormControl>
+                <Input
+                  type='password'
+                  placeholder='输入新密码（可选）'
+                  {...field}
+                />
+              </FormControl>
+              <FormDescription>
+                如果您想更改密码，请在此输入新密码。否则请留空。  
+                新密码至少需要 8 个字符。
+              </FormDescription>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        <FormField
+          control={form.control}
+          name='confirm_password'
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>确认新密码</FormLabel>
+              <FormControl>
+                <Input
+                  type='password'
+                  placeholder='再次输入新密码以确认'
+                  {...field}
+                />
+              </FormControl>
+              <FormDescription>
+                请再次输入新密码以确认无误。
               </FormDescription>
               <FormMessage />
             </FormItem>
