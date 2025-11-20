@@ -93,7 +93,7 @@ class RouteHistory(db.Model):
     # 评价信息
     driver_rating = db.Column(db.Integer, comment='驾驶员评分(1-5)')
     route_difficulty = db.Column(db.Integer, comment='路径难度评分(1-5)')
-    traffic_conditions = db.Column(db.String(20), comment('traffic_conditions'))
+    traffic_conditions = db.Column(db.String(20), comment='traffic_conditions')
 
     # 反馈信息
     feedback_notes = db.Column(db.Text, comment='反馈备注')
