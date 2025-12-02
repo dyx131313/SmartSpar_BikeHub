@@ -15,7 +15,17 @@ import { useAuthStore } from '@/stores/auth-store'
 
 export function AppSidebar() {
   const { collapsible, variant } = useLayout()
-  // const storeUser = useAuthStore((s) => s.auth?.user)
+  const user = useAuthStore((s) => s.auth?.user)
+
+  const filteredNavGroups = sidebarData.navGroups.map((group) => {
+    const filteredItems = group.items.filter((item) => {
+      if (!item.roles || item.roles.length === 0) return true
+      if (!user) return false
+      const userRoles = Array.isArray(user.role) ? user.role : [user.role]
+      return item.roles.some((r) => userRoles.includes(r))
+    })
+    return { ...group, items: filteredItems }
+  })
 
   return (
     <Sidebar collapsible={collapsible} variant={variant}>
@@ -28,7 +38,7 @@ export function AppSidebar() {
         {/* <AppTitle /> */}
       </SidebarHeader>
       <SidebarContent>
-        {sidebarData.navGroups.map((props) => (
+        {filteredNavGroups.map((props) => (
           <NavGroup key={props.title} {...props} />
         ))}
       </SidebarContent>

@@ -6,7 +6,7 @@ import { ACCESS_TOKEN_COOKIE } from '@/lib/config'
 interface AuthUser {
   accountNo: string
   email: string
-  role: string[]
+  role: string[] | string
   exp: number
 }
 
