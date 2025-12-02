@@ -1,7 +1,7 @@
 """
 群聊功能API路由
 """
-from flask import request, jsonify, current_app
+from flask import Blueprint, request, jsonify, current_app
 from flask_jwt_extended import jwt_required, get_jwt_identity
 from app.models.chat_models import *
 from app.utils.database import get_db_connection
