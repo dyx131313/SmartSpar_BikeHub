@@ -6,7 +6,7 @@ import json
 import os  # 新增：用于处理路径
 
 class APICompatibleDataGenerator:
-    def __init__(self, output_dir='../data'):
+    def __init__(self, output_dir='../../data'):
         """
         初始化数据生成器
         
@@ -71,8 +71,8 @@ class APICompatibleDataGenerator:
         counter = {base_name: 1 for _, _, _, base_name in real_flat}
         for idx in range(len(real_flat) + 1, num_stations + 1):
             st_type, lat, lng, base_name = random.choice(real_flat)
-            new_lat = lat + random.uniform(-0.03, 0.03)
-            new_lng = lng + random.uniform(-0.03, 0.03)
+            new_lat = lat + random.uniform(-0.045, 0.045)
+            new_lng = lng + random.uniform(-0.045, 0.045)
             seq = counter[base_name]
             counter[base_name] += 1
             stations.append(self._make_station_dict(
@@ -172,6 +172,10 @@ class APICompatibleDataGenerator:
         
         base = base_matrix.get(station_type, [5]*24)[hour]
         
+        # ③ 高峰期集中放大
+        if is_weekday and hour in (7, 8, 9, 11, 12, 13, 17, 18, 19):
+            base *= 3
+
         # 调整因子
         if not is_weekday:
             base *= 0.7  # 周末需求减少
@@ -273,7 +277,8 @@ class APICompatibleDataGenerator:
 def main():
     # 设置输出目录为项目根目录下的data文件夹
     script_dir = os.path.dirname(os.path.abspath(__file__))
-    project_root = os.path.dirname(script_dir)  # 上一级目录
+    app_dir = os.path.dirname(script_dir)
+    project_root = os.path.dirname(app_dir)  # ✅ 再跳一级
     data_dir = os.path.join(project_root, 'data')
     
     print("开始生成符合API接口的数据...")
@@ -284,13 +289,13 @@ def main():
     
     # 生成站点数据
     print("\n1. 生成站点数据...")
-    stations_df = generator.generate_stations(50)  # 减少站点数量
+    stations_df = generator.generate_stations()     # 用默认值
     print(f"生成 {len(stations_df)} 个站点")
     print(f"站点类型分布: {stations_df['station_type'].value_counts().to_dict()}")
     
     # 生成需求数据（简化版，用于API导入）
     print("\n2. 生成需求数据...")
-    demands_df = generator.generate_demand_data_for_api(stations_df, days=30)
+    demands_df = generator.generate_demand_data_for_api(stations_df, days=120)
     
     # 检查数据格式
     print("\n=== 数据格式检查 ===")
@@ -310,9 +315,9 @@ def main():
     # 保存需求数据
     demands_json = demands_df.to_dict('records')
     # 如果需要完整数据，可以去掉这个限制
-    if len(demands_json) > 1000:
-        print(f"需求数据较多({len(demands_json)}条)，只保存前1000条用于测试")
-        demands_json = demands_json[:1000]
+    #if len(demands_json) > 1000:
+     #   print(f"需求数据较多({len(demands_json)}条)，只保存前1000条用于测试")
+     #   demands_json = demands_json[:1000]
     
     demands_file = generator.save_to_file('api_demands.json', demands_json)
     
