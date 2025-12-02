@@ -42,7 +42,8 @@ class ChatGroupBase(BaseModel):
 
 class ChatGroupCreate(ChatGroupBase):
     """创建群聊模型"""
-    pass
+    initial_members: Optional[List[int]] = Field(default_factory=list, description="初始成员ID列表")
+    welcome_message: Optional[str] = Field(None, max_length=500, description="欢迎消息")
 
 
 class ChatGroupUpdate(BaseModel):
@@ -83,7 +84,7 @@ class ChatGroupMemberBase(BaseModel):
 
 class ChatGroupMemberCreate(ChatGroupMemberBase):
     """添加群聊成员模型"""
-    pass
+    invited_by: Optional[int] = Field(None, description="邀请人ID")
 
 
 class ChatGroupMemberUpdate(BaseModel):

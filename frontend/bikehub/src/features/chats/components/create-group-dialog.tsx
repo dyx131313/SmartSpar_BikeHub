@@ -2,7 +2,7 @@
  * 创建群聊对话框组件
  */
 import React, { useState, useEffect } from 'react';
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from '@/components/ui/dialog';
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from '@/components/ui';
 import { Button, Input, Textarea, Select, SelectContent, SelectItem, SelectTrigger, SelectValue, Avatar, AvatarFallback, AvatarImage, Badge, ScrollArea, Checkbox } from '@/components/ui';
 import { X, Users, Search } from 'lucide-react';
 import { groupChatAPI } from '../api/group-chat-api';

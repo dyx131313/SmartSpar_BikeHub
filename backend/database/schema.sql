@@ -189,4 +189,5 @@ INSERT INTO demand_data (timestamp, station_id, station_type, weekday, is_holida
 
 -- 插入默认管理员用户 (密码: admin123)
 INSERT INTO users (username, email, password_hash, role, full_name) VALUES
-('admin', 'admin@bikehub.com', 'pbkdf2:sha256:260000$salt$hash', 'admin', '系统管理员');
+('admin', 'admin@bikehub.com', 'pbkdf2:sha256:260000$salt$hash', 'admin', '系统管理员'),
+('dispatcher01', 'dispather@bikehub.com', 'llll23:sha256:260000$salt$hash', 'dispatcher', '调度员');

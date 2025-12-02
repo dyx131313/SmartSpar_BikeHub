@@ -350,3 +350,6 @@ export function Chats() {
     </>
   )
 }
+
+// 导出群聊组件
+export { GroupChats } from './group-chats'
