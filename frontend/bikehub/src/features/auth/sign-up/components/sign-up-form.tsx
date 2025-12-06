@@ -25,18 +25,27 @@ import { useNavigate } from '@tanstack/react-router'
 
 const formSchema = z
   .object({
-    email: z.email({
-      error: (iss) =>
-        iss.input === '' ? 'Please enter your email' : undefined,
-    }),
+    username: z
+      .string()
+      .min(3, 'Username must be at least 3 characters')
+      .max(20, 'Username must be at most 20 characters')
+      .trim(),
+    email: z
+      .string()
+      .email({
+        message: 'Please enter a valid email address',
+      })
+      .refine((val) => val.toLowerCase().endsWith('@qq.com'), {
+        message: 'Email must be a QQ email address (ending with @qq.com)',
+      }),
     password: z
       .string()
       .min(1, 'Please enter your password')
-      .min(7, 'Password must be at least 7 characters long'),
+      .min(7, 'Password must be at least 7 characters'),
     confirmPassword: z.string().min(1, 'Please confirm your password'),
   })
   .refine((data) => data.password === data.confirmPassword, {
-    message: "Passwords don't match.",
+    message: "Passwords don't match",
     path: ['confirmPassword'],
   })
 
@@ -53,6 +62,7 @@ export function SignUpForm({
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
+      username: '',
       email: '',
       password: '',
       confirmPassword: '',
@@ -71,14 +81,14 @@ export function SignUpForm({
   //   try {
   //     const payload = { email: data.email, password: data.password, name: data.name }
   //     const resp = await apiPost('/api/auth/register', payload)
-  //     // 期望后端返回 { user, token }
+  //     // 鏈熸湜鍚庣杩斿洖 { user, token }
   //     if (resp?.token) {
   //       setAccessToken(resp.token)
   //     }
   //     if (resp?.user) {
   //       setUser(resp.user)
   //     }
-  //     // 跳转到登录页或首页
+  //     // 璺宠浆鍒扮櫥褰曢〉鎴栭椤?
   //     navigate({ to: '/sign-in-2' })
   //   } catch (err) {
   //     handleServerError(err)
@@ -90,16 +100,29 @@ export function SignUpForm({
   async function onSubmit(data: z.infer<typeof formSchema>) {
     setIsLoading(true)
     try {
-      const payload = { email: data.email, password: data.password, name: (data as any).name }
+      const payload = {
+        username: data.username.trim(),
+        email: data.email.trim(),
+        password: data.password,
+      }
       const resp = await apiPost('/api/auth/register', payload)
-      // 期望后端返回 { user, token }
-      if (resp?.token) {
-        setAccessToken(resp.token)
+
+      const token =
+        resp?.access_token ??
+        resp?.accessToken ??
+        resp?.token ??
+        resp?.data?.access_token ??
+        resp?.data?.accessToken ??
+        resp?.data?.token ??
+        null
+
+      if (token) {
+        setAccessToken(token)
       }
       if (resp?.user) {
         setUser(resp.user)
       }
-      // 跳转到登录页或首页
+
       navigate({ to: '/sign-in-2' })
     } catch (err) {
       handleServerError(err)
@@ -116,12 +139,25 @@ export function SignUpForm({
       >
         <FormField
           control={form.control}
+          name='username'
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>用户名</FormLabel>
+              <FormControl>
+                <Input placeholder='请输入用户名' {...field} />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        <FormField
+          control={form.control}
           name='email'
           render={({ field }) => (
             <FormItem>
-              <FormLabel>邮箱</FormLabel>
+              <FormLabel>QQ邮箱</FormLabel>
               <FormControl>
-                <Input placeholder='name@example.com' {...field} />
+                <Input placeholder='例如：123456@qq.com' {...field} />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -154,7 +190,7 @@ export function SignUpForm({
           )}
         />
         <Button className='mt-2' disabled={isLoading}>
-          创建用户
+          注册
         </Button>
 
         {/* <div className='relative my-2'>
