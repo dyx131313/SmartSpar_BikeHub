@@ -186,6 +186,24 @@ export async function apiDelete(path: string) {
   return data
 }
 
+export async function apiUpload(path: string, formData: FormData) {
+  const url = buildUrl(path)
+  const res = await fetchWithAuth(url, {
+    method: 'POST',
+    body: formData,
+  })
+  const data = await res.json().catch(() => ({}))
+  if (!res.ok) {
+    const err: any = new Error(data?.error || data?.message || 'Request failed')
+    err.status = res.status
+    err.data = data
+    if (res.status === 401) {
+      useAuthStore.getState().auth.reset?.()
+    }
+    throw err
+  }
+  return data
+}
 // 导出统一的API对象以供聊天模块使用
 export const api = {
   get: apiGet,
