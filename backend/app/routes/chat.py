@@ -5,7 +5,7 @@ from flask import request, jsonify, current_app
 from flask_jwt_extended import jwt_required, get_jwt_identity
 from app.models.chat_models import *
 from app.utils.database import get_db_connection
-from app.utils.auth import admin_required
+from app.utils.permissions import require_admin as admin_required
 from datetime import datetime
 import json
 import os
