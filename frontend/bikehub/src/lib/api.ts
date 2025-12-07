@@ -41,6 +41,17 @@ function buildUrl(path: string) {
   return IS_DEV ? path : `${API_BASE}${path}`
 }
 
+function buildStaticUrl(path: string) {
+  // 构建静态资源URL（头像等）
+  if (/^https?:\/\//.test(path)) return path
+  if (IS_DEV) {
+    // 开发环境使用后端地址
+    return `http://localhost:5000${path}`
+  }
+  // 生产环境使用相对路径
+  return path
+}
+
 async function fetchWithAuth(url: string, options: RequestInit = {}, retry = true) {
   const token = readToken()
   const headers = { ...(options.headers as Record<string, string> || {}) }
@@ -75,10 +86,23 @@ async function fetchWithAuth(url: string, options: RequestInit = {}, retry = tru
 export async function apiPost(path: string, body: any = null) {
   const url = buildUrl(path)
   console.log('API POST:', url, body)
+
+  let headers: Record<string, string> = {}
+  let requestBody: any = body
+
+  // 如果是 FormData（文件上传），不要设置 Content-Type，让浏览器自动设置
+  if (body instanceof FormData) {
+    // 移除 Content-Type 头，让浏览器自动生成正确的 boundary
+    // headers['Content-Type'] = 'multipart/form-data'
+  } else {
+    headers['Content-Type'] = 'application/json'
+    requestBody = JSON.stringify(body)
+  }
+
   const res = await fetchWithAuth(url, {
     method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify(body),
+    headers,
+    body: requestBody,
   })
 
   // 尝试读取响应体，即使对于 500 错误
@@ -169,3 +193,6 @@ export const api = {
   put: apiPut,
   delete: apiDelete
 }
+
+// 导出buildStaticUrl函数
+export { buildStaticUrl }

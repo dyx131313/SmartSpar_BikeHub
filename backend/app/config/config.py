@@ -53,6 +53,9 @@ class Config:
         # 创建上传目录
         os.makedirs(Config.UPLOAD_FOLDER, exist_ok=True)
 
+        # 创建头像目录
+        os.makedirs(os.path.join(Config.UPLOAD_FOLDER, 'avatars'), exist_ok=True)
+
         # 创建模型目录
         os.makedirs(Config.MODEL_PATH, exist_ok=True)
 

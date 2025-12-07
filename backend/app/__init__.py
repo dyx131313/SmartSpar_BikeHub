@@ -30,6 +30,7 @@ def create_app(config_name=None):
     db.init_app(app)
     migrate.init_app(app, db)
     cors.init_app(app, origins=app.config['CORS_ORIGINS'],
+                  supports_credentials=True,
                   allow_headers=['Content-Type', 'Authorization', 'X-Requested-With'],
                   methods=['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'])
     jwt.init_app(app)
@@ -76,6 +77,8 @@ def register_blueprints(app):
     """注册蓝图"""
     from app.routes import api_bp
     app.register_blueprint(api_bp, url_prefix='/api')
+    from app.routes.static import static_bp
+    app.register_blueprint(static_bp)
 
 def configure_jwt_errors(app):
     """配置JWT错误处理"""
