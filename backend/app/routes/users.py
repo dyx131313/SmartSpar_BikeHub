@@ -1,4 +1,4 @@
-from flask import request, jsonify
+﻿from flask import request, jsonify
 from flask_jwt_extended import (
     create_access_token,
     jwt_required,
@@ -6,73 +6,77 @@ from flask_jwt_extended import (
     get_jwt,
 )
 from datetime import datetime
+import re
+import random
+from sqlalchemy import or_
 from app import db
 from app.models.user import User
+from app.models.verification_code import VerificationCode
 from app.routes import api_bp
+from app.utils.email_utils import send_verification_email
 
 
 @api_bp.route("/auth/register", methods=["POST"])
 def register():
-    """用户注册"""
+    """User registration"""
     try:
         data = request.get_json()
 
-        # 验证必填字段
+        # Validate required fields
         required_fields = ["username", "email", "password"]
         for field in required_fields:
             if not data or not data.get(field):
-                return jsonify({"error": f"{field} 不能为空"}), 400
+                return jsonify({"error": f"{field} is required"}), 400
 
-        # 验证用户名格式
+        # Validate username format
         username = data["username"].strip()
         if len(username) < 3 or len(username) > 20:
-            return jsonify({"error": "用户名长度必须在3-20个字符之间"}), 400
+            return jsonify({"error": "Username length must be between 3 and 20 characters"}), 400
         if not username.replace("_", "").replace("-", "").isalnum():
-            return jsonify({"error": "用户名只能包含字母、数字、下划线和连字符"}), 400
+            return jsonify({"error": "Username may only contain letters, numbers, underscore and hyphen"}), 400
 
-        # 验证密码强度
+        # Validate password strength (length only for now)
         password = data["password"]
         if len(password) < 6:
-            return jsonify({"error": "密码长度至少6个字符"}), 400
+            return jsonify({"error": "Password length must be at least 6 characters"}), 400
 
-        # 验证邮箱格式
+        # Validate email format (allow any valid email domain)
         email = data["email"].strip().lower()
-        import re
-
         email_pattern = r"^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$"
         if not re.match(email_pattern, email):
-            return jsonify({"error": "邮箱格式不正确"}), 400
+            return jsonify({"error": "Invalid email format"}), 400
 
-        # 检查用户名是否已存在
+        # Check if username already exists
         if User.query.filter_by(username=username).first():
-            return jsonify({"error": "用户名已存在"}), 400
+            return jsonify({"error": "Username already exists"}), 400
 
-        # 检查邮箱是否已存在
+        # Check if email already exists
         if User.query.filter_by(email=email).first():
-            return jsonify({"error": "邮箱已被注册"}), 400
+            return jsonify({"error": "Email has already been registered"}), 400
 
-        # 创建新用户，默认角色为 'user'
+        # Create new user with default role 'user'
         user = User(
             username=username,
             email=email,
-            role="user",  # 注册用户默认为普通用户
+            role="user",
             full_name=data.get("full_name", "").strip(),
             phone=data.get("phone", "").strip(),
             is_active=True,
-            email_verified=False,  # 需要邮箱验证
+            # Currently we treat email as verified on registration
+            email_verified=True,
         )
         user.set_password(password)
 
         db.session.add(user)
         db.session.commit()
 
-        # 创建访问令牌
+        # Create access token
         access_token = create_access_token(identity=str(user.id))
 
         return (
             jsonify(
                 {
-                    "message": "注册成功",
+                    "message": "Register success",
                     "access_token": access_token,
                     "user": user.to_dict(),
                 }
@@ -82,50 +86,256 @@ def register():
 
     except Exception as e:
         db.session.rollback()
-        return jsonify({"error": f"注册失败: {str(e)}"}), 500
+        return jsonify({"error": f"Register failed: {str(e)}"}), 500
 
 
 @api_bp.route("/auth/login", methods=["POST"])
 def login():
-    """用户登录"""
+    """User login (supports username or email + password)"""
     try:
-        data = request.get_json()
+        data = request.get_json() or {}
 
-        if not data or not data.get("username") or not data.get("password"):
-            return jsonify({"error": "用户名和密码不能为空"}), 400
+        identifier = (data.get("username") or data.get("email") or data.get("identifier") or "").strip()
+        password = data.get("password")
 
-        user = User.query.filter_by(username=data["username"]).first()
+        if not identifier or not password:
+            return jsonify({"error": "Username or email and password are required"}), 400
 
-        if user and user.check_password(data["password"]) and user.is_active:
+        # Support login by username OR email
+        user = (
+            User.query.filter(
+                or_(User.username == identifier, User.email == identifier)
+            )
+            .first()
+        )
+
+        if user and user.check_password(password) and user.is_active:
             access_token = create_access_token(identity=str(user.id))
             return jsonify({"access_token": access_token, "user": user.to_dict()})
         else:
-            return jsonify({"error": "用户名或密码错误"}), 401
+            return jsonify({"error": "Invalid username/email or password"}), 401
 
     except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
+
+@api_bp.route("/auth/email/send-bind-code", methods=["POST"])
+@jwt_required()
+def send_bind_email_code():
+    """Send verification code for binding email"""
+    try:
+        current_user_id = get_jwt_identity()
+        user = User.query.get(current_user_id)
+
+        if not user or not user.is_active:
+            return jsonify({"error": "User does not exist or is disabled"}), 404
+
+        data = request.get_json() or {}
+        email = (data.get("email") or "").strip().lower()
+
+        if not email:
+            return jsonify({"error": "Email is required"}), 400
+
+        email_pattern = r"^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$"
+        if not re.match(email_pattern, email):
+            return jsonify({"error": "Invalid email format"}), 400
+
+        # Ensure the new email is not already used by another account
+        exists = (
+            User.query.filter(User.email == email, User.id != current_user_id)
+            .first()
+        )
+        if exists:
+            return jsonify({"error": "This email is already used by another account"}), 400
+
+        code = f"{random.randint(0, 999999):06d}"
+        verification = VerificationCode(
+            email=email,
+            code=code,
+            type="bind_email",
+        )
+        db.session.add(verification)
+        db.session.commit()
+
+        subject = "BikeHub - Email binding verification code"
+        body = (
+            f"Your email binding verification code is: {code}\n\n"
+            f"This code will expire in 10 minutes. If you did not request this, please ignore this email."
+        )
+
+        if not send_verification_email(email, subject, body):
+            return jsonify({"error": "Failed to send verification email, please try again later"}), 500
+
+        return jsonify({"message": "Verification code has been sent to the specified email"})
+    except Exception as e:
+        db.session.rollback()
+        return jsonify({"error": str(e)}), 500
+
+
+@api_bp.route("/auth/email/verify-bind", methods=["POST"])
+@jwt_required()
+def verify_bind_email():
+    """Verify email binding code and update user's email"""
+    try:
+        current_user_id = get_jwt_identity()
+        user = User.query.get(current_user_id)
+
+        if not user or not user.is_active:
+            return jsonify({"error": "User does not exist or is disabled"}), 404
+
+        data = request.get_json() or {}
+        email = (data.get("email") or "").strip().lower()
+        code = (data.get("code") or "").strip()
+
+        if not email or not code:
+            return jsonify({"error": "Email and verification code are required"}), 400
+
+        verification = (
+            VerificationCode.query.filter_by(
+                email=email, type="bind_email", code=code, is_used=False
+            )
+            .order_by(VerificationCode.created_at.desc())
+            .first()
+        )
+
+        if not verification or not verification.is_valid:
+            return jsonify({"error": "Invalid or expired verification code"}), 400
+
+        verification.is_used = True
+
+        # Update user email
+        user.email = email
+        user.email_verified = True
+
+        db.session.commit()
+
+        return jsonify({"message": "Email binding successfully updated", "user": user.to_dict()})
+    except Exception as e:
+        db.session.rollback()
+        return jsonify({"error": str(e)}), 500
+
+
+@api_bp.route("/auth/forgot-password/request", methods=["POST"])
+def forgot_password_request():
+    """Forgot password: send reset code to bound email (if any)"""
+    try:
+        data = request.get_json() or {}
+        identifier = (data.get("identifier") or "").strip()
+
+        if not identifier:
+            return jsonify({"error": "Username or email is required"}), 400
+
+        user = (
+            User.query.filter(
+                or_(User.username == identifier, User.email == identifier)
+            )
+            .first()
+        )
+
+        if not user:
+            # Do not reveal whether the account exists
+            return jsonify(
+                {
+                    "message": "If the account exists and has a bound email, a verification code will be sent"
+                }
+            )
+
+        if not user.email:
+            return jsonify({"error": "No email address is bound to this account, password cannot be reset"},), 400
+
+        code = f"{random.randint(0, 999999):06d}"
+        verification = VerificationCode(
+            email=user.email,
+            code=code,
+            type="reset_password",
+        )
+        db.session.add(verification)
+        db.session.commit()
+
+        subject = "BikeHub - Password reset verification code"
+        body = (
+            f" 你的“重置密码”验证码是：{code}\n\n"
+            f" 该验证码将在1分钟后过期，请尽快使用。如果您未请求重置密码，请忽略此邮件。"
+        )
+
+        if not send_verification_email(user.email, subject, body):
+            return jsonify({"error": "Failed to send password reset email, please try again later"}), 500
+
+        return jsonify(
+            {
+                "message": "If the account exists and has a bound email, a verification code has been sent to that email"
+            }
+        )
+    except Exception as e:
+        db.session.rollback()
+        return jsonify({"error": str(e)}), 500
+
+
+@api_bp.route("/auth/forgot-password/reset", methods=["POST"])
+def forgot_password_reset():
+    """Forgot password: verify code and reset password"""
+    try:
+        data = request.get_json() or {}
+        identifier = (data.get("identifier") or "").strip()
+        code = (data.get("code") or "").strip()
+        new_password = data.get("new_password") or ""
+
+        if not identifier or not code or not new_password:
+            return jsonify({"error": "Account identifier, verification code and new password are required"}), 400
+
+        if len(new_password) < 6:
+            return jsonify({"error": "New password length must be at least 6 characters"}), 400
+
+        user = (
+            User.query.filter(
+                or_(User.username == identifier, User.email == identifier)
+            )
+            .first()
+        )
+
+        if not user or not user.email:
+            return jsonify({"error": "Invalid verification code or account email not found"}), 400
+
+        verification = (
+            VerificationCode.query.filter_by(
+                email=user.email, type="reset_password", code=code, is_used=False
+            )
+            .order_by(VerificationCode.created_at.desc())
+            .first()
+        )
+
+        if not verification or not verification.is_valid:
+            return jsonify({"error": "Invalid or expired verification code"}), 400
+
+        verification.is_used = True
+        user.set_password(new_password)
+
+        db.session.commit()
+
+        return jsonify({"message": "Password has been reset successfully"})
+    except Exception as e:
+        db.session.rollback()
         return jsonify({"error": str(e)}), 500
 
 
 @api_bp.route("/auth/logout", methods=["POST"])
 @jwt_required()
 def logout():
-    """用户登出"""
+    """User logout (JWT token handled on client side)"""
     try:
         current_user_id = get_jwt_identity()
-        jti = get_jwt()["jti"]  # 获取JWT ID
+        jti = get_jwt()["jti"]  # JWT ID, could be stored in a blacklist in real deployments
 
-        # 在实际应用中，你可以将jti添加到黑名单中
-        # 这里简化处理，只返回成功消息
-        # 客户端应该删除本地存储的token
+        # Here we simply return success; the client should delete its local token.
 
-        # 更新用户最后登录时间（可选）
+        # Optionally update user's last login / logout time
         user = User.query.get(current_user_id)
         if user:
-            # 可以在这里记录登出时间等日志信息
+            # Could record logout info in logs if needed
             pass
 
         return jsonify(
-            {"message": "登出成功", "logout_time": datetime.now().isoformat()}
+            {"message": "Logout success", "logout_time": datetime.now().isoformat()}
         )
 
     except Exception as e:
@@ -161,7 +371,7 @@ def get_current_user():
         user = User.query.get(current_user_id)
 
         if not user:
-            return jsonify({"error": "用户不存在"}), 404
+            return jsonify({"error": "用户不存�?"}), 404
 
         return jsonify({"data": user.to_dict()})
 
@@ -177,7 +387,7 @@ def get_users():
         current_user_id = get_jwt_identity()
         current_user = User.query.get(current_user_id)
 
-        # 只有管理员可以查看所有用户
+        # 只有管理员可以查看所有用�?
         if current_user.role != "admin":
             return jsonify({"error": "权限不足"}), 403
 
@@ -211,19 +421,19 @@ def create_user():
         current_user_id = get_jwt_identity()
         current_user = User.query.get(current_user_id)
 
-        # 只有管理员可以创建用户
+        # 只有管理员可以创建用�?
         if current_user.role != "admin":
             return jsonify({"error": "权限不足"}), 403
 
         data = request.get_json()
 
-        # 检查用户名是否已存在
+        # 检查用户名是否已存�?
         if User.query.filter_by(username=data["username"]).first():
             return jsonify({"error": "用户名已存在"}), 400
 
         # 检查邮箱是否已存在
         if User.query.filter_by(email=data["email"]).first():
-            return jsonify({"error": "邮箱已存在"}), 400
+            return jsonify({"error": "邮箱已存�?"}), 400
 
         user = User(
             username=data["username"],
@@ -252,7 +462,7 @@ def get_user_profile():
         user = User.query.get(current_user_id)
 
         if not user:
-            return jsonify({"error": "用户不存在"}), 404
+            return jsonify({"error": "用户不存�?"}), 404
 
         return jsonify({"data": user.to_dict()})
     except Exception as e:
@@ -261,7 +471,7 @@ def get_user_profile():
 
 @api_bp.route("/auth/debug-headers", methods=["GET", "POST"])
 def debug_headers():
-    """调试请求头 - 不验证JWT"""
+    """调试请求�? - 不验证JWT"""
     from flask import request
 
     auth_header = request.headers.get("Authorization", "")
@@ -269,7 +479,7 @@ def debug_headers():
 
     return jsonify(
         {
-            "message": "请求头调试信息",
+            "message": "请求头调试信�?",
             "auth_header": auth_header,
             "auth_header_type": type(auth_header).__name__,
             "auth_header_length": len(auth_header) if auth_header else 0,
@@ -315,7 +525,7 @@ def update_user(id):
         current_user_id = get_jwt_identity()
         current_user = User.query.get(current_user_id)
 
-        # 只有管理员可以更新其他用户信息
+        # 只有管理员可以更新其他用户信�?
         if current_user.role != "admin" and current_user_id != id:
             return jsonify({"error": "权限不足"}), 403
 
@@ -333,7 +543,7 @@ def update_user(id):
         if "phone" in data:
             user.phone = data["phone"]
 
-        # 只有管理员可以修改角色和激活状态
+        # 只有管理员可以修改角色和激活状�?
         if current_user.role == "admin":
             if "role" in data:
                 user.role = data["role"]
@@ -359,13 +569,13 @@ def delete_user(id):
         current_user_id = get_jwt_identity()
         current_user = User.query.get(current_user_id)
 
-        # 只有管理员可以删除用户
+        # 只有管理员可以删除用�?
         if current_user.role != "admin":
             return jsonify({"error": "权限不足"}), 403
 
         # 不能删除自己
         if current_user_id == id:
-            return jsonify({"error": "不能删除自己的账户"}), 400
+            return jsonify({"error": "不能删除自己的账�?"}), 400
 
         user = User.query.get_or_404(id)
 
@@ -392,12 +602,12 @@ def delete_user(id):
         ).first()
 
         if has_related_tasks:
-            # 软删除：设为未激活
+            # 软删除：设为未激�?
             user.is_active = False
             db.session.commit()
             return jsonify(
                 {
-                    "message": "用户存在关联历史任务，已自动切换为禁用状态",
+                    "message": "用户存在关联历史任务，已自动切换为禁用状�?",
                     "deleted_user": {
                         "id": user.id,
                         "username": user.username,
@@ -417,9 +627,9 @@ def delete_user(id):
         db.session.delete(user)
         db.session.commit()
 
-        # 双重检查
+        # 双重检�?
         if User.query.get(id):
-            return jsonify({"error": "删除操作未生效，请重试"}), 500
+            return jsonify({"error": "删除操作未生效，请重�?"}), 500
 
         return jsonify({"message": "用户删除成功", "deleted_user": user_info})
 
@@ -436,7 +646,7 @@ def get_user_by_id(id):
         current_user_id = get_jwt_identity()
         current_user = User.query.get(current_user_id)
 
-        # 只有管理员可以查看其他用户信息，或者用户查看自己
+        # 只有管理员可以查看其他用户信息，或者用户查看自�?
         if current_user.role != "admin" and current_user_id != id:
             return jsonify({"error": "权限不足"}), 403
 

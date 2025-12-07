@@ -7,7 +7,7 @@ import { Loader2, LogIn } from 'lucide-react'
 import { toast } from 'sonner'
 import { IconFacebook, IconGithub } from '@/assets/brand-icons'
 import { apiPost } from '@/lib/api'
-import { setCookie } from '@/lib/cookies'  
+import { setCookie } from '@/lib/cookies'
 import { handleServerError } from '@/lib/handle-server-error'
 import { useAuthStore } from '@/stores/auth-store'
 import { sleep, cn } from '@/lib/utils'
@@ -88,79 +88,71 @@ export function UserAuthForm({
     //   },
     //   error: 'Error',
     // })
-     // 使用真实 API 登录
-     console.log('onSubmit called', data)
-     ;(async () => {
-      setIsLoading(true)
-      try {
-        // console.log('calling apiPost /api/auth/login', { username: data.username })
-        // 后端可能使用 email 或 username，按实际调整 payload
-        const payload = { username: data.username, password: data.password }
-        const resp = await apiPost('/api/auth/login', payload)
-        // console.log('login resp', resp)
-        // console.log('useAuthStore.getState()', useAuthStore.getState()) 
-        // // 兼容不同字段命名
-        // const token = resp?.access_token ?? resp?.token ?? resp?.data?.token
-        // if (token) {
-        //   auth.setAccessToken(token)
-        // }
-        // if (resp?.user) {
-        //   auth.setUser(resp.user)
-        // }
-        // const currentUser = useAuthStore.getState()?.auth?.user ?? resp?.user ?? null
+    // 浣跨敤鐪熷疄 API 鐧诲綍
+    console.log('onSubmit called', data)
+      ; (async () => {
+        setIsLoading(true)
+        try {
+          // console.log('calling apiPost /api/auth/login', { username: data.username })
+          const payload = { username: data.username, password: data.password }
+          const resp = await apiPost('/api/auth/login', payload)
+          // console.log('login resp', resp)
+          // console.log('useAuthStore.getState()', useAuthStore.getState()) 
+          // const token = resp?.access_token ?? resp?.token ?? resp?.data?.token
+          // if (token) {
+          //   auth.setAccessToken(token)
+          // }
+          // if (resp?.user) {
+          //   auth.setUser(resp.user)
+          // }
+          // const currentUser = useAuthStore.getState()?.auth?.user ?? resp?.user ?? null
 
-        console.log('login resp', resp)
-        // 更鲁棒地提取 token（access_token / accessToken / token / data.*）
-        const token =
-         resp?.access_token ??
-          // resp?.accessToken ??
-          // resp?.token ??
-          // resp?.data?.access_token ??
-          // resp?.data?.accessToken ??
-          // resp?.data?.token ??
-          null
+          console.log('login resp', resp)
+          const token =
+            resp?.access_token ??
+            // resp?.accessToken ??
+            // resp?.token ??
+            // resp?.data?.access_token ??
+            // resp?.data?.accessToken ??
+            // resp?.data?.token ??
+            null
 
 
-        if (token) {
-          // 统一由 auth-store 处理 cookie 持久化
-          setAccessToken?.(token)
-          console.log('setAccessToken called ->', token)
-          // 可选：同时写入 localStorage 作为回退（不要作为主存储）
-          try { localStorage.setItem('access_token', typeof token === 'string' ? token : String(token)) } catch {}
-        } else {
-           console.warn('No token extracted from login resp', resp)
-         }
+          if (token) {
+            setAccessToken?.(token)
+            console.log('setAccessToken called ->', token)
+            try { localStorage.setItem('access_token', typeof token === 'string' ? token : String(token)) } catch { }
+          } else {
+            console.warn('No token extracted from login resp', resp)
+          }
 
-        // // 取 user 并写入 store（直接保存后端返回的 user）
-        const user = resp?.user ?? null
-        if (user) {
-          setUser?.(user)
-          console.log('setUser called ->', user)
-        } else {
-          console.warn('No user in login resp', resp)
+          const user = resp?.user ?? null
+          if (user) {
+            setUser?.(user)
+            console.log('setUser called ->', user)
+          } else {
+            console.warn('No user in login resp', resp)
+          }
+
+          // const currentUser = readAuthState()?.user ?? user ?? null
+
+          const displayName = user?.full_name ?? user?.username ?? user?.email
+          const rolePart = user?.role
+            ? Array.isArray(user.role)
+              ? `(${user.role.join(', ')})`
+              : `(${user.role})`
+            : ''
+          toast.success(`欢迎${displayName}${rolePart}`)
+
+          const targetPath = redirectTo || '/'
+          navigate({ to: targetPath, replace: true })
+        } catch (err) {
+          handleServerError(err)
+          toast.error('Sign in failed')
+        } finally {
+          setIsLoading(false)
         }
-
-        // 立即读取 store 验证（调试）
-        // const currentUser = readAuthState()?.user ?? user ?? null
-
-        const displayName = user?.full_name ?? user?.username ?? user?.email 
-        const rolePart = user?.role
-          ? Array.isArray(user.role)
-            ? `(${user.role.join(', ')})`
-            : `(${user.role})`
-          : ''
-        toast.success(`欢迎，${displayName}${rolePart}`)
-        // toast.success(`欢迎，${rolePart}`)
-
-        const targetPath = redirectTo || '/'
-        navigate({ to: targetPath, replace: true })
-      } catch (err) {
-        handleServerError(err)
-        toast.error('Sign in failed')
-      } finally {
-        setIsLoading(false)
-      }
-    })()
+      })()
   }
 
   return (
@@ -175,9 +167,9 @@ export function UserAuthForm({
           name='username'
           render={({ field }) => (
             <FormItem>
-              <FormLabel>用户名</FormLabel>
+              <FormLabel>用户名 / QQ邮箱</FormLabel>
               <FormControl>
-                <Input placeholder='name' {...field} />
+                <Input placeholder='请输入用户名或 QQ 邮箱' {...field} />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -205,7 +197,7 @@ export function UserAuthForm({
         {/* <Button className='mt-2' disabled={isLoading}> */}
         <Button type='submit' className='mt-2' disabled={isLoading}>
           {isLoading ? <Loader2 className='animate-spin' /> : <LogIn />}
-          登陆
+          登录
         </Button>
 
         {/* <div className='relative my-2'>

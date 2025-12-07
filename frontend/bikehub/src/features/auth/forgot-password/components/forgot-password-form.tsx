@@ -5,7 +5,9 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { useNavigate } from '@tanstack/react-router'
 import { ArrowRight, Loader2 } from 'lucide-react'
 import { toast } from 'sonner'
-import { sleep, cn } from '@/lib/utils'
+import { cn } from '@/lib/utils'
+import { apiPost } from '@/lib/api'
+import { handleServerError } from '@/lib/handle-server-error'
 import { Button } from '@/components/ui/button'
 import {
   Form,
@@ -18,9 +20,10 @@ import {
 import { Input } from '@/components/ui/input'
 
 const formSchema = z.object({
-  email: z.email({
-    error: (iss) => (iss.input === '' ? 'Please enter your email' : undefined),
-  }),
+  identifier: z
+    .string()
+    .min(1, '请输入用户名或QQ邮箱')
+    .max(100),
 })
 
 export function ForgotPasswordForm({
@@ -32,24 +35,35 @@ export function ForgotPasswordForm({
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
-    defaultValues: { email: '' },
+    defaultValues: { identifier: '' },
   })
 
-  function onSubmit(data: z.infer<typeof formSchema>) {
+  async function onSubmit(data: z.infer<typeof formSchema>) {
     setIsLoading(true)
-    // eslint-disable-next-line no-console
-    console.log(data)
+    try {
+      const payload = { identifier: data.identifier.trim() }
+      const resp = await apiPost('/api/auth/forgot-password/request', payload)
 
-    toast.promise(sleep(2000), {
-      loading: 'Sending email...',
-      success: () => {
-        setIsLoading(false)
-        form.reset()
-        navigate({ to: '/otp' })
-        return `Email sent to ${data.email}`
-      },
-      error: 'Error',
-    })
+      const msg =
+        resp?.message ??
+        'If the account exists and has a bound email, a verification code has been sent to that email'
+      toast.success(msg)
+
+      // 浣跨敤 sessionStorage 淇濆瓨璐﹀彿鏍囪瘑锛屼紶缁欭TP椤甸潰
+      try {
+        sessionStorage.setItem('reset_identifier', payload.identifier)
+      } catch {
+        // ignore
+      }
+
+      form.reset()
+      navigate({ to: '/otp' })
+    } catch (err) {
+      handleServerError(err)
+      toast.error('Failed to start password reset, please try again')
+    } finally {
+      setIsLoading(false)
+    }
   }
 
   return (
@@ -61,12 +75,12 @@ export function ForgotPasswordForm({
       >
         <FormField
           control={form.control}
-          name='email'
+          name='identifier'
           render={({ field }) => (
             <FormItem>
-              <FormLabel>邮箱</FormLabel>
+              <FormLabel>用户名/QQ邮箱</FormLabel>
               <FormControl>
-                <Input placeholder='name@example.com' {...field} />
+                <Input placeholder='请输入用户名/QQ邮箱' {...field} />
               </FormControl>
               <FormMessage />
             </FormItem>
