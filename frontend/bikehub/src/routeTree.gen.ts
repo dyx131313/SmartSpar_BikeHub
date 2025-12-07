@@ -30,6 +30,8 @@ import { Route as AuthenticatedTask_managementIndexRouteImport } from './routes/
 import { Route as AuthenticatedStation_managementIndexRouteImport } from './routes/_authenticated/station_management/index'
 import { Route as AuthenticatedSettingsIndexRouteImport } from './routes/_authenticated/settings/index'
 import { Route as AuthenticatedHelpCenterIndexRouteImport } from './routes/_authenticated/help-center/index'
+import { Route as AuthenticatedDemand_managementIndexRouteImport } from './routes/_authenticated/demand_management/index'
+import { Route as AuthenticatedDemandManagementIndexRouteImport } from './routes/_authenticated/demand-management/index'
 import { Route as AuthenticatedChatsIndexRouteImport } from './routes/_authenticated/chats/index'
 import { Route as AuthenticatedAppsIndexRouteImport } from './routes/_authenticated/apps/index'
 import { Route as ClerkAuthenticatedUserManagementRouteImport } from './routes/clerk/_authenticated/user-management'
@@ -148,6 +150,18 @@ const AuthenticatedHelpCenterIndexRoute =
     path: '/help-center/',
     getParentRoute: () => AuthenticatedRouteRoute,
   } as any)
+const AuthenticatedDemand_managementIndexRoute =
+  AuthenticatedDemand_managementIndexRouteImport.update({
+    id: '/demand_management/',
+    path: '/demand_management/',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
+const AuthenticatedDemandManagementIndexRoute =
+  AuthenticatedDemandManagementIndexRouteImport.update({
+    id: '/demand-management/',
+    path: '/demand-management/',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
 const AuthenticatedChatsIndexRoute = AuthenticatedChatsIndexRouteImport.update({
   id: '/chats/',
   path: '/chats/',
@@ -229,6 +243,8 @@ export interface FileRoutesByFullPath {
   '/clerk/user-management': typeof ClerkAuthenticatedUserManagementRoute
   '/apps': typeof AuthenticatedAppsIndexRoute
   '/chats': typeof AuthenticatedChatsIndexRoute
+  '/demand-management': typeof AuthenticatedDemandManagementIndexRoute
+  '/demand_management': typeof AuthenticatedDemand_managementIndexRoute
   '/help-center': typeof AuthenticatedHelpCenterIndexRoute
   '/settings/': typeof AuthenticatedSettingsIndexRoute
   '/station_management': typeof AuthenticatedStation_managementIndexRoute
@@ -258,6 +274,8 @@ export interface FileRoutesByTo {
   '/clerk/user-management': typeof ClerkAuthenticatedUserManagementRoute
   '/apps': typeof AuthenticatedAppsIndexRoute
   '/chats': typeof AuthenticatedChatsIndexRoute
+  '/demand-management': typeof AuthenticatedDemandManagementIndexRoute
+  '/demand_management': typeof AuthenticatedDemand_managementIndexRoute
   '/help-center': typeof AuthenticatedHelpCenterIndexRoute
   '/settings': typeof AuthenticatedSettingsIndexRoute
   '/station_management': typeof AuthenticatedStation_managementIndexRoute
@@ -292,6 +310,8 @@ export interface FileRoutesById {
   '/clerk/_authenticated/user-management': typeof ClerkAuthenticatedUserManagementRoute
   '/_authenticated/apps/': typeof AuthenticatedAppsIndexRoute
   '/_authenticated/chats/': typeof AuthenticatedChatsIndexRoute
+  '/_authenticated/demand-management/': typeof AuthenticatedDemandManagementIndexRoute
+  '/_authenticated/demand_management/': typeof AuthenticatedDemand_managementIndexRoute
   '/_authenticated/help-center/': typeof AuthenticatedHelpCenterIndexRoute
   '/_authenticated/settings/': typeof AuthenticatedSettingsIndexRoute
   '/_authenticated/station_management/': typeof AuthenticatedStation_managementIndexRoute
@@ -324,6 +344,8 @@ export interface FileRouteTypes {
     | '/clerk/user-management'
     | '/apps'
     | '/chats'
+    | '/demand-management'
+    | '/demand_management'
     | '/help-center'
     | '/settings/'
     | '/station_management'
@@ -353,6 +375,8 @@ export interface FileRouteTypes {
     | '/clerk/user-management'
     | '/apps'
     | '/chats'
+    | '/demand-management'
+    | '/demand_management'
     | '/help-center'
     | '/settings'
     | '/station_management'
@@ -386,6 +410,8 @@ export interface FileRouteTypes {
     | '/clerk/_authenticated/user-management'
     | '/_authenticated/apps/'
     | '/_authenticated/chats/'
+    | '/_authenticated/demand-management/'
+    | '/_authenticated/demand_management/'
     | '/_authenticated/help-center/'
     | '/_authenticated/settings/'
     | '/_authenticated/station_management/'
@@ -557,6 +583,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedHelpCenterIndexRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/_authenticated/demand_management/': {
+      id: '/_authenticated/demand_management/'
+      path: '/demand_management'
+      fullPath: '/demand_management'
+      preLoaderRoute: typeof AuthenticatedDemand_managementIndexRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/demand-management/': {
+      id: '/_authenticated/demand-management/'
+      path: '/demand-management'
+      fullPath: '/demand-management'
+      preLoaderRoute: typeof AuthenticatedDemandManagementIndexRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
     '/_authenticated/chats/': {
       id: '/_authenticated/chats/'
       path: '/chats'
@@ -659,6 +699,8 @@ interface AuthenticatedRouteRouteChildren {
   AuthenticatedErrorsErrorRoute: typeof AuthenticatedErrorsErrorRoute
   AuthenticatedAppsIndexRoute: typeof AuthenticatedAppsIndexRoute
   AuthenticatedChatsIndexRoute: typeof AuthenticatedChatsIndexRoute
+  AuthenticatedDemandManagementIndexRoute: typeof AuthenticatedDemandManagementIndexRoute
+  AuthenticatedDemand_managementIndexRoute: typeof AuthenticatedDemand_managementIndexRoute
   AuthenticatedHelpCenterIndexRoute: typeof AuthenticatedHelpCenterIndexRoute
   AuthenticatedStation_managementIndexRoute: typeof AuthenticatedStation_managementIndexRoute
   AuthenticatedTask_managementIndexRoute: typeof AuthenticatedTask_managementIndexRoute
@@ -671,6 +713,10 @@ const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedErrorsErrorRoute: AuthenticatedErrorsErrorRoute,
   AuthenticatedAppsIndexRoute: AuthenticatedAppsIndexRoute,
   AuthenticatedChatsIndexRoute: AuthenticatedChatsIndexRoute,
+  AuthenticatedDemandManagementIndexRoute:
+    AuthenticatedDemandManagementIndexRoute,
+  AuthenticatedDemand_managementIndexRoute:
+    AuthenticatedDemand_managementIndexRoute,
   AuthenticatedHelpCenterIndexRoute: AuthenticatedHelpCenterIndexRoute,
   AuthenticatedStation_managementIndexRoute:
     AuthenticatedStation_managementIndexRoute,
