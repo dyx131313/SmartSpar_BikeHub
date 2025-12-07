@@ -199,7 +199,6 @@ export async function apiDelete(path: string) {
   }
   return data
 }
-
 // 导出统一的API对象以供聊天模块使用
 export const api = {
   get: apiGet,
