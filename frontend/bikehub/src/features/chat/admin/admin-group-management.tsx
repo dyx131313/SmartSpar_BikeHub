@@ -7,6 +7,13 @@ import { Search, Plus, Users, Settings, Eye, Edit, Trash2, Shield, Ban, Check, X
 import { groupChatAPI } from '../api/group-chat-api';
 import { ChatGroup, GroupType, MemberRole, ChatGroupMember } from '../data/group-chat-types';
 
+// 过滤器接口
+interface GroupFilters {
+  type?: GroupType | 'all';
+  status?: 'all' | 'active' | 'inactive';
+  search?: string;
+}
+
 interface AdminGroupManagementProps {
   onGroupSelect?: (group: ChatGroup) => void;
 }
@@ -33,13 +40,18 @@ export const AdminGroupManagement: React.FC<AdminGroupManagementProps> = ({ onGr
     max_members: 100,
   });
 
+  // 处理群聊类型变更
+  const handleGroupTypeChange = (value: GroupType) => {
+    setFormData(prev => ({ ...prev, group_type: value }));
+  };
+
   // 分页状态
   const [currentPage, setCurrentPage] = useState(1);
   const [pageSize, setPageSize] = useState(20);
   const [totalPages, setTotalPages] = useState(0);
 
   // 加载群聊列表
-  const loadGroups = async (page = 1, filters = {}) => {
+  const loadGroups = async (page = 1, filters: GroupFilters = {}) => {
     try {
       setLoading(true);
       const response = await groupChatAPI.adminGetAllGroups(page, pageSize);
@@ -52,10 +64,11 @@ export const AdminGroupManagement: React.FC<AdminGroupManagementProps> = ({ onGr
       if (filters.status && filters.status !== 'all') {
         filteredGroups = filteredGroups.filter(g => g.is_active === (filters.status === 'active'));
       }
-      if (filters.search) {
+      if (filters.search && typeof filters.search === 'string') {
+        const searchLower = filters.search.toLowerCase();
         filteredGroups = filteredGroups.filter(g =>
-          g.name.toLowerCase().includes(filters.search.toLowerCase()) ||
-          g.description?.toLowerCase().includes(filters.search.toLowerCase())
+          g.name.toLowerCase().includes(searchLower) ||
+          g.description?.toLowerCase().includes(searchLower)
         );
       }
 
@@ -88,14 +101,45 @@ export const AdminGroupManagement: React.FC<AdminGroupManagementProps> = ({ onGr
       return;
     }
 
+    // 验证数据格式
+    const requestData = {
+      name: formData.name.trim(),
+      description: formData.description?.trim() || undefined,
+      avatar_url: formData.avatar_url?.trim() || undefined,
+      group_type: formData.group_type, // 这是枚举值，会序列化为字符串
+      max_members: formData.max_members
+    };
+
+    console.log('Creating group with data:', requestData);
+    console.log('Group type value:', requestData.group_type);
+    console.log('Group type typeof:', typeof requestData.group_type);
+
     try {
-      const response = await groupChatAPI.createGroup(formData);
+      const response = await groupChatAPI.createGroup(requestData);
+      console.log('Create group response:', response);
       setGroups(prev => [response.group, ...prev]);
       setCreateDialogOpen(false);
       resetForm();
-    } catch (error) {
+    } catch (error: any) {
       console.error('创建群聊失败:', error);
-      alert('创建群聊失败，请重试');
+      console.error('Error details:', {
+        message: error.message,
+        status: error.status,
+        response: error.response,
+        data: error.data
+      });
+
+      // 显示更详细的错误信息
+      let errorMessage = '创建群聊失败，请重试';
+      if (error.response?.data?.error) {
+        errorMessage = `创建失败: ${error.response.data.error}`;
+      } else if (error.data?.error) {
+        errorMessage = `创建失败: ${error.data.error}`;
+      } else if (error.message) {
+        errorMessage = `创建失败: ${error.message}`;
+      }
+
+      alert(errorMessage);
     }
   };
 
@@ -277,7 +321,7 @@ export const AdminGroupManagement: React.FC<AdminGroupManagementProps> = ({ onGr
                 />
               </div>
 
-              <Select value={filterType} onValueChange={(value: any) => setFilterType(value)}>
+              <Select value={filterType} onValueChange={(value: GroupType | 'all') => setFilterType(value)}>
                 <SelectTrigger className="w-32">
                   <SelectValue placeholder="群聊类型" />
                 </SelectTrigger>
@@ -289,7 +333,7 @@ export const AdminGroupManagement: React.FC<AdminGroupManagementProps> = ({ onGr
                 </SelectContent>
               </Select>
 
-              <Select value={filterStatus} onValueChange={(value: any) => setFilterStatus(value)}>
+              <Select value={filterStatus} onValueChange={(value: 'all' | 'active' | 'inactive') => setFilterStatus(value)}>
                 <SelectTrigger className="w-32">
                   <SelectValue placeholder="状态" />
                 </SelectTrigger>

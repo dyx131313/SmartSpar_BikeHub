@@ -48,3 +48,4 @@ geopy==2.4.1
 scikit-learn>=1.6.0
 
 pydantic==2.11.7
+websockets==15.0.1

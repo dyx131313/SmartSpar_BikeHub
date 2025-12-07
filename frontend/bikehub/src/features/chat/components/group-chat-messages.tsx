@@ -2,7 +2,7 @@
  * 群聊消息组件
  */
 import React, { useState, useRef, useEffect } from 'react';
-import { ScrollArea, Avatar, AvatarFallback, AvatarImage, Button, Input, Tooltip, DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui';
+import { ScrollArea, Avatar, AvatarFallback, AvatarImage, Button, Input, Tooltip, TooltipTrigger, TooltipContent, DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui';
 import { Send, Paperclip, Smile, Reply, MoreVertical, Edit, Trash2, Copy, Download, RotateCcw, Check } from 'lucide-react';
 import { groupChatAPI } from '../api/group-chat-api';
 import { ChatGroup, ChatMessage, MessageType, SendMessageForm } from '../data/group-chat-types';
@@ -471,22 +471,29 @@ export const GroupChatMessages: React.FC<GroupChatMessagesProps> = ({
             className="hidden"
             accept="image/*,.pdf,.doc,.docx,.txt,.zip,.rar"
           />
-          <Tooltip content="发送文件">
-            <Button
-              variant="outline"
-              size="icon"
-              onClick={() => fileInputRef.current?.click()}
-              disabled={sending}
-            >
-              <Paperclip className="h-4 w-4" />
-            </Button>
+          {/* 发送文件 */}
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <Button
+                variant="outline"
+                size="icon"
+                onClick={() => fileInputRef.current?.click()}
+                disabled={sending}
+              >
+                <Paperclip className="h-4 w-4" />
+              </Button>
+            </TooltipTrigger>
+            <TooltipContent>发送文件</TooltipContent>
           </Tooltip>
 
           {/* 表情按钮 */}
-          <Tooltip content="表情">
-            <Button variant="outline" size="icon" disabled={sending}>
-              <Smile className="h-4 w-4" />
-            </Button>
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <Button variant="outline" size="icon" disabled={sending}>
+                <Smile className="h-4 w-4" />
+              </Button>
+            </TooltipTrigger>
+            <TooltipContent>表情</TooltipContent>
           </Tooltip>
 
           {/* 发送按钮 */}

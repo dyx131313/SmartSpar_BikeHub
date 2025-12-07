@@ -17,15 +17,15 @@ def test_mysql_connection():
         print("=== 数据库连接测试 ===")
         print(f"MYSQL_HOST: {os.getenv('MYSQL_HOST', 'localhost')}")
         print(f"MYSQL_USER: {os.getenv('MYSQL_USER', 'root')}")
-        print(f"MYSQL_DATABASE: {os.getenv('MYSQL_DATABASE', 'bikehub')}")
+        print(f"MYSQL_DATABASE: {os.getenv('MYSQL_DATABASE', 'bikehub_dev')}")
         print(f"MYSQL_PORT: {os.getenv('MYSQL_PORT', '3306')}")
 
         # 测试连接
         connection = pymysql.connect(
             host=os.getenv('MYSQL_HOST', 'localhost'),
             user=os.getenv('MYSQL_USER', 'root'),
-            password=os.getenv('MYSQL_PASSWORD', ''),
-            database=os.getenv('MYSQL_DATABASE', 'bikehub'),
+            password=os.getenv('MYSQL_PASSWORD', 'ding1017ding'),
+            database=os.getenv('MYSQL_DATABASE', 'bikehub_dev'),
             port=int(os.getenv('MYSQL_PORT', '3306')),
             charset='utf8mb4',
             cursorclass=pymysql.cursors.DictCursor

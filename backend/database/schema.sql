@@ -1,6 +1,6 @@
-CREATE DATABASE IF NOT EXISTS bikehub CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+CREATE DATABASE IF NOT EXISTS bikehub_dev CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
-USE bikehub;
+USE bikehub_dev;
 
 -- 站点信息表
 CREATE TABLE IF NOT EXISTS stations (
@@ -67,7 +67,9 @@ CREATE TABLE IF NOT EXISTS users (
     full_name VARCHAR(100) COMMENT '全名',
     phone VARCHAR(20) COMMENT '电话',
     is_active TINYINT(1) NOT NULL DEFAULT 1 COMMENT '是否激活',
+    email_verified TINYINT(1) NOT NULL DEFAULT 0 COMMENT '邮箱是否验证',
     last_login TIMESTAMP NULL COMMENT '最后登录时间',
+    login_count INT NOT NULL DEFAULT 0 COMMENT '登录次数',
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     INDEX idx_role (role),

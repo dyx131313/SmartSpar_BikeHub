@@ -1,6 +1,6 @@
 import os
-#from dotenv import load_dotenv
-#load_dotenv()  # ✅ 关键：加载 .env 文件
+from dotenv import load_dotenv
+load_dotenv()  # ✅ 关键：加载 .env 文件
 
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy

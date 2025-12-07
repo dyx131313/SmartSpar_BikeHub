@@ -2,10 +2,10 @@
  * 群聊列表组件
  */
 import React, { useEffect, useState } from 'react';
-import { Badge, Button, Input, ScrollArea, Avatar, AvatarFallback, AvatarImage, Tooltip, DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui';
+import { Badge, Button, Input, ScrollArea, Avatar, AvatarFallback, AvatarImage, Tooltip, TooltipTrigger, TooltipContent, DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui';
 import { Search, Plus, MoreVertical, Bell, BellOff, Settings, Users, MessageSquare, Crown, Shield, User, X } from 'lucide-react';
 import { groupChatAPI } from '../api/group-chat-api';
-import { ChatGroup, MemberRole } from '../data/group-chat-types';
+import { ChatGroup, MemberRole, ChatGroupMember } from '../data/group-chat-types';
 
 interface GroupChatListProps {
   selectedGroupId?: number | null;
@@ -25,6 +25,7 @@ export const GroupChatList: React.FC<GroupChatListProps> = ({
   const [searchQuery, setSearchQuery] = useState('');
   const [hasMore, setHasMore] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
+  const [membersCache, setMembersCache] = useState<Map<number, ChatGroupMember[]>>(new Map());
 
   // 加载群聊列表
   const loadGroups = async (page = 1, query = '') => {
@@ -73,7 +74,16 @@ export const GroupChatList: React.FC<GroupChatListProps> = ({
   // 处理免打扰
   const handleMuteToggle = async (groupId: number, isMuted: boolean) => {
     try {
-      await groupChatAPI.updateGroupMember(groupId, 'self', { is_muted: !isMuted });
+      // 获取群聊成员列表
+      const members = await loadGroupMembers(groupId);
+      const currentMemberId = getCurrentUserMemberId(groupId, members);
+
+      if (!currentMemberId) {
+        console.error('找不到当前用户的成员信息');
+        return;
+      }
+
+      await groupChatAPI.updateGroupMember(groupId, currentMemberId, { is_muted: !isMuted });
       setGroups(prev => prev.map(group =>
         group.id === groupId ? { ...group, is_muted: !isMuted } : group
       ));
@@ -119,6 +129,33 @@ export const GroupChatList: React.FC<GroupChatListProps> = ({
         return 'bg-blue-100 text-blue-800 border-blue-200';
       default:
         return 'bg-green-100 text-green-800 border-green-200';
+    }
+  };
+
+  // 获取当前用户的成员ID
+  const getCurrentUserMemberId = (groupId: number, members: ChatGroupMember[]): number | undefined => {
+    // 假设当前用户的ID可以从localStorage或其他地方获取
+    // 这里我们通过用户名来匹配（在实际应用中应该使用用户ID）
+    const currentUserUsername = localStorage.getItem('username');
+    if (currentUserUsername) {
+      return members.find(member => member.username === currentUserUsername)?.id;
+    }
+    return undefined;
+  };
+
+  // 加载群聊成员
+  const loadGroupMembers = async (groupId: number) => {
+    if (membersCache.has(groupId)) {
+      return membersCache.get(groupId)!;
+    }
+
+    try {
+      const response = await groupChatAPI.getGroupMembers(groupId);
+      membersCache.set(groupId, response.members);
+      return response.members;
+    } catch (error) {
+      console.error('加载群聊成员失败:', error);
+      return [];
     }
   };
 
@@ -203,9 +240,12 @@ export const GroupChatList: React.FC<GroupChatListProps> = ({
                             {group.group_type === 'system' ? '系统' : group.group_type === 'private' ? '私密' : '公开'}
                           </span>
                           {group.is_muted && (
-                            <Tooltip content="已开启免打扰">
+                            <Tooltip>
+                            <TooltipTrigger asChild>
                               <BellOff className="h-3 w-3 text-muted-foreground" />
-                            </Tooltip>
+                            </TooltipTrigger>
+                            <TooltipContent>已开启免打扰</TooltipContent>
+                          </Tooltip>
                           )}
                         </div>
 
@@ -227,7 +267,7 @@ export const GroupChatList: React.FC<GroupChatListProps> = ({
                           </div>
 
                           {/* 未读消息数量 */}
-                          {(group.unread_count || 0) > 0 && (
+                          {(group.unread_count && group.unread_count > 0) && (
                             <Badge variant="destructive" className="text-xs">
                               {group.unread_count > 99 ? '99+' : group.unread_count}
                             </Badge>

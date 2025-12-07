@@ -16,7 +16,7 @@ import type {
   FileUploadResponse,
   UserChatSetting,
   UserInfo
-} from '@/features/chats/data/group-chat-types';
+} from '@/features/chat/data/group-chat-types';
 
 /**
  * 群聊API类
@@ -27,7 +27,7 @@ export class GroupChatAPI {
    */
   static async getGroups(page = 1, pageSize = 20): Promise<ChatGroupListResponse> {
     const response = await api.get(`/api/chat/groups?page=${page}&page_size=${pageSize}`);
-    return response.data;
+    return response;
   }
 
   /**
@@ -35,7 +35,7 @@ export class GroupChatAPI {
    */
   static async createGroup(data: CreateGroupForm): Promise<{ message: string; group: ChatGroup }> {
     const response = await api.post('/api/chat/groups', data);
-    return response.data;
+    return response;
   }
 
   /**
@@ -43,7 +43,7 @@ export class GroupChatAPI {
    */
   static async getGroup(groupId: number): Promise<{ group: ChatGroup }> {
     const response = await api.get(`/api/chat/groups/${groupId}`);
-    return response.data;
+    return response;
   }
 
   /**
@@ -51,7 +51,7 @@ export class GroupChatAPI {
    */
   static async updateGroup(groupId: number, data: Partial<CreateGroupForm>): Promise<{ message: string; group: ChatGroup }> {
     const response = await api.put(`/api/chat/groups/${groupId}`, data);
-    return response.data;
+    return response;
   }
 
   /**
@@ -59,7 +59,7 @@ export class GroupChatAPI {
    */
   static async deleteGroup(groupId: number): Promise<{ message: string }> {
     const response = await api.delete(`/api/chat/groups/${groupId}`);
-    return response.data;
+    return response;
   }
 
   /**
@@ -67,7 +67,7 @@ export class GroupChatAPI {
    */
   static async getGroupMembers(groupId: number, page = 1, pageSize = 50): Promise<ChatGroupMemberListResponse> {
     const response = await api.get(`/api/chat/groups/${groupId}/members?page=${page}&page_size=${pageSize}`);
-    return response.data;
+    return response;
   }
 
   /**
@@ -75,7 +75,7 @@ export class GroupChatAPI {
    */
   static async addGroupMembers(groupId: number, userIds: number[]): Promise<{ message: string; added_user_ids: number[] }> {
     const response = await api.post(`/api/chat/groups/${groupId}/members`, { user_ids: userIds });
-    return response.data;
+    return response;
   }
 
   /**
@@ -83,7 +83,7 @@ export class GroupChatAPI {
    */
   static async removeGroupMember(groupId: number, memberId: number): Promise<{ message: string }> {
     const response = await api.delete(`/api/chat/groups/${groupId}/members/${memberId}`);
-    return response.data;
+    return response;
   }
 
   /**
@@ -91,7 +91,7 @@ export class GroupChatAPI {
    */
   static async updateGroupMember(groupId: number, memberId: number, data: { role?: string; nickname?: string; is_muted?: boolean }): Promise<{ message: string; member: ChatGroupMember }> {
     const response = await api.put(`/api/chat/groups/${groupId}/members/${memberId}`, data);
-    return response.data;
+    return response;
   }
 
   /**
@@ -99,7 +99,7 @@ export class GroupChatAPI {
    */
   static async leaveGroup(groupId: number): Promise<{ message: string }> {
     const response = await api.post(`/api/chat/groups/${groupId}/leave`);
-    return response.data;
+    return response;
   }
 
   /**
@@ -111,7 +111,7 @@ export class GroupChatAPI {
       url += `&before_message_id=${beforeMessageId}`;
     }
     const response = await api.get(url);
-    return response.data;
+    return response;
   }
 
   /**
@@ -136,12 +136,24 @@ export class GroupChatAPI {
       formData.append('file', data.file);
     }
 
-    const response = await api.post(`/api/chat/groups/${groupId}/messages`, formData, {
+    const url = `/api/chat/groups/${groupId}/messages`
+    const res = await fetch(url, {
+      method: 'POST',
       headers: {
-        'Content-Type': 'multipart/form-data',
+        'Authorization': `Bearer ${localStorage.getItem('access_token')}`,
+        // 不要设置Content-Type，让浏览器自动设置multipart/form-data边界
       },
-    });
-    return response.data;
+      body: formData,
+      credentials: 'include',
+    })
+
+    if (!res.ok) {
+      const errorData = await res.json().catch(() => ({}))
+      throw new Error(errorData?.error || errorData?.message || 'Failed to send message')
+    }
+
+    const response = await res.json()
+    return response;
   }
 
   /**
@@ -149,7 +161,7 @@ export class GroupChatAPI {
    */
   static async recallMessage(messageId: number): Promise<{ message: string }> {
     const response = await api.delete(`/api/chat/messages/${messageId}`);
-    return response.data;
+    return response;
   }
 
   /**
@@ -157,7 +169,7 @@ export class GroupChatAPI {
    */
   static async editMessage(messageId: number, content: string): Promise<{ message: string; data: ChatMessage }> {
     const response = await api.put(`/api/chat/messages/${messageId}`, { content });
-    return response.data;
+    return response;
   }
 
   /**
@@ -165,7 +177,7 @@ export class GroupChatAPI {
    */
   static async markMessageAsRead(messageId: number): Promise<{ message: string }> {
     const response = await api.post(`/api/chat/messages/${messageId}/read`);
-    return response.data;
+    return response;
   }
 
   /**
@@ -177,7 +189,7 @@ export class GroupChatAPI {
       url += `&before_message_id=${beforeMessageId}`;
     }
     const response = await api.get(url);
-    return response.data;
+    return response;
   }
 
   /**
@@ -199,12 +211,23 @@ export class GroupChatAPI {
       formData.append('file', data.file);
     }
 
-    const response = await api.post(`/api/chat/private/${userId}/messages`, formData, {
+    const url = `/api/chat/private/${userId}/messages`
+    const res = await fetch(url, {
+      method: 'POST',
       headers: {
-        'Content-Type': 'multipart/form-data',
+        'Authorization': `Bearer ${localStorage.getItem('access_token')}`,
       },
-    });
-    return response.data;
+      body: formData,
+      credentials: 'include',
+    })
+
+    if (!res.ok) {
+      const errorData = await res.json().catch(() => ({}))
+      throw new Error(errorData?.error || errorData?.message || 'Failed to send private message')
+    }
+
+    const response = await res.json()
+    return response;
   }
 
   /**
@@ -216,7 +239,7 @@ export class GroupChatAPI {
       url += `&group_id=${groupId}`;
     }
     const response = await api.get(url);
-    return response.data;
+    return response;
   }
 
   /**
@@ -224,7 +247,7 @@ export class GroupChatAPI {
    */
   static async getStatistics(): Promise<ChatStatisticsResponse> {
     const response = await api.get('/api/chat/statistics');
-    return response.data;
+    return response;
   }
 
   /**
@@ -234,12 +257,23 @@ export class GroupChatAPI {
     const formData = new FormData();
     formData.append('file', file);
 
-    const response = await api.post('/api/chat/upload', formData, {
+    const url = '/api/chat/upload'
+    const res = await fetch(url, {
+      method: 'POST',
       headers: {
-        'Content-Type': 'multipart/form-data',
+        'Authorization': `Bearer ${localStorage.getItem('access_token')}`,
       },
-    });
-    return response.data;
+      body: formData,
+      credentials: 'include',
+    })
+
+    if (!res.ok) {
+      const errorData = await res.json().catch(() => ({}))
+      throw new Error(errorData?.error || errorData?.message || 'Failed to upload file')
+    }
+
+    const response = await res.json()
+    return response;
   }
 
   /**
@@ -247,7 +281,7 @@ export class GroupChatAPI {
    */
   static async getUserChatSettings(): Promise<UserChatSetting[]> {
     const response = await api.get('/api/chat/settings');
-    return response.data;
+    return response;
   }
 
   /**
@@ -255,15 +289,27 @@ export class GroupChatAPI {
    */
   static async updateUserChatSetting(key: string, value: string): Promise<{ message: string; setting: UserChatSetting }> {
     const response = await api.put('/api/chat/settings', { setting_key: key, setting_value: value });
-    return response.data;
+    return response;
   }
 
   /**
    * 搜索用户
    */
   static async searchUsers(query: string, limit = 20): Promise<UserInfo[]> {
+    // 如果查询关键词为空，使用特殊参数表示获取所有用户
+    // const searchQuery = query.trim() ? query : ' ';
+    // const response = await api.get(`/api/chat/users/search?q=${encodeURIComponent(searchQuery)}&limit=${limit}`);
     const response = await api.get(`/api/chat/users/search?q=${encodeURIComponent(query)}&limit=${limit}`);
-    return response.data;
+    return response.users;
+  }
+
+  /**
+   * 获取所有可搜索的用户
+   */
+  static async getAllAvailableUsers(limit = 50): Promise<UserInfo[]> {
+    // 使用一个不可能匹配的搜索词来返回所有用户
+    const response = await api.get(`/api/chat/users/search?q=%&limit=${limit}`);
+    return response.users;
   }
 
   /**
@@ -271,7 +317,7 @@ export class GroupChatAPI {
    */
   static async getUserInfo(userId: number): Promise<UserInfo> {
     const response = await api.get(`/api/chat/users/${userId}`);
-    return response.data;
+    return response;
   }
 
   /**
@@ -279,7 +325,7 @@ export class GroupChatAPI {
    */
   static async getUnreadCount(): Promise<{ unread_count: number }> {
     const response = await api.get('/api/chat/unread-count');
-    return response.data;
+    return response;
   }
 
   /**
@@ -287,7 +333,7 @@ export class GroupChatAPI {
    */
   static async markGroupAsRead(groupId: number): Promise<{ message: string }> {
     const response = await api.post(`/api/chat/groups/${groupId}/read-all`);
-    return response.data;
+    return response;
   }
 
   /**
@@ -295,7 +341,7 @@ export class GroupChatAPI {
    */
   static async markAllAsRead(): Promise<{ message: string }> {
     const response = await api.post('/api/chat/read-all');
-    return response.data;
+    return response;
   }
 
   // 管理员专用接口
@@ -305,7 +351,7 @@ export class GroupChatAPI {
    */
   static async adminGetAllGroups(page = 1, pageSize = 20): Promise<ChatGroupListResponse> {
     const response = await api.get(`/api/chat/admin/groups?page=${page}&page_size=${pageSize}`);
-    return response.data;
+    return response;
   }
 
   /**
@@ -313,7 +359,7 @@ export class GroupChatAPI {
    */
   static async adminDeleteGroup(groupId: number): Promise<{ message: string }> {
     const response = await api.delete(`/api/chat/admin/groups/${groupId}`);
-    return response.data;
+    return response;
   }
 
   /**
@@ -321,7 +367,7 @@ export class GroupChatAPI {
    */
   static async adminDisableGroup(groupId: number): Promise<{ message: string }> {
     const response = await api.post(`/api/chat/admin/groups/${groupId}/disable`);
-    return response.data;
+    return response;
   }
 
   /**
@@ -329,7 +375,7 @@ export class GroupChatAPI {
    */
   static async adminEnableGroup(groupId: number): Promise<{ message: string }> {
     const response = await api.post(`/api/chat/admin/groups/${groupId}/enable`);
-    return response.data;
+    return response;
   }
 }
 

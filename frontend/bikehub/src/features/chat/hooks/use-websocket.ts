@@ -2,7 +2,7 @@
  * WebSocket Hook
  */
 import { useEffect, useRef, useCallback, useState } from 'react';
-import { getAuthToken } from '@/lib/auth';
+import { readToken } from '@/lib/api';
 import { ChatNotificationMessage, WebSocketMessage } from '../data/group-chat-types';
 
 interface UseWebSocketOptions {
@@ -58,12 +58,12 @@ export const useWebSocket = (options: UseWebSocketOptions = {}) => {
   });
 
   const wsRef = useRef<WebSocket | null>(null);
-  const reconnectTimeoutRef = useRef<NodeJS.Timeout>();
-  const pingIntervalRef = useRef<NodeJS.Timeout>();
+  const reconnectTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+  const pingIntervalRef = useRef<NodeJS.Timeout | null>(null);
   const messageQueueRef = useRef<any[]>([]);
 
   // WebSocket服务器地址
-  const wsUrl = `${process.env.NEXT_PUBLIC_WS_URL || 'ws://localhost:8765'}?token=${getAuthToken()}`;
+  const wsUrl = `${import.meta.env.VITE_WS_URL || 'ws://localhost:8765'}?token=${readToken()}`;
 
   // 连接WebSocket
   const connect = useCallback(() => {

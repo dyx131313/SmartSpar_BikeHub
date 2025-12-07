@@ -1,7 +1,7 @@
 /**
  * 创建群聊对话框组件
  */
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from '@/components/ui';
 import { Button, Input, Textarea, Select, SelectContent, SelectItem, SelectTrigger, SelectValue, Avatar, AvatarFallback, AvatarImage, Badge, ScrollArea, Checkbox } from '@/components/ui';
 import { X, Users, Search } from 'lucide-react';
@@ -19,6 +19,8 @@ export const CreateGroupDialog: React.FC<CreateGroupDialogProps> = ({
   onClose,
   onSuccess,
 }) => {
+  console.log('🔄 CreateGroupDialog渲染 - open:', open);
+
   const [formData, setFormData] = useState<CreateGroupForm>({
     name: '',
     description: '',
@@ -31,26 +33,36 @@ export const CreateGroupDialog: React.FC<CreateGroupDialogProps> = ({
   const [searchQuery, setSearchQuery] = useState('');
   const [searching, setSearching] = useState(false);
 
+  console.log('📊 CreateGroupDialog状态 - formData:', formData);
+  console.log('📊 CreateGroupDialog状态 - selectedUsers.length:', selectedUsers.length);
+  console.log('📊 CreateGroupDialog状态 - availableUsers.length:', availableUsers.length);
+
   // 加载可用用户
-  const loadUsers = async () => {
+  const loadUsers = useCallback(async () => {
+    console.log('🔍 loadUsers 函数被调用');
     try {
       setSearching(true);
+      console.log('🔍 正在加载用户列表...');
       const users = await groupChatAPI.searchUsers('', 50);
+      console.log('🔍 用户加载完成，数量:', users?.length);
       setAvailableUsers(users);
     } catch (error) {
       console.error('加载用户列表失败:', error);
     } finally {
       setSearching(false);
     }
-  };
+  }, []);
 
   // 搜索用户
-  const handleSearchUsers = async (query: string) => {
+  const handleSearchUsers = useCallback(async (query: string) => {
+    console.log('🔍 handleSearchUsers 被调用 - query:', query);
     setSearchQuery(query);
     if (query.trim()) {
       try {
         setSearching(true);
+        console.log('🔍 正在搜索用户:', query);
         const users = await groupChatAPI.searchUsers(query, 20);
+        console.log('🔍 搜索完成，结果数量:', users?.length);
         setAvailableUsers(users);
       } catch (error) {
         console.error('搜索用户失败:', error);
@@ -58,22 +70,31 @@ export const CreateGroupDialog: React.FC<CreateGroupDialogProps> = ({
         setSearching(false);
       }
     } else {
+      console.log('🔍 搜索框为空，重置为所有用户');
+      // 当搜索框为空时，重置为所有用户
       loadUsers();
     }
-  };
+  }, [loadUsers]);
 
   // 处理用户选择
   const handleUserToggle = (user: UserInfo) => {
-    const isSelected = selectedUsers.some(u => u.id === user.id);
-    if (isSelected) {
-      setSelectedUsers(prev => prev.filter(u => u.id !== user.id));
-    } else {
-      if (selectedUsers.length >= formData.max_members - 1) {
-        alert(`最多只能选择 ${formData.max_members - 1} 个成员`);
-        return;
+    console.log('👤 handleUserToggle 被调用 - user:', user.full_name, 'ID:', user.id);
+    setSelectedUsers(prev => {
+      const isSelected = prev.some(u => u.id === user.id);
+      console.log('👤 用户选择状态:', isSelected, '当前已选数量:', prev.length);
+      if (isSelected) {
+        console.log('👤 取消选择用户:', user.full_name);
+        return prev.filter(u => u.id !== user.id);
+      } else {
+        if (prev.length >= formData.max_members - 1) {
+          console.log('👤 已达到最大选择数量限制');
+          alert(`最多只能选择 ${formData.max_members - 1} 个成员`);
+          return prev;
+        }
+        console.log('👤 添加用户到选择列表:', user.full_name);
+        return [...prev, { ...user }];
       }
-      setSelectedUsers(prev => [...prev, user]);
-    }
+    });
   };
 
   // 处理表单提交
@@ -117,7 +138,8 @@ export const CreateGroupDialog: React.FC<CreateGroupDialogProps> = ({
   };
 
   // 关闭对话框
-  const handleClose = () => {
+  const handleClose = useCallback(() => {
+    console.log('🚪 handleClose 函数被调用');
     setFormData({
       name: '',
       description: '',
@@ -126,17 +148,31 @@ export const CreateGroupDialog: React.FC<CreateGroupDialogProps> = ({
     });
     setSelectedUsers([]);
     setSearchQuery('');
-    onClose();
-  };
+    // 延迟调用 onClose，避免状态更新冲突
+    setTimeout(() => {
+      console.log('🚪 延迟调用 onClose');
+      onClose();
+    }, 0);
+  }, [onClose]);
 
   useEffect(() => {
+    console.log('⚡ useEffect 运行 - open:', open, 'loadUsers:', !!loadUsers);
     if (open) {
+      console.log('⚡ open 为 true，调用 loadUsers');
       loadUsers();
+    } else {
+      console.log('⚡ open 为 false，不加载用户');
     }
-  }, [open]);
+  }, [open, loadUsers]); // 添加 loadUsers 作为依赖
 
   return (
-    <Dialog open={open} onOpenChange={handleClose}>
+    <Dialog open={open} onOpenChange={(newOpen) => {
+      console.log('🎭 Dialog onOpenChange 被调用 - old open:', open, 'new open:', newOpen);
+      if (!newOpen) {
+        console.log('🎭 Dialog 关闭，调用 handleClose');
+        handleClose();
+      }
+    }}>
       <DialogContent className="max-w-2xl max-h-[90vh] flex flex-col">
         <DialogHeader>
           <DialogTitle>创建群聊</DialogTitle>

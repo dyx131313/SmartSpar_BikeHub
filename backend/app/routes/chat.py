@@ -1,18 +1,16 @@
 """
 群聊功能API路由
 """
-from flask import Blueprint, request, jsonify, current_app
+from flask import request, jsonify, current_app
 from flask_jwt_extended import jwt_required, get_jwt_identity
 from app.models.chat_models import *
 from app.utils.database import get_db_connection
 from app.utils.auth import admin_required
+from app.routes import api_bp
 from datetime import datetime
 import json
 import os
 from werkzeug.utils import secure_filename
-
-# 创建聊天蓝图
-chat_bp = Blueprint('chat', __name__, url_prefix='/api/chat')
 
 
 def allowed_file(filename):
@@ -21,7 +19,7 @@ def allowed_file(filename):
     return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
 
-@chat_bp.route('/groups', methods=['GET'])
+@api_bp.route("/chat/groups", methods=['GET'])
 @jwt_required()
 def get_chat_groups():
     """获取用户的群聊列表"""
@@ -31,7 +29,7 @@ def get_chat_groups():
         page_size = min(request.args.get('page_size', 20, type=int), 100)
 
         conn = get_db_connection()
-        cursor = conn.cursor(dictionary=True)
+        cursor = conn.cursor()
 
         # 获取用户加入的群聊
         query = """
@@ -84,7 +82,7 @@ def get_chat_groups():
         return jsonify({'error': '获取群聊列表失败'}), 500
 
 
-@chat_bp.route('/groups', methods=['POST'])
+@api_bp.route("/chat/groups", methods=['POST'])
 @jwt_required()
 def create_chat_group():
     """创建群聊"""
@@ -92,8 +90,13 @@ def create_chat_group():
         user_id = get_jwt_identity()
         data = request.get_json()
 
-        # 验证输入数据
-        group_data = ChatGroupCreate(**data)
+        # 验证输入数据 - 兼容前端格式
+        try:
+            group_data = ChatGroupCreate(**data)
+        except Exception as e:
+            # 如果验证失败，尝试使用基础模型
+            from app.models.chat_models import ChatGroupBase
+            group_data = ChatGroupBase(**data)
 
         conn = get_db_connection()
         cursor = conn.cursor()
@@ -132,7 +135,7 @@ def create_chat_group():
 
         return jsonify({
             'message': '群聊创建成功',
-            'group': dict(group)
+            'group': group
         }), 201
 
     except Exception as e:
@@ -140,7 +143,7 @@ def create_chat_group():
         return jsonify({'error': '创建群聊失败'}), 500
 
 
-@chat_bp.route('/groups/<int:group_id>', methods=['GET'])
+@api_bp.route("/chat/groups/<int:group_id>", methods=['GET'])
 @jwt_required()
 def get_chat_group(group_id):
     """获取群聊详情"""
@@ -148,7 +151,7 @@ def get_chat_group(group_id):
         user_id = get_jwt_identity()
 
         conn = get_db_connection()
-        cursor = conn.cursor(dictionary=True)
+        cursor = conn.cursor()
 
         # 检查用户是否是群成员
         check_query = """
@@ -186,7 +189,7 @@ def get_chat_group(group_id):
         return jsonify({'error': '获取群聊详情失败'}), 500
 
 
-@chat_bp.route('/groups/<int:group_id>/members', methods=['GET'])
+@api_bp.route("/chat/groups/<int:group_id>/members", methods=['GET'])
 @jwt_required()
 def get_group_members(group_id):
     """获取群聊成员列表"""
@@ -196,7 +199,7 @@ def get_group_members(group_id):
         page_size = min(request.args.get('page_size', 50, type=int), 100)
 
         conn = get_db_connection()
-        cursor = conn.cursor(dictionary=True)
+        cursor = conn.cursor()
 
         # 检查用户权限
         check_query = """
@@ -252,7 +255,7 @@ def get_group_members(group_id):
         return jsonify({'error': '获取群聊成员失败'}), 500
 
 
-@chat_bp.route('/groups/<int:group_id>/members', methods=['POST'])
+@api_bp.route("/chat/groups/<int:group_id>/members", methods=['POST'])
 @jwt_required()
 def add_group_members(group_id):
     """添加群聊成员"""
@@ -265,7 +268,7 @@ def add_group_members(group_id):
             return jsonify({'error': '请选择要添加的用户'}), 400
 
         conn = get_db_connection()
-        cursor = conn.cursor(dictionary=True)
+        cursor = conn.cursor()
 
         # 检查用户权限（只有群主和管理员可以添加成员）
         check_query = """
@@ -339,7 +342,7 @@ def add_group_members(group_id):
         return jsonify({'error': '添加群聊成员失败'}), 500
 
 
-@chat_bp.route('/groups/<int:group_id>/messages', methods=['GET'])
+@api_bp.route("/chat/groups/<int:group_id>/messages", methods=['GET'])
 @jwt_required()
 def get_group_messages(group_id):
     """获取群聊消息列表"""
@@ -350,7 +353,7 @@ def get_group_messages(group_id):
         before_message_id = request.args.get('before_message_id', type=int)
 
         conn = get_db_connection()
-        cursor = conn.cursor(dictionary=True)
+        cursor = conn.cursor()
 
         # 检查用户是否是群成员
         check_query = """
@@ -425,7 +428,7 @@ def get_group_messages(group_id):
         return jsonify({'error': '获取群聊消息失败'}), 500
 
 
-@chat_bp.route('/groups/<int:group_id>/messages', methods=['POST'])
+@api_bp.route("/chat/groups/<int:group_id>/messages", methods=['POST'])
 @jwt_required()
 def send_group_message(group_id):
     """发送群聊消息"""
@@ -462,7 +465,7 @@ def send_group_message(group_id):
             return jsonify({'error': '消息内容不能为空'}), 400
 
         conn = get_db_connection()
-        cursor = conn.cursor(dictionary=True)
+        cursor = conn.cursor()
 
         # 检查用户是否是群成员
         check_query = """
@@ -516,7 +519,7 @@ def send_group_message(group_id):
         return jsonify({'error': '发送群聊消息失败'}), 500
 
 
-@chat_bp.route('/messages/<int:message_id>/read', methods=['POST'])
+@api_bp.route("/chat/messages/<int:message_id>/read", methods=['POST'])
 @jwt_required()
 def mark_message_read(message_id):
     """标记消息为已读"""
@@ -524,7 +527,7 @@ def mark_message_read(message_id):
         user_id = get_jwt_identity()
 
         conn = get_db_connection()
-        cursor = conn.cursor(dictionary=True)
+        cursor = conn.cursor()
 
         # 检查消息是否存在以及用户是否有权限标记
         check_query = """
@@ -560,7 +563,139 @@ def mark_message_read(message_id):
         return jsonify({'error': '标记消息已读失败'}), 500
 
 
-@chat_bp.route('/search', methods=['GET'])
+@api_bp.route("/chat/users/search", methods=['GET'])
+@jwt_required()
+def search_chat_users():
+    """搜索聊天用户"""
+    try:
+        user_id = get_jwt_identity()
+        query = request.args.get('q', '').strip()
+        page = request.args.get('page', 1, type=int)
+        # 兼容两种参数名：page_size 和 limit
+        page_size = min(request.args.get('page_size', request.args.get('limit', 20, type=int), type=int), 100)
+        group_id = request.args.get('group_id', type=int)  # 可选：在特定群聊内搜索
+
+        # 如果没有查询关键词，返回所有可搜索的用户列表
+        if not query:
+            return get_all_searchable_users(user_id, group_id, page, page_size)
+
+        if len(query) < 2:
+            return jsonify({'error': '搜索关键词至少需要2个字符'}), 400
+
+        conn = get_db_connection()
+        cursor = conn.cursor()
+
+        # 构建基础查询
+        base_query = """
+        SELECT DISTINCT u.id, u.username, u.full_name, u.email, u.role,
+               u.is_active, u.email_verified, u.created_at
+        FROM users u
+        """
+
+        params = []
+        where_conditions = []
+
+        # 基础搜索条件
+        where_conditions.append("(u.username LIKE %s OR u.full_name LIKE %s OR u.email LIKE %s)")
+        search_pattern = f'%{query}%'
+        params.extend([search_pattern, search_pattern, search_pattern])
+
+        # 如果指定了group_id，则只搜索该群聊内的用户
+        if group_id:
+            base_query += """
+            INNER JOIN chat_group_members cgm ON u.id = cgm.user_id
+            INNER JOIN chat_groups cg ON cgm.group_id = cg.id
+            WHERE cgm.group_id = %s AND cgm.is_active = 1 AND cg.is_active = 1
+            """
+            params.insert(0, group_id)
+        else:
+            # 否则搜索所有活跃用户（创建群聊时使用）
+            base_query += """
+            WHERE u.id != %s AND u.is_active = 1
+            """
+            params.extend([user_id])
+
+        # 添加搜索条件
+        if group_id:
+            where_clause = f" AND {' AND '.join(where_conditions)}"
+        else:
+            where_clause = f" AND {' AND '.join(where_conditions)}"
+
+        # 完整查询
+        final_query = base_query + where_clause + """
+        ORDER BY
+            CASE
+                WHEN u.username = %s THEN 1
+                WHEN u.full_name = %s THEN 2
+                ELSE 3
+            END,
+            u.username
+        LIMIT %s OFFSET %s
+        """
+
+        # 添加精确匹配参数和分页参数
+        params.extend([query, query, page_size, (page - 1) * page_size])
+
+        cursor.execute(final_query, params)
+        users = cursor.fetchall()
+
+        # 获取总数（不包含分页）
+        count_query = base_query.replace("SELECT DISTINCT u.id, u.username, u.full_name, u.email, u.role,", "SELECT COUNT(DISTINCT u.id) as total,") + where_clause
+
+        count_params = params[:-2]  # 移除分页参数
+        cursor.execute(count_query, count_params)
+        total = cursor.fetchone()['total']
+
+        # 获取用户在共同群聊中的关系信息
+        for user in users:
+            # 检查用户是否已经在对方的联系人中或共同群聊
+            relation_query = """
+            SELECT COUNT(*) as mutual_groups,
+                   (SELECT COUNT(*) FROM chat_group_members WHERE group_id IN (
+                       SELECT DISTINCT cgm1.group_id
+                       FROM chat_group_members cgm1
+                       WHERE cgm1.user_id = %s AND cgm1.is_active = 1
+                       INTERSECT
+                       SELECT DISTINCT cgm2.group_id
+                       FROM chat_group_members cgm2
+                       WHERE cgm2.user_id = %s AND cgm2.is_active = 1
+                   ) AND user_id = %s AND is_active = 1) as user_in_contact_groups
+            FROM chat_groups cg
+            WHERE cg.id IN (
+                SELECT DISTINCT cgm1.group_id
+                FROM chat_group_members cgm1
+                WHERE cgm1.user_id = %s AND cgm1.is_active = 1
+                INTERSECT
+                SELECT DISTINCT cgm2.group_id
+                FROM chat_group_members cgm2
+                WHERE cgm2.user_id = %s AND cgm2.is_active = 1
+            ) AND cg.is_active = 1
+            """
+
+            cursor.execute(relation_query, (user['id'], user_id, user_id, user['id'], user_id))
+            relation_info = cursor.fetchone()
+
+            user['mutual_groups'] = relation_info['mutual_groups']
+            user['already_in_contact'] = relation_info['user_in_contact_groups'] > 0
+
+        cursor.close()
+        conn.close()
+
+        return jsonify({
+            'users': users,
+            'total': total,
+            'page': page,
+            'page_size': page_size,
+            'has_more': (page - 1) * page_size + len(users) < total,
+            'query': query
+        }), 200
+
+    except Exception as e:
+        current_app.logger.error(f"搜索聊天用户失败: {str(e)}")
+        return jsonify({'error': '搜索用户失败'}), 500
+
+
+@api_bp.route("/chat/search", methods=['GET'])
 @jwt_required()
 def search_chat():
     """搜索聊天内容"""
@@ -574,7 +709,7 @@ def search_chat():
             return jsonify({'error': '搜索关键词不能为空'}), 400
 
         conn = get_db_connection()
-        cursor = conn.cursor(dictionary=True)
+        cursor = conn.cursor()
 
         result = {
             'groups': [],
@@ -646,7 +781,7 @@ def search_chat():
         return jsonify({'error': '搜索聊天内容失败'}), 500
 
 
-@chat_bp.route('/statistics', methods=['GET'])
+@api_bp.route("/chat/statistics", methods=['GET'])
 @jwt_required()
 def get_chat_statistics():
     """获取聊天统计信息"""
@@ -654,7 +789,7 @@ def get_chat_statistics():
         user_id = get_jwt_identity()
 
         conn = get_db_connection()
-        cursor = conn.cursor(dictionary=True)
+        cursor = conn.cursor()
 
         # 获取用户的群聊统计
         stats_query = """
@@ -684,7 +819,7 @@ def get_chat_statistics():
 
 
 # 管理员专用接口
-@chat_bp.route('/admin/groups', methods=['GET'])
+@api_bp.route("/chat/admin/groups", methods=['GET'])
 @admin_required
 def admin_get_all_groups():
     """管理员获取所有群聊列表"""
@@ -693,7 +828,7 @@ def admin_get_all_groups():
         page_size = min(request.args.get('page_size', 20, type=int), 100)
 
         conn = get_db_connection()
-        cursor = conn.cursor(dictionary=True)
+        cursor = conn.cursor()
 
         offset = (page - 1) * page_size
 
@@ -733,3 +868,85 @@ def admin_get_all_groups():
     except Exception as e:
         current_app.logger.error(f"管理员获取群聊列表失败: {str(e)}")
         return jsonify({'error': '获取群聊列表失败'}), 500
+
+
+def get_all_searchable_users(user_id, group_id, page, page_size):
+    """
+    获取所有可搜索的用户列表（当搜索框为空时显示）
+    Args:
+        user_id (int): 当前用户ID
+        group_id (int): 可选，指定群聊ID
+        page (int): 页码
+        page_size (int): 每页数量
+    Returns:
+        Response: JSON响应
+    """
+    try:
+        conn = get_db_connection()
+        cursor = conn.cursor()
+
+        # 如果指定了group_id，则返回该群聊的所有成员
+        if group_id:
+            query = """
+            SELECT DISTINCT u.id, u.username, u.full_name, u.email, u.role,
+                   u.is_active, u.email_verified, u.created_at,
+                   1 as mutual_groups,
+                   1 as already_in_contact
+            FROM users u
+            INNER JOIN chat_group_members cgm ON u.id = cgm.user_id
+            WHERE cgm.group_id = %s AND cgm.is_active = 1 AND u.is_active = 1
+            ORDER BY u.username
+            LIMIT %s OFFSET %s
+            """
+            params = [group_id, page_size, (page - 1) * page_size]
+        else:
+            # 返回所有活跃用户（创建群聊时使用）
+            query = """
+            SELECT DISTINCT u.id, u.username, u.full_name, u.email, u.role,
+                   u.is_active, u.email_verified, u.created_at,
+                   0 as mutual_groups,
+                   0 as already_in_contact
+            FROM users u
+            WHERE u.id != %s AND u.is_active = 1
+            ORDER BY u.username
+            LIMIT %s OFFSET %s
+            """
+            params = [user_id, page_size, (page - 1) * page_size]
+
+        cursor.execute(query, params)
+        users = cursor.fetchall()
+
+        # 获取总数
+        if group_id:
+            count_query = """
+            SELECT COUNT(DISTINCT u.id) as total
+            FROM users u
+            INNER JOIN chat_group_members cgm ON u.id = cgm.user_id
+            WHERE cgm.group_id = %s AND cgm.is_active = 1 AND u.is_active = 1
+            """
+            cursor.execute(count_query, [group_id])
+        else:
+            count_query = """
+            SELECT COUNT(DISTINCT u.id) as total
+            FROM users u
+            WHERE u.id != %s AND u.is_active = 1
+            """
+            cursor.execute(count_query, [user_id])
+
+        total = cursor.fetchone()['total']
+
+        cursor.close()
+        conn.close()
+
+        return jsonify({
+            'users': users,
+            'total': total,
+            'page': page,
+            'page_size': page_size,
+            'has_more': (page - 1) * page_size + len(users) < total,
+            'query': ''
+        }), 200
+
+    except Exception as e:
+        current_app.logger.error(f"获取可搜索用户列表失败: {str(e)}")
+        return jsonify({'error': '获取用户列表失败'}), 500

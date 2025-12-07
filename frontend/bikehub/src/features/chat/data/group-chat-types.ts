@@ -6,6 +6,14 @@ export enum GroupType {
   SYSTEM = 'system'
 }
 
+export interface CreateGroupForm {
+  name: string;
+  description?: string;
+  avatar_url?: string;
+  group_type: GroupType;
+  max_members: number;
+}
+
 export enum MessageType {
   TEXT = 'text',
   IMAGE = 'image',
@@ -47,6 +55,7 @@ export interface ChatGroup {
   is_muted?: boolean;
   last_read_at?: string;
   unread_count?: number;
+  creator_name?: string;
 }
 
 // 群聊成员
@@ -122,14 +131,7 @@ export interface ChatStatisticsResponse {
   active_groups: number;
 }
 
-// 创建群聊表单
-export interface CreateGroupForm {
-  name: string;
-  description?: string;
-  avatar_url?: string;
-  group_type: GroupType;
-  max_members: number;
-}
+// CreateGroupForm 已在上面定义
 
 // 发送消息表单
 export interface SendMessageForm {
