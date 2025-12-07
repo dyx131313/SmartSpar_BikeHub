@@ -1,5 +1,5 @@
 -- 群聊相关表结构
-USE bikehub_dev;
+-- USE bikehub_dev;
 
 -- 群聊表
 CREATE TABLE IF NOT EXISTS chat_groups (

@@ -139,6 +139,38 @@ def register_cli_commands(app):
     def init_db():
         """初始化数据库"""
         db.create_all()
+        
+        # 执行额外的SQL脚本（用于非ORM管理的表，如群聊功能）
+        import os
+        from sqlalchemy import text
+        
+        # 获取项目根目录
+        base_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+        chat_schema_path = os.path.join(base_dir, 'database', 'chat_schema.sql')
+        
+        if os.path.exists(chat_schema_path):
+            print(f'正在执行SQL脚本: database/chat_schema.sql...')
+            try:
+                with open(chat_schema_path, 'r', encoding='utf-8') as f:
+                    sql_content = f.read()
+                    
+                # 简单的语句分割
+                statements = sql_content.split(';')
+                with db.engine.connect() as conn:
+                    for statement in statements:
+                        if statement.strip():
+                            # 跳过 USE 语句
+                            if statement.strip().upper().startswith('USE '):
+                                continue
+                            try:
+                                conn.execute(text(statement))
+                            except Exception as e:
+                                print(f"执行语句警告: {str(e)}")
+                    conn.commit()
+                print('SQL脚本执行完成')
+            except Exception as e:
+                print(f"执行SQL脚本失败: {str(e)}")
+        
         print('数据库初始化完成')
 
     @app.cli.command()
