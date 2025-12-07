@@ -15,3 +15,9 @@ export const stationSchema = z.object({
 })
 
 export type Station = z.infer<typeof stationSchema>
+
+export interface StationDashboardData extends Station {
+  current_bikes: number
+  predicted_demand: number
+  real_demand: number
+}

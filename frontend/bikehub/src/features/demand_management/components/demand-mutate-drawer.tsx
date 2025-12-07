@@ -123,8 +123,10 @@ export function DemandMutateDrawer({
 
   const onSubmit = (data: DemandForm) => {
     const payload = {
-        ...data,
-        timestamp: new Date(data.timestamp).toISOString()
+      ...data,
+      // 直接使用表单中的时间字符串（本地时间格式 YYYY-MM-DDTHH:mm），
+      // 避免 toISOString() 转换为 UTC 导致的时间偏差和后端解析问题
+      timestamp: data.timestamp
     }
 
     if (isUpdate) {
@@ -196,38 +198,38 @@ export function DemandMutateDrawer({
               )}
             />
             <div className='flex gap-4'>
-                <FormField
+              <FormField
                 control={form.control}
                 name='weekday'
                 render={({ field }) => (
-                    <FormItem className='flex-1'>
+                  <FormItem className='flex-1'>
                     <FormLabel>星期 (1-7)</FormLabel>
                     <FormControl>
-                        <Input type='number' min={1} max={7} {...field} />
+                      <Input type='number' min={1} max={7} {...field} />
                     </FormControl>
                     <FormMessage />
-                    </FormItem>
+                  </FormItem>
                 )}
-                />
-                <FormField
+              />
+              <FormField
                 control={form.control}
                 name='is_holiday'
                 render={({ field }) => (
-                    <FormItem className='flex flex-row items-start space-x-3 space-y-0 rounded-md border p-4 shadow'>
+                  <FormItem className='flex flex-row items-start space-x-3 space-y-0 rounded-md border p-4 shadow'>
                     <FormControl>
-                        <Checkbox
+                      <Checkbox
                         checked={field.value}
                         onCheckedChange={field.onChange}
-                        />
+                      />
                     </FormControl>
                     <div className='space-y-1 leading-none'>
-                        <FormLabel>
+                      <FormLabel>
                         节假日
-                        </FormLabel>
+                      </FormLabel>
                     </div>
-                    </FormItem>
+                  </FormItem>
                 )}
-                />
+              />
             </div>
             <FormField
               control={form.control}
@@ -248,32 +250,32 @@ export function DemandMutateDrawer({
               )}
             />
             <div className='flex gap-4'>
-                <FormField
+              <FormField
                 control={form.control}
                 name='temp'
                 render={({ field }) => (
-                    <FormItem className='flex-1'>
+                  <FormItem className='flex-1'>
                     <FormLabel>温度 (°C)</FormLabel>
                     <FormControl>
-                        <Input type='number' step='0.1' {...field} />
+                      <Input type='number' step='0.1' {...field} />
                     </FormControl>
                     <FormMessage />
-                    </FormItem>
+                  </FormItem>
                 )}
-                />
-                <FormField
+              />
+              <FormField
                 control={form.control}
                 name='demand'
                 render={({ field }) => (
-                    <FormItem className='flex-1'>
+                  <FormItem className='flex-1'>
                     <FormLabel>需求量</FormLabel>
                     <FormControl>
-                        <Input type='number' {...field} />
+                      <Input type='number' {...field} />
                     </FormControl>
                     <FormMessage />
-                    </FormItem>
+                  </FormItem>
                 )}
-                />
+              />
             </div>
           </form>
         </Form>
