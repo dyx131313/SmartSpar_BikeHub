@@ -1,4 +1,4 @@
-﻿import { useState } from 'react'
+import { useState } from 'react'
 import { z } from 'zod'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
@@ -94,12 +94,10 @@ export function UserAuthForm({
         setIsLoading(true)
         try {
           // console.log('calling apiPost /api/auth/login', { username: data.username })
-          // 鍚庣鍙兘浣跨敤 email 鎴� username锛屾寜瀹為檯璋冩暣 payload
           const payload = { username: data.username, password: data.password }
           const resp = await apiPost('/api/auth/login', payload)
           // console.log('login resp', resp)
           // console.log('useAuthStore.getState()', useAuthStore.getState()) 
-          // // 鍏煎涓嶅悓瀛楁鍛藉悕
           // const token = resp?.access_token ?? resp?.token ?? resp?.data?.token
           // if (token) {
           //   auth.setAccessToken(token)
@@ -110,7 +108,6 @@ export function UserAuthForm({
           // const currentUser = useAuthStore.getState()?.auth?.user ?? resp?.user ?? null
 
           console.log('login resp', resp)
-          // 鏇撮瞾妫掑湴鎻愬彇 token锛坅ccess_token / accessToken / token / data.*锛�
           const token =
             resp?.access_token ??
             // resp?.accessToken ??
@@ -122,16 +119,13 @@ export function UserAuthForm({
 
 
           if (token) {
-            // 缁熶竴鐢� auth-store 澶勭悊 cookie 鎸佷箙鍖�
             setAccessToken?.(token)
             console.log('setAccessToken called ->', token)
-            // 鍙€夛細鍚屾椂鍐欏叆 localStorage 浣滀负鍥為€€锛堜笉瑕佷綔涓轰富瀛樺偍锛�
             try { localStorage.setItem('access_token', typeof token === 'string' ? token : String(token)) } catch { }
           } else {
             console.warn('No token extracted from login resp', resp)
           }
 
-          // // 鍙� user 骞跺啓鍏� store锛堢洿鎺ヤ繚瀛樺悗绔繑鍥炵殑 user锛�
           const user = resp?.user ?? null
           if (user) {
             setUser?.(user)
@@ -140,7 +134,6 @@ export function UserAuthForm({
             console.warn('No user in login resp', resp)
           }
 
-          // 绔嬪嵆璇诲彇 store 楠岃瘉锛堣皟璇曪級
           // const currentUser = readAuthState()?.user ?? user ?? null
 
           const displayName = user?.full_name ?? user?.username ?? user?.email
@@ -149,8 +142,7 @@ export function UserAuthForm({
               ? `(${user.role.join(', ')})`
               : `(${user.role})`
             : ''
-          toast.success(`娆㈣繋锛�${displayName}${rolePart}`)
-          // toast.success(`娆㈣繋锛�${rolePart}`)
+          toast.success(`欢迎${displayName}${rolePart}`)
 
           const targetPath = redirectTo || '/'
           navigate({ to: targetPath, replace: true })

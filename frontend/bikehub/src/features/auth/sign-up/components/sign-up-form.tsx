@@ -34,9 +34,6 @@ const formSchema = z
       .string()
       .email({
         message: 'Please enter a valid email address',
-      })
-      .refine((val) => val.toLowerCase().endsWith('@qq.com'), {
-        message: 'Email must be a QQ email address (ending with @qq.com)',
       }),
     password: z
       .string()
@@ -155,7 +152,7 @@ export function SignUpForm({
           name='email'
           render={({ field }) => (
             <FormItem>
-              <FormLabel>QQ邮箱</FormLabel>
+              <FormLabel>邮箱</FormLabel>
               <FormControl>
                 <Input placeholder='例如：123456@qq.com' {...field} />
               </FormControl>
