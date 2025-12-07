@@ -17,7 +17,13 @@ const taskSearchSchema = z.object({
   filter: z.string().optional().catch(''),
 })
 
+import { RequireRole } from '@/components/require-role'
+
 export const Route = createFileRoute('/_authenticated/station_management/')({
   validateSearch: taskSearchSchema,
-  component: Management,
+  component: () => (
+    <RequireRole roles={['admin', 'dispatcher', 'operator']}>
+      <Management />
+    </RequireRole>
+  ),
 })

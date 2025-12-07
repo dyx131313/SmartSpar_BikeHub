@@ -6,6 +6,9 @@ from flask import current_app
 import logging
 
 logger = logging.getLogger(__name__)
+from app import db
+import pymysql
+from flask import current_app
 
 def get_db_connection():
     """

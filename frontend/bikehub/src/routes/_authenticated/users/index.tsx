@@ -26,7 +26,13 @@ const usersSearchSchema = z.object({
   username: z.string().optional().catch(''),
 })
 
+import { RequireRole } from '@/components/require-role'
+
 export const Route = createFileRoute('/_authenticated/users/')({
   validateSearch: usersSearchSchema,
-  component: Users,
+  component: () => (
+    <RequireRole roles={['admin']}>
+      <Users />
+    </RequireRole>
+  ),
 })

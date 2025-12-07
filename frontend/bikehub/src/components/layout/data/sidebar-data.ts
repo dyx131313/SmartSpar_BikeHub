@@ -63,11 +63,13 @@ export const sidebarData: SidebarData = {
           title: '站点管理',
           url: '/station_management',
           icon: MapPin,
+          roles: ['admin', 'dispatcher', 'operator'],
         },
         {
           title: '调度管理',
           url: '/task_management',
           icon: ListTodo,
+          roles: ['admin', 'dispatcher', 'operator'],
         },
         // {
         //   title: 'Apps',
@@ -78,6 +80,12 @@ export const sidebarData: SidebarData = {
           title: '用户管理',
           url: '/users',
           icon: Users,
+          roles: ['admin'],
+        },
+        {
+          title: '反馈管理',
+          url: '/feedback',
+          icon: Bug,
         },
 
         // {

@@ -5,6 +5,7 @@ from .user import User, UserSession, UserLog
 from .prediction import Prediction, PredictionModel
 from .bike_history import BikeHistory
 from .alert import Alert, AlertSubscription
+from .verification_code import VerificationCode
 
 __all__ = [
     'Station',
@@ -17,5 +18,6 @@ __all__ = [
     'PredictionModel',
     'BikeHistory',
     'Alert',
-    'AlertSubscription'
+    'AlertSubscription',
+    'VerificationCode'
 ]

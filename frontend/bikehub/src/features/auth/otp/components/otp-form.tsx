@@ -3,8 +3,10 @@ import { z } from 'zod'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useNavigate } from '@tanstack/react-router'
-import { showSubmittedData } from '@/lib/show-submitted-data'
+import { toast } from 'sonner'
 import { cn } from '@/lib/utils'
+import { apiPost } from '@/lib/api'
+import { handleServerError } from '@/lib/handle-server-error'
 import { Button } from '@/components/ui/button'
 import {
   Form,
@@ -20,13 +22,27 @@ import {
   InputOTPSlot,
   InputOTPSeparator,
 } from '@/components/ui/input-otp'
+import { PasswordInput } from '@/components/password-input'
 
-const formSchema = z.object({
-  otp: z
-    .string()
-    .min(6, 'Please enter the 6-digit code.')
-    .max(6, 'Please enter the 6-digit code.'),
-})
+const formSchema = z
+  .object({
+    otp: z
+      .string()
+      .min(6, 'Please enter the 6-digit code')
+      .max(6, 'Please enter the 6-digit code'),
+    password: z
+      .string()
+      .min(7, 'Password must be at least 7 characters')
+      .max(100, 'Password is too long'),
+    confirmPassword: z
+      .string()
+      .min(7, 'Please re-enter your password')
+      .max(100, 'Password is too long'),
+  })
+  .refine((data) => data.password === data.confirmPassword, {
+    message: "The two passwords don't match",
+    path: ['confirmPassword'],
+  })
 
 type OtpFormProps = React.HTMLAttributes<HTMLFormElement>
 
@@ -36,20 +52,50 @@ export function OtpForm({ className, ...props }: OtpFormProps) {
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
-    defaultValues: { otp: '' },
+    defaultValues: { otp: '', password: '', confirmPassword: '' },
   })
 
   // eslint-disable-next-line react-hooks/incompatible-library
   const otp = form.watch('otp')
 
-  function onSubmit(data: z.infer<typeof formSchema>) {
+  async function onSubmit(data: z.infer<typeof formSchema>) {
     setIsLoading(true)
-    showSubmittedData(data)
+    try {
+      let identifier: string | null = null
+      try {
+        identifier = sessionStorage.getItem('reset_identifier')
+      } catch {
+        identifier = null
+      }
 
-    setTimeout(() => {
+      if (!identifier) {
+        toast.error('Password reset session has expired, please start again')
+        navigate({ to: '/forgot-password', replace: true })
+        return
+      }
+
+      const payload = {
+        identifier,
+        code: data.otp,
+        new_password: data.password,
+      }
+
+      await apiPost('/api/auth/forgot-password/reset', payload)
+
+      try {
+        sessionStorage.removeItem('reset_identifier')
+      } catch {
+        // ignore
+      }
+
+      toast.success('Password reset successful, please log in with your new password')
+      navigate({ to: '/sign-in', replace: true })
+    } catch (err) {
+      handleServerError(err)
+      toast.error('Invalid code or error occurred while resetting password')
+    } finally {
       setIsLoading(false)
-      navigate({ to: '/' })
-    }, 1000)
+    }
   }
 
   return (
@@ -91,8 +137,37 @@ export function OtpForm({ className, ...props }: OtpFormProps) {
             </FormItem>
           )}
         />
+
+        <FormField
+          control={form.control}
+          name='password'
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>New password</FormLabel>
+              <FormControl>
+                <PasswordInput placeholder='********' {...field} />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+
+        <FormField
+          control={form.control}
+          name='confirmPassword'
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Confirm new password</FormLabel>
+              <FormControl>
+                <PasswordInput placeholder='********' {...field} />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+
         <Button className='mt-2' disabled={otp.length < 6 || isLoading}>
-          Verify
+          Reset password
         </Button>
       </form>
     </Form>
