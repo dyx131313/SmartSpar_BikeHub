@@ -186,7 +186,6 @@ export async function apiDelete(path: string) {
   return data
 }
 
-<<<<<<< HEAD
 export async function apiUpload(path: string, formData: FormData) {
   const url = buildUrl(path)
   const res = await fetchWithAuth(url, {
@@ -205,7 +204,6 @@ export async function apiUpload(path: string, formData: FormData) {
   }
   return data
 }
-=======
 // 导出统一的API对象以供聊天模块使用
 export const api = {
   get: apiGet,
@@ -216,4 +214,3 @@ export const api = {
 
 // 导出buildStaticUrl函数
 export { buildStaticUrl }
->>>>>>> main
