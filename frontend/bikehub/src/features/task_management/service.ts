@@ -29,3 +29,7 @@ export const deleteTask = async (id: number) => {
 export const getTask = async (id: number) => {
     return apiGet(`/api/dispatch-tasks/${id}`) as Promise<{ data: Task }>
 }
+
+export const getRouteForTask = async (taskId: number) => {
+    return apiGet(`/api/route-planning/task/${taskId}`) as Promise<{ data: any }>
+}
