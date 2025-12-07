@@ -30,6 +30,7 @@ import { Route as AuthenticatedTask_managementIndexRouteImport } from './routes/
 import { Route as AuthenticatedStation_managementIndexRouteImport } from './routes/_authenticated/station_management/index'
 import { Route as AuthenticatedSettingsIndexRouteImport } from './routes/_authenticated/settings/index'
 import { Route as AuthenticatedHelpCenterIndexRouteImport } from './routes/_authenticated/help-center/index'
+import { Route as AuthenticatedFeedbackIndexRouteImport } from './routes/_authenticated/feedback/index'
 import { Route as AuthenticatedChatsIndexRouteImport } from './routes/_authenticated/chats/index'
 import { Route as AuthenticatedAppsIndexRouteImport } from './routes/_authenticated/apps/index'
 import { Route as ClerkAuthenticatedUserManagementRouteImport } from './routes/clerk/_authenticated/user-management'
@@ -148,6 +149,12 @@ const AuthenticatedHelpCenterIndexRoute =
     path: '/help-center/',
     getParentRoute: () => AuthenticatedRouteRoute,
   } as any)
+const AuthenticatedFeedbackIndexRoute =
+  AuthenticatedFeedbackIndexRouteImport.update({
+    id: '/feedback/',
+    path: '/feedback/',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
 const AuthenticatedChatsIndexRoute = AuthenticatedChatsIndexRouteImport.update({
   id: '/chats/',
   path: '/chats/',
@@ -208,6 +215,7 @@ const AuthenticatedErrorsErrorRoute =
 export interface FileRoutesByFullPath {
   '/clerk': typeof ClerkAuthenticatedRouteRouteWithChildren
   '/settings': typeof AuthenticatedSettingsRouteRouteWithChildren
+  '/clerk/': typeof ClerkauthRouteRouteWithChildren
   '/forgot-password': typeof authForgotPasswordRoute
   '/otp': typeof authOtpRoute
   '/sign-in': typeof authSignInRoute
@@ -229,6 +237,7 @@ export interface FileRoutesByFullPath {
   '/clerk/user-management': typeof ClerkAuthenticatedUserManagementRoute
   '/apps': typeof AuthenticatedAppsIndexRoute
   '/chats': typeof AuthenticatedChatsIndexRoute
+  '/feedback': typeof AuthenticatedFeedbackIndexRoute
   '/help-center': typeof AuthenticatedHelpCenterIndexRoute
   '/settings/': typeof AuthenticatedSettingsIndexRoute
   '/station_management': typeof AuthenticatedStation_managementIndexRoute
@@ -258,6 +267,7 @@ export interface FileRoutesByTo {
   '/clerk/user-management': typeof ClerkAuthenticatedUserManagementRoute
   '/apps': typeof AuthenticatedAppsIndexRoute
   '/chats': typeof AuthenticatedChatsIndexRoute
+  '/feedback': typeof AuthenticatedFeedbackIndexRoute
   '/help-center': typeof AuthenticatedHelpCenterIndexRoute
   '/settings': typeof AuthenticatedSettingsIndexRoute
   '/station_management': typeof AuthenticatedStation_managementIndexRoute
@@ -292,6 +302,7 @@ export interface FileRoutesById {
   '/clerk/_authenticated/user-management': typeof ClerkAuthenticatedUserManagementRoute
   '/_authenticated/apps/': typeof AuthenticatedAppsIndexRoute
   '/_authenticated/chats/': typeof AuthenticatedChatsIndexRoute
+  '/_authenticated/feedback/': typeof AuthenticatedFeedbackIndexRoute
   '/_authenticated/help-center/': typeof AuthenticatedHelpCenterIndexRoute
   '/_authenticated/settings/': typeof AuthenticatedSettingsIndexRoute
   '/_authenticated/station_management/': typeof AuthenticatedStation_managementIndexRoute
@@ -303,6 +314,7 @@ export interface FileRouteTypes {
   fullPaths:
     | '/clerk'
     | '/settings'
+    | '/clerk/'
     | '/forgot-password'
     | '/otp'
     | '/sign-in'
@@ -324,6 +336,7 @@ export interface FileRouteTypes {
     | '/clerk/user-management'
     | '/apps'
     | '/chats'
+    | '/feedback'
     | '/help-center'
     | '/settings/'
     | '/station_management'
@@ -353,6 +366,7 @@ export interface FileRouteTypes {
     | '/clerk/user-management'
     | '/apps'
     | '/chats'
+    | '/feedback'
     | '/help-center'
     | '/settings'
     | '/station_management'
@@ -386,6 +400,7 @@ export interface FileRouteTypes {
     | '/clerk/_authenticated/user-management'
     | '/_authenticated/apps/'
     | '/_authenticated/chats/'
+    | '/_authenticated/feedback/'
     | '/_authenticated/help-center/'
     | '/_authenticated/settings/'
     | '/_authenticated/station_management/'
@@ -510,8 +525,8 @@ declare module '@tanstack/react-router' {
     }
     '/clerk/(auth)': {
       id: '/clerk/(auth)'
-      path: ''
-      fullPath: '/clerk'
+      path: '/'
+      fullPath: '/clerk/'
       preLoaderRoute: typeof ClerkauthRouteRouteImport
       parentRoute: typeof ClerkRouteRoute
     }
@@ -555,6 +570,13 @@ declare module '@tanstack/react-router' {
       path: '/help-center'
       fullPath: '/help-center'
       preLoaderRoute: typeof AuthenticatedHelpCenterIndexRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/feedback/': {
+      id: '/_authenticated/feedback/'
+      path: '/feedback'
+      fullPath: '/feedback'
+      preLoaderRoute: typeof AuthenticatedFeedbackIndexRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
     '/_authenticated/chats/': {
@@ -659,6 +681,7 @@ interface AuthenticatedRouteRouteChildren {
   AuthenticatedErrorsErrorRoute: typeof AuthenticatedErrorsErrorRoute
   AuthenticatedAppsIndexRoute: typeof AuthenticatedAppsIndexRoute
   AuthenticatedChatsIndexRoute: typeof AuthenticatedChatsIndexRoute
+  AuthenticatedFeedbackIndexRoute: typeof AuthenticatedFeedbackIndexRoute
   AuthenticatedHelpCenterIndexRoute: typeof AuthenticatedHelpCenterIndexRoute
   AuthenticatedStation_managementIndexRoute: typeof AuthenticatedStation_managementIndexRoute
   AuthenticatedTask_managementIndexRoute: typeof AuthenticatedTask_managementIndexRoute
@@ -671,6 +694,7 @@ const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedErrorsErrorRoute: AuthenticatedErrorsErrorRoute,
   AuthenticatedAppsIndexRoute: AuthenticatedAppsIndexRoute,
   AuthenticatedChatsIndexRoute: AuthenticatedChatsIndexRoute,
+  AuthenticatedFeedbackIndexRoute: AuthenticatedFeedbackIndexRoute,
   AuthenticatedHelpCenterIndexRoute: AuthenticatedHelpCenterIndexRoute,
   AuthenticatedStation_managementIndexRoute:
     AuthenticatedStation_managementIndexRoute,

@@ -82,6 +82,11 @@ export const sidebarData: SidebarData = {
           icon: Users,
           roles: ['admin'],
         },
+        {
+          title: '反馈管理',
+          url: '/feedback',
+          icon: Bug,
+        },
 
         // {
         //   title: 'Secured by Clerk',
