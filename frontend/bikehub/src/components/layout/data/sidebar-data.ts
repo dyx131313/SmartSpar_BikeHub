@@ -23,6 +23,7 @@ import {
   Command,
   GalleryVerticalEnd,
   BarChart2,
+  TrendingUp,
 } from 'lucide-react'
 import { ClerkLogo } from '@/assets/clerk-logo'
 import { type SidebarData } from '../types'
@@ -69,6 +70,12 @@ export const sidebarData: SidebarData = {
           title: '调度管理',
           url: '/task_management',
           icon: ListTodo,
+          roles: ['admin', 'dispatcher', 'operator'],
+        },
+        {
+          title: '需求数据管理',
+          url: '/demand-management',
+          icon: TrendingUp,
           roles: ['admin', 'dispatcher', 'operator'],
         },
         // {
