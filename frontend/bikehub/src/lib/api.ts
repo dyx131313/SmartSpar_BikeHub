@@ -41,6 +41,17 @@ function buildUrl(path: string) {
   return IS_DEV ? path : `${API_BASE}${path}`
 }
 
+function buildStaticUrl(path: string) {
+  // 构建静态资源URL（头像等）
+  if (/^https?:\/\//.test(path)) return path
+  if (IS_DEV) {
+    // 开发环境使用后端地址
+    return `http://localhost:5000${path}`
+  }
+  // 生产环境使用相对路径
+  return path
+}
+
 async function fetchWithAuth(url: string, options: RequestInit = {}, retry = true) {
   const token = readToken()
   const headers = { ...(options.headers as Record<string, string> || {}) }
@@ -72,18 +83,48 @@ async function fetchWithAuth(url: string, options: RequestInit = {}, retry = tru
   return res
 }
 
-export async function apiPost(path: string, body: any) {
+export async function apiPost(path: string, body: any = null) {
   const url = buildUrl(path)
+  console.log('API POST:', url, body)
+
+  let headers: Record<string, string> = {}
+  let requestBody: any = body
+
+  // 如果是 FormData（文件上传），不要设置 Content-Type，让浏览器自动设置
+  if (body instanceof FormData) {
+    // 移除 Content-Type 头，让浏览器自动生成正确的 boundary
+    // headers['Content-Type'] = 'multipart/form-data'
+  } else {
+    headers['Content-Type'] = 'application/json'
+    requestBody = JSON.stringify(body)
+  }
+
   const res = await fetchWithAuth(url, {
     method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify(body),
+    headers,
+    body: requestBody,
   })
-  const data = await res.json().catch(() => ({}))
+
+  // 尝试读取响应体，即使对于 500 错误
+  let data
+  try {
+    data = await res.json()
+  } catch {
+    data = { error: '服务器返回了无法解析的响应' }
+  }
+
   if (!res.ok) {
-    const err: any = new Error(data?.error || data?.message || 'Request failed')
+    console.error('API Error:', {
+      url,
+      status: res.status,
+      statusText: res.statusText,
+      data
+    })
+
+    const err: any = new Error(data?.error || data?.message || res.statusText || 'Request failed')
     err.status = res.status
     err.data = data
+    err.url = url
     if (res.status === 401) {
       useAuthStore.getState().auth.reset?.()
     }
@@ -145,6 +186,7 @@ export async function apiDelete(path: string) {
   return data
 }
 
+<<<<<<< HEAD
 export async function apiUpload(path: string, formData: FormData) {
   const url = buildUrl(path)
   const res = await fetchWithAuth(url, {
@@ -163,3 +205,15 @@ export async function apiUpload(path: string, formData: FormData) {
   }
   return data
 }
+=======
+// 导出统一的API对象以供聊天模块使用
+export const api = {
+  get: apiGet,
+  post: apiPost,
+  put: apiPut,
+  delete: apiDelete
+}
+
+// 导出buildStaticUrl函数
+export { buildStaticUrl }
+>>>>>>> main

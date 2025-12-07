@@ -89,6 +89,11 @@ export const sidebarData: SidebarData = {
           icon: Users,
           roles: ['admin'],
         },
+        {
+          title: '反馈管理',
+          url: '/feedback',
+          icon: Bug,
+        },
 
         // {
         //   title: 'Secured by Clerk',
@@ -114,8 +119,8 @@ export const sidebarData: SidebarData = {
       title: "个人",
       items: [
         {
-          title: '私信',
-          url: '/chats',
+          title: '群聊',
+          url: '/chat/groups',
           badge: '3',
           icon: MessagesSquare,
         },

@@ -15,6 +15,7 @@ class User(db.Model):
                      nullable=False, default='user', comment='用户角色')
     full_name = db.Column(db.String(100), comment='全名')
     phone = db.Column(db.String(20), comment='电话')
+    avatar_url = db.Column(db.String(255), comment='头像URL')
     is_active = db.Column(db.Boolean, default=True, comment='是否激活')
     email_verified = db.Column(db.Boolean, default=False, comment='邮箱是否验证')
     last_login = db.Column(db.TIMESTAMP, comment='最后登录时间')
@@ -45,6 +46,7 @@ class User(db.Model):
             'role': self.role,
             'full_name': self.full_name,
             'phone': self.phone,
+            'avatar_url': self.avatar_url,
             'is_active': self.is_active,
             'email_verified': self.email_verified,
             'last_login': self.last_login.isoformat() if self.last_login else None,

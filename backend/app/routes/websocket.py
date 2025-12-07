@@ -6,7 +6,7 @@ import websockets
 import json
 from flask import current_app
 from functools import wraps
-from app.utils.auth import verify_token
+from app.utils.auth import JWTAuth
 from app.services.websocket_service import ChatWebSocketHandler, websocket_manager
 import logging
 
@@ -40,7 +40,7 @@ def websocket_auth_required(f):
                 return
 
             # 验证token
-            user_data = verify_token(token)
+            user_data = JWTAuth.verify_token(token)
             if not user_data:
                 await websocket.close(code=4001, reason="无效的认证令牌")
                 return

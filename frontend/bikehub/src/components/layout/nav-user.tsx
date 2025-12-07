@@ -28,7 +28,7 @@
   } from '@/components/ui/sidebar'
   import { SignOutDialog } from '@/components/sign-out-dialog'
   import { useAuthStore } from '@/stores/auth-store'
-  import { apiGet, readToken } from '@/lib/api'
+  import { apiGet, readToken, buildStaticUrl } from '@/lib/api'
 
   // function isJwtValid(token?: string) {
   //   if (!token || token.split('.').length !== 3) return false
@@ -96,8 +96,8 @@
           const resp = await apiGet('/api/users/profile')
           // 兼容后端直接返回 user 或 { user: ... }
           setFetchedUser(resp.data)
-          // console.log('resp',resp.data)
-          // console.log('[NavUser] fetched user:', fetchedUser)
+          console.log('[NavUser] resp data:', resp.data)
+          console.log('[NavUser] fetched user:', fetchedUser)
         } catch (err) {
           console.warn('fetch current user failed', err)
         } finally {
@@ -183,11 +183,15 @@
 
     const displayEmail = (effectiveUser as any).email ?? (effectiveUser as any).username ?? ''
 
-    const avatarSrc = (effectiveUser as any).avatar ?? (effectiveUser as any).picture ?? ''
+    const avatarSrc = (effectiveUser as any).avatar_url ?? (effectiveUser as any).avatar ?? (effectiveUser as any).picture ?? ''
 
     const initials = getInitials(displayName)
 
-    // console.log(displayUserName, displayName, displayEmail,  initials)
+    console.log('NavUser displayUserName:', displayUserName)
+    console.log('NavUser displayName:', displayName)
+    console.log('NavUser displayEmail:', displayEmail)
+    console.log('NavUser avatarSrc:', avatarSrc)
+    console.log('NavUser initials:', initials)
 
     return (
       <>
@@ -201,7 +205,21 @@
                 >
                   <Avatar className='h-8 w-8 rounded-lg'>
                     {avatarSrc ? (
-                      <AvatarImage src={avatarSrc} alt={displayName} />
+                      <AvatarImage
+                        src={buildStaticUrl(avatarSrc)}
+                        alt={displayName}
+                        crossOrigin="anonymous"
+                        onError={(e) => {
+                          console.error('Nav avatar error:', e)
+                          console.error('Avatar URL being used:', avatarSrc)
+                          console.error('Full URL:', buildStaticUrl(avatarSrc))
+                          console.error('Natural width:', e.currentTarget.naturalWidth)
+                          console.error('Complete:', e.currentTarget.complete)
+                          console.error('Error:', e.currentTarget.onerror)
+                          e.currentTarget.style.display = 'none'
+                        }}
+                        onLoad={() => console.log('Nav avatar loaded:', avatarSrc)}
+                      />
                     ) : (
                       <AvatarFallback className='rounded-lg'>{initials}</AvatarFallback>
                     )}
@@ -223,7 +241,11 @@
                   <div className='flex items-center gap-2 px-1 py-1.5 text-start text-sm'>
                     <Avatar className='h-8 w-8 rounded-lg'>
                       {avatarSrc ? (
-                        <AvatarImage src={avatarSrc} alt={displayName} />
+                        <AvatarImage
+                          src={buildStaticUrl(avatarSrc)}
+                          alt={displayName}
+                          crossOrigin="anonymous"
+                        />
                       ) : (
                         <AvatarFallback className='rounded-lg'>{initials}</AvatarFallback>
                       )}
