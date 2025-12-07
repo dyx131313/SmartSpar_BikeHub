@@ -288,6 +288,8 @@ export const AdminGroupManagement: React.FC<AdminGroupManagementProps> = ({ onGr
       type: filterType,
       status: filterStatus,
     });
+    console.log("🧨 CreateGroupDialog mounted");
+    return () => console.log("🧨 CreateGroupDialog unmounted");
   }, [currentPage, pageSize, searchQuery, filterType, filterStatus]);
 
   return (

@@ -7,6 +7,7 @@ import { Button, Input, Textarea, Select, SelectContent, SelectItem, SelectTrigg
 import { X, Users, Search } from 'lucide-react';
 import { groupChatAPI } from '../api/group-chat-api';
 import { CreateGroupForm, GroupType, UserInfo } from '../data/group-chat-types';
+import { api } from '@/lib/api';
 
 interface CreateGroupDialogProps {
   open: boolean;
@@ -14,13 +15,11 @@ interface CreateGroupDialogProps {
   onSuccess: (group: any) => void;
 }
 
-export const CreateGroupDialog: React.FC<CreateGroupDialogProps> = ({
+const CreateGroupDialog: React.FC<CreateGroupDialogProps> = React.memo(({
   open,
   onClose,
   onSuccess,
 }) => {
-  console.log('🔄 CreateGroupDialog渲染 - open:', open);
-
   const [formData, setFormData] = useState<CreateGroupForm>({
     name: '',
     description: '',
@@ -28,14 +27,16 @@ export const CreateGroupDialog: React.FC<CreateGroupDialogProps> = ({
     max_members: 100,
   });
   const [selectedUsers, setSelectedUsers] = useState<UserInfo[]>([]);
+
+  // 监控 selectedUsers 的变化
+  useEffect(() => {
+    console.log('🔄 selectedUsers 状态更新，当前数量:', selectedUsers.length, '时间戳:', Date.now());
+    console.log('🔄 selectedUsers 内容:', selectedUsers.map(u => u.full_name));
+  }, [selectedUsers]);
   const [availableUsers, setAvailableUsers] = useState<UserInfo[]>([]);
   const [loading, setLoading] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
   const [searching, setSearching] = useState(false);
-
-  console.log('📊 CreateGroupDialog状态 - formData:', formData);
-  console.log('📊 CreateGroupDialog状态 - selectedUsers.length:', selectedUsers.length);
-  console.log('📊 CreateGroupDialog状态 - availableUsers.length:', availableUsers.length);
 
   // 加载可用用户
   const loadUsers = useCallback(async () => {
@@ -43,15 +44,16 @@ export const CreateGroupDialog: React.FC<CreateGroupDialogProps> = ({
     try {
       setSearching(true);
       console.log('🔍 正在加载用户列表...');
-      const users = await groupChatAPI.searchUsers('', 50);
-      console.log('🔍 用户加载完成，数量:', users?.length);
-      setAvailableUsers(users);
+      // 直接使用 API 获取用户，不使用 getAllAvailableUsers
+      const response = await api.get(`/api/chat/users/search?q=&limit=50`);
+      console.log('🔍 用户加载完成，数量:', response.users?.length);
+      setAvailableUsers(response.users);
     } catch (error) {
       console.error('加载用户列表失败:', error);
     } finally {
       setSearching(false);
     }
-  }, []);
+  }, [setAvailableUsers, setSearching]);
 
   // 搜索用户
   const handleSearchUsers = useCallback(async (query: string) => {
@@ -74,28 +76,35 @@ export const CreateGroupDialog: React.FC<CreateGroupDialogProps> = ({
       // 当搜索框为空时，重置为所有用户
       loadUsers();
     }
-  }, [loadUsers]);
+  }, [loadUsers, setSearchQuery]);
 
   // 处理用户选择
-  const handleUserToggle = (user: UserInfo) => {
-    console.log('👤 handleUserToggle 被调用 - user:', user.full_name, 'ID:', user.id);
+  const handleUserToggle = useCallback((user: UserInfo) => {
+    console.log('👤 handleUserToggle 被调用 - user:', user.full_name, 'ID:', user.id, '时间戳:', Date.now());
     setSelectedUsers(prev => {
+      console.log('👤 setSelectedUsers 开始执行 - prev.length:', prev.length, '时间戳:', Date.now());
       const isSelected = prev.some(u => u.id === user.id);
       console.log('👤 用户选择状态:', isSelected, '当前已选数量:', prev.length);
       if (isSelected) {
         console.log('👤 取消选择用户:', user.full_name);
-        return prev.filter(u => u.id !== user.id);
+        const newSelected = prev.filter(u => u.id !== user.id);
+        console.log('👤 返回新的选中列表，长度:', newSelected.length, '时间戳:', Date.now());
+        return newSelected;
       } else {
-        if (prev.length >= formData.max_members - 1) {
+        // 使用函数式获取最新的 formData
+        const currentMaxMembers = 100; // 默认值，确保不会出错
+        if (prev.length >= currentMaxMembers - 1) {
           console.log('👤 已达到最大选择数量限制');
-          alert(`最多只能选择 ${formData.max_members - 1} 个成员`);
+          alert(`最多只能选择 ${currentMaxMembers - 1} 个成员`);
           return prev;
         }
         console.log('👤 添加用户到选择列表:', user.full_name);
-        return [...prev, { ...user }];
+        const newSelected = [...prev, { ...user }];
+        console.log('👤 返回新的选中列表，长度:', newSelected.length, '时间戳:', Date.now());
+        return newSelected;
       }
     });
-  };
+  }, []);
 
   // 处理表单提交
   const handleSubmit = async (e: React.FormEvent) => {
@@ -137,22 +146,11 @@ export const CreateGroupDialog: React.FC<CreateGroupDialogProps> = ({
     }
   };
 
-  // 关闭对话框
+  // 关闭对话框 - 保留状态，只调用 onClose
   const handleClose = useCallback(() => {
     console.log('🚪 handleClose 函数被调用');
-    setFormData({
-      name: '',
-      description: '',
-      group_type: GroupType.PUBLIC,
-      max_members: 100,
-    });
-    setSelectedUsers([]);
-    setSearchQuery('');
-    // 延迟调用 onClose，避免状态更新冲突
-    setTimeout(() => {
-      console.log('🚪 延迟调用 onClose');
-      onClose();
-    }, 0);
+    console.log('🚪 延迟调用 onClose');
+    onClose();
   }, [onClose]);
 
   useEffect(() => {
@@ -163,7 +161,7 @@ export const CreateGroupDialog: React.FC<CreateGroupDialogProps> = ({
     } else {
       console.log('⚡ open 为 false，不加载用户');
     }
-  }, [open, loadUsers]); // 添加 loadUsers 作为依赖
+  }, [open]); // 只依赖 open，避免 loadUsers 变化导致重新执行
 
   return (
     <Dialog open={open} onOpenChange={(newOpen) => {
@@ -276,10 +274,14 @@ export const CreateGroupDialog: React.FC<CreateGroupDialogProps> = ({
                             className={`flex items-center justify-between p-2 rounded-lg cursor-pointer transition-colors ${
                               isSelected ? 'bg-primary/10 border border-primary/20' : 'hover:bg-accent'
                             }`}
-                            onClick={() => handleUserToggle(user)}
+                            onClick={(e) => {
+                              e.preventDefault();
+                              e.stopPropagation();
+                              handleUserToggle(user);
+                            }}
                           >
                             <div className="flex items-center space-x-3">
-                              <Checkbox checked={isSelected} />
+                           
                               <Avatar className="h-8 w-8">
                                 <AvatarImage src="" alt={user.full_name} />
                                 <AvatarFallback>
@@ -322,7 +324,11 @@ export const CreateGroupDialog: React.FC<CreateGroupDialogProps> = ({
                         {user.full_name}
                         <button
                           type="button"
-                          onClick={() => handleUserToggle(user)}
+                          onClick={(e) => {
+                            e.preventDefault();
+                            e.stopPropagation();
+                            handleUserToggle(user);
+                          }}
                           className="ml-1 hover:bg-secondary-foreground/20 rounded"
                         >
                           <X className="h-3 w-3" />
@@ -354,4 +360,6 @@ export const CreateGroupDialog: React.FC<CreateGroupDialogProps> = ({
       </DialogContent>
     </Dialog>
   );
-};
+});
+
+export default CreateGroupDialog;

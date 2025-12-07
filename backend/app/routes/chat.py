@@ -434,6 +434,7 @@ def send_group_message(group_id):
     """发送群聊消息"""
     try:
         user_id = get_jwt_identity()
+        current_app.logger.info(f"收到群聊消息请求 - group_id: {group_id}, user_id: {user_id}")
 
         # 检查文件上传
         file_url = None
@@ -458,11 +459,28 @@ def send_group_message(group_id):
                 else:
                     message_type = MessageType.FILE
 
-        # 获取消息内容
-        content = request.form.get('content', '') if 'file' in request.files else request.get_json().get('content', '')
+        # 获取消息内容和其他字段
+        current_app.logger.info(f"请求类型: {request.content_type}")
+        current_app.logger.info(f"表单数据: {dict(request.form) if request.form else 'None'}")
+        current_app.logger.info(f"文件: {request.files}")
+
+        # 总是从表单中获取内容，因为FormData应该使用request.form
+        content = request.form.get('content', '')
+        message_type_str = request.form.get('message_type', 'text')
+        reply_to_id = request.form.get('reply_to_id', type=int)
+
+        current_app.logger.info(f"content: '{content}', message_type: '{message_type_str}', reply_to_id: {reply_to_id}")
 
         if not content and not file_url:
+            current_app.logger.error("消息内容为空")
             return jsonify({'error': '消息内容不能为空'}), 400
+
+        # 转换消息类型
+        message_type_str = message_type_str.upper()
+        try:
+            message_type = MessageType(message_type_str)
+        except ValueError:
+            message_type = MessageType.TEXT
 
         conn = get_db_connection()
         cursor = conn.cursor()
@@ -484,11 +502,11 @@ def send_group_message(group_id):
 
         # 插入消息
         insert_query = """
-        INSERT INTO chat_messages (group_id, sender_id, message_type, content, file_url, file_name, file_size)
-        VALUES (%s, %s, %s, %s, %s, %s, %s)
+        INSERT INTO chat_messages (group_id, sender_id, message_type, content, file_url, file_name, file_size, reply_to_id)
+        VALUES (%s, %s, %s, %s, %s, %s, %s, %s)
         """
         cursor.execute(insert_query, (
-            group_id, user_id, message_type.value, content, file_url, file_name, file_size
+            group_id, user_id, message_type.value, content, file_url, file_name, file_size, reply_to_id
         ))
 
         message_id = cursor.lastrowid

@@ -13,9 +13,9 @@ import { ThemeSwitch } from '@/components/theme-switch';
 // 导入群聊相关组件
 import { GroupChatList } from './components/group-chat-list';
 import { GroupChatMessages } from './components/group-chat-messages';
-import { CreateGroupDialog } from './components/create-group-dialog';
+import CreateGroupDialog from './components/create-group-dialog';
 import { groupChatAPI } from './api/group-chat-api';
-import { ChatGroup, ChatMessage, MessageType } from './data/group-chat-types';
+import { ChatGroup, ChatMessage, MessageType, UserInfo } from './data/group-chat-types';
 
 export function GroupChats() {
   console.log('🔄 GroupChats 组件渲染');
