@@ -1,8 +1,4 @@
-<<<<<<< HEAD
 from flask import request, jsonify, current_app
-=======
-﻿from flask import request, jsonify
->>>>>>> main
 from flask_jwt_extended import (
     create_access_token,
     jwt_required,
