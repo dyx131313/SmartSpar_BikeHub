@@ -11,8 +11,8 @@ class Config:
     MYSQL_USER = os.environ.get('MYSQL_USER') or 'root'
     MYSQL_PASSWORD = os.environ.get('MYSQL_PASSWORD') or 'password'
     MYSQL_HOST = os.environ.get('MYSQL_HOST') or 'localhost'
-    MYSQL_PORT = os.environ.get('MYSQL_PORT') or '3306'
-    MYSQL_DB = os.environ.get('MYSQL_DB') or 'bikehub'
+    MYSQL_PORT = int(os.environ.get('MYSQL_PORT') or 3306)
+    MYSQL_DB = os.environ.get('MYSQL_DB') or 'bikehub_dev'
 
     SQLALCHEMY_DATABASE_URI = f'mysql+pymysql://{MYSQL_USER}:{MYSQL_PASSWORD}@{MYSQL_HOST}:{MYSQL_PORT}/{MYSQL_DB}?charset=utf8mb4'
     SQLALCHEMY_TRACK_MODIFICATIONS = False
@@ -61,7 +61,10 @@ class Config:
         # Ensure upload directory exists
         os.makedirs(Config.UPLOAD_FOLDER, exist_ok=True)
 
-        # Ensure model directory exists
+        # 创建头像目录
+        os.makedirs(os.path.join(Config.UPLOAD_FOLDER, 'avatars'), exist_ok=True)
+
+        # 创建模型目录
         os.makedirs(Config.MODEL_PATH, exist_ok=True)
 
 
@@ -74,7 +77,8 @@ class DevelopmentConfig(Config):
 class TestingConfig(Config):
     """Testing environment config"""
     TESTING = True
-    SQLALCHEMY_DATABASE_URI = 'sqlite:///:memory:'
+    # 使用MySQL而不是SQLite进行测试
+    SQLALCHEMY_DATABASE_URI = f'mysql+pymysql://{Config.MYSQL_USER}:{Config.MYSQL_PASSWORD}@{Config.MYSQL_HOST}:{Config.MYSQL_PORT}/{Config.MYSQL_DB}_test?charset=utf8mb4'
     WTF_CSRF_ENABLED = False
 
 

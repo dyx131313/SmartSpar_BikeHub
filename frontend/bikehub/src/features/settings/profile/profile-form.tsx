@@ -4,7 +4,7 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { Link } from '@tanstack/react-router'
 import { showSubmittedData } from '@/lib/show-submitted-data'
 import { cn } from '@/lib/utils'
-import { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { Button } from '@/components/ui/button'
 import {
   Form,
@@ -25,8 +25,9 @@ import {
 } from '@/components/ui/select'
 import { Textarea } from '@/components/ui/textarea'
 import { toast } from 'sonner'
-import { useAuthStore } from '@/stores/auth-store' 
+import { useAuthStore } from '@/stores/auth-store'
 import { apiPut, apiGet } from '@/lib/api'
+import { AvatarUploader } from './avatar-uploader'
 import { F } from 'node_modules/@faker-js/faker/dist/airline-DF6RqYmq'
 
 const profileFormSchema = z.object({
@@ -58,10 +59,15 @@ const defaultValues: Partial<ProfileFormValues> = {
   username: '',
   email: '',
   full_name: '',
+  current_password: '',
+  new_password: '',
+  confirm_password: '',
 }
 
 export function ProfileForm() {
   const [isSubmitting, setIsSubmitting] = useState(false)
+  const [userProfile, setUserProfile] = useState<any>(null)
+  const [avatarUrl, setAvatarUrl] = useState<string>('')
   const form = useForm<ProfileFormValues>({
     resolver: zodResolver(profileFormSchema),
     defaultValues,
@@ -73,6 +79,33 @@ export function ProfileForm() {
   //   control: form.control,
   // })
   const setUser = useAuthStore((s) => s.auth?.setUser)
+
+  // 获取当前用户信息
+  const fetchUserProfile = async () => {
+    try {
+      const response = await apiGet('/api/users/profile')
+      setUserProfile(response.data)
+      setAvatarUrl(response.data?.avatar_url || '')
+      // 填充表单
+      if (response.data) {
+        form.reset({
+          username: response.data.username || '',
+          email: response.data.email || '',
+          full_name: response.data.full_name || '',
+          current_password: '',
+          new_password: '',
+          confirm_password: ''
+        })
+      }
+    } catch (error) {
+      console.error('Failed to fetch user profile:', error)
+    }
+  }
+
+  // 初始化时获取用户信息
+  React.useEffect(() => {
+    fetchUserProfile()
+  }, [])
 
 
   async function onSubmit(data: ProfileFormValues) {
@@ -154,9 +187,21 @@ export function ProfileForm() {
   }
 
   return (
-    <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className='space-y-8'>
-        <FormField
+    <div className="space-y-8">
+      {userProfile && (
+        <AvatarUploader
+          avatarUrl={avatarUrl}
+          fullName={userProfile.full_name || userProfile.username}
+          onAvatarChange={(newUrl) => {
+            setAvatarUrl(newUrl)
+            // 更新用户profile中的avatar_url
+            setUserProfile((prev: any) => ({ ...prev, avatar_url: newUrl }))
+          }}
+        />
+      )}
+      <Form {...form}>
+        <form onSubmit={form.handleSubmit(onSubmit)} className='space-y-8'>
+          <FormField
           control={form.control}
           name='username'
           render={({ field }) => (
@@ -324,5 +369,5 @@ export function ProfileForm() {
         <Button type='submit' disabled={isSubmitting}>{isSubmitting ? '保存中...' : '更新账户'}</Button>
       </form>
     </Form>
-  )
-}
+    </div>
+  )}

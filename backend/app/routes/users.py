@@ -1,4 +1,4 @@
-﻿from flask import request, jsonify
+from flask import request, jsonify, current_app
 from flask_jwt_extended import (
     create_access_token,
     jwt_required,
@@ -10,6 +10,12 @@ import re
 import random
 from sqlalchemy import or_
 from app import db
+from app.models.user import User, UserLog
+from app.routes import api_bp
+from werkzeug.utils import secure_filename
+import os
+import uuid
+import mimetypes
 from app.models.user import User
 from app.models.verification_code import VerificationCode
 from app.routes import api_bp
@@ -654,4 +660,157 @@ def get_user_by_id(id):
         return jsonify({"data": user.to_dict()})
 
     except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
+
+def allowed_avatar_file(filename):
+    """验证头像文件类型"""
+    allowed_extensions = {'png', 'jpg', 'jpeg', 'gif'}
+    allowed_mimetypes = {'image/jpeg', 'image/jpg', 'image/png', 'image/gif'}
+
+    # 检查文件扩展名
+    if '.' in filename:
+        ext = filename.rsplit('.', 1)[1].lower()
+        if ext not in allowed_extensions:
+            return False
+
+    # 检查MIME类型
+    mime_type, _ = mimetypes.guess_type(filename)
+    if mime_type and mime_type not in allowed_mimetypes:
+        return False
+
+    return True
+
+
+@api_bp.route("/users/avatar", methods=["POST"])
+@jwt_required()
+def upload_avatar():
+    """上传用户头像"""
+    try:
+        current_user_id = get_jwt_identity()
+        user = User.query.get(current_user_id)
+
+        if not user:
+            return jsonify({"error": "用户不存在"}), 404
+
+        # 检查是否有文件
+        if 'avatar' not in request.files:
+            return jsonify({"error": "未选择文件"}), 400
+
+        file = request.files['avatar']
+
+        # 检查是否选择了文件
+        if file.filename == '':
+            return jsonify({"error": "未选择文件"}), 400
+
+        # 验证文件类型
+        if not allowed_avatar_file(file.filename):
+            return jsonify({"error": "只支持 PNG、JPG、JPEG、GIF 格式的图片"}), 400
+
+        # 验证文件大小（限制为5MB）
+        file.seek(0, os.SEEK_END)
+        file_size = file.tell()
+        file.seek(0)
+
+        if file_size > 5 * 1024 * 1024:  # 5MB
+            return jsonify({"error": "文件大小不能超过5MB"}), 400
+
+        # 创建头像目录
+        avatar_dir = os.path.join(current_app.config['UPLOAD_FOLDER'], 'avatars')
+        os.makedirs(avatar_dir, exist_ok=True)
+
+        # 生成文件名
+        file_ext = os.path.splitext(file.filename)[1].lower()
+        new_filename = f"{user.id}_{uuid.uuid4().hex}{file_ext}"
+        file_path = os.path.join(avatar_dir, new_filename)
+
+        # 保存文件
+        file.save(file_path)
+
+        # 删除旧头像（如果有）
+        if user.avatar_url:
+            old_filename = os.path.basename(user.avatar_url)
+            old_file_path = os.path.join(avatar_dir, old_filename)
+            if os.path.exists(old_file_path):
+                os.remove(old_file_path)
+
+        # 生成访问URL
+        avatar_url = f"/uploads/avatars/{new_filename}"
+
+        # 更新用户头像
+        user.avatar_url = avatar_url
+        user.updated_at = datetime.utcnow()
+        db.session.commit()
+
+        # 记录操作日志
+        log_entry = UserLog(
+            user_id=user.id,
+            action='update_avatar',
+            resource_type='user',
+            resource_id=user.id,
+            description=f'用户更新头像: {new_filename}',
+            ip_address=request.remote_addr,
+            user_agent=request.headers.get('User-Agent', ''),
+            status='success'
+        )
+        db.session.add(log_entry)
+        db.session.commit()
+
+        return jsonify({
+            "message": "头像上传成功",
+            "data": {
+                "avatar_url": avatar_url
+            }
+        })
+
+    except Exception as e:
+        db.session.rollback()
+        return jsonify({"error": str(e)}), 500
+
+
+@api_bp.route("/users/avatar", methods=["DELETE"])
+@jwt_required()
+def delete_avatar():
+    """删除用户头像"""
+    try:
+        current_user_id = get_jwt_identity()
+        user = User.query.get(current_user_id)
+
+        if not user:
+            return jsonify({"error": "用户不存在"}), 404
+
+        if not user.avatar_url:
+            return jsonify({"message": "用户没有头像"}), 200
+
+        # 删除头像文件
+        avatar_dir = os.path.join(current_app.config['UPLOAD_FOLDER'], 'avatars')
+        filename = os.path.basename(user.avatar_url)
+        file_path = os.path.join(avatar_dir, filename)
+
+        if os.path.exists(file_path):
+            os.remove(file_path)
+
+        # 清除用户头像URL
+        user.avatar_url = None
+        user.updated_at = datetime.utcnow()
+        db.session.commit()
+
+        # 记录操作日志
+        log_entry = UserLog(
+            user_id=user.id,
+            action='delete_avatar',
+            resource_type='user',
+            resource_id=user.id,
+            description=f'用户删除头像: {filename}',
+            ip_address=request.remote_addr,
+            user_agent=request.headers.get('User-Agent', ''),
+            status='success'
+        )
+        db.session.add(log_entry)
+        db.session.commit()
+
+        return jsonify({"message": "头像删除成功"})
+
+    except Exception as e:
+        db.session.rollback()
         return jsonify({"error": str(e)}), 500
