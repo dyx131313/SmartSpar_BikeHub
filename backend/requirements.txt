@@ -4,12 +4,13 @@ Flask-SQLAlchemy==3.1.1
 Flask-Migrate==4.1.0
 Flask-CORS==6.0.1
 Flask-JWT-Extended==4.7.1
+Flask-Mail==0.9.1
 
 # 数据库驱动
 PyMySQL==1.1.1
 cryptography==44.0.1
 
-# 工具库
+# 工具
 python-dotenv==1.0.1
 
 # 数据处理
@@ -23,10 +24,10 @@ python-dateutil==2.9.0.post0
 pytest==8.4.0
 pytest-cov==6.1.1
 
-# 图像处理（用于站点地图等）
+# 图像处理（用于站点地图等
 Pillow==11.0.0
 
-# HTTP客户端
+# HTTP客户
 requests==2.32.3
 
 # CORS支持
@@ -38,8 +39,14 @@ arrow==1.4.0
 # 文件处理
 openpyxl==3.1.5
 
-# 数据序列化
+# 数据序列
 jsonschema==4.24.0
 
 # 地理计算
 geopy==2.4.1
+
+# 机器学习 (用于需求预测)
+scikit-learn>=1.6.0
+
+pydantic==2.11.7
+websockets==15.0.1
