@@ -1,5 +1,5 @@
 import { apiGet, apiPost, apiPut, apiDelete } from '@/lib/api'
-import { Station } from './data/schema'
+import { Station, StationDashboardData } from './data/schema'
 
 // 定义后端返回的列表结构
 export interface StationListResponse {
@@ -8,6 +8,16 @@ export interface StationListResponse {
     pages: number
     current_page: number
     per_page: number
+}
+
+export interface DashboardStationsResponse {
+    data: StationDashboardData[]
+    count: number
+}
+
+// 获取仪表盘聚合数据
+export const getDashboardStations = async () => {
+    return apiGet('/api/dashboard/stations') as Promise<DashboardStationsResponse>
 }
 
 // 获取站点列表
