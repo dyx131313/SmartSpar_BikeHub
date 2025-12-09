@@ -121,7 +121,7 @@ export const sidebarData: SidebarData = {
         {
           title: '群聊',
           url: '/chat/groups',
-          badge: '3',
+          // badge: '123',
           icon: MessagesSquare,
         },
         {

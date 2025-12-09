@@ -293,7 +293,7 @@ export const GroupChatMessages: React.FC<GroupChatMessagesProps> = ({
             className={`relative rounded-2xl px-4 py-2 ${
               isOwnMessage
                 ? 'bg-primary text-primary-foreground'
-                : 'bg-accent'
+                : 'bg-[#f2f2f2] text-foreground'
             }`}
           >
             {/* 回复内容 */}
