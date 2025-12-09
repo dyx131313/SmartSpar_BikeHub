@@ -16,17 +16,24 @@ export function AppTitle() {
       <SidebarMenuItem>
         <SidebarMenuButton
           size='lg'
-          className='gap-0 py-0 hover:bg-transparent active:bg-transparent'
+          className='gap-2 py-2 hover:bg-transparent active:bg-transparent'
           asChild
         >
-          <div>
+          <div className='flex items-center gap-2 w-full'>
             <Link
               to='/'
               onClick={() => setOpenMobile(false)}
-              className='grid flex-1 text-start text-sm leading-tight'
+              className='flex items-center gap-2 flex-1 min-w-0'
             >
-              <span className='truncate font-bold'>Shadcn-Admin</span>
-              <span className='truncate text-xs'>Vite + ShadcnUI</span>
+              <img
+                src='/images/logo_design.png'
+                alt='SmartSpar BikeHub Logo'
+                className='h-12 w-12 flex-shrink-0 object-contain'
+              />
+              <div className='flex flex-col text-start min-w-0'>
+                <span className='truncate font-bold text-sm leading-tight'>SmartSpar BikeHub</span>
+                <span className='truncate text-xs text-muted-foreground'>智慧共享单车调度系统</span>
+              </div>
             </Link>
             <ToggleSidebar />
           </div>
