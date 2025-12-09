@@ -24,11 +24,7 @@ def get_db_connection():
             host=config.get('MYSQL_HOST', 'localhost'),
             user=config.get('MYSQL_USER', 'root'),
             password=config.get('MYSQL_PASSWORD', ''),
-<<<<<<< HEAD
-            database=config.get('MYSQL_DATABASE', 'bikehub'),
-=======
             database=config.get('MYSQL_DATABASE', 'bikehub_dev'),
->>>>>>> main
             port=config.get('MYSQL_PORT', 3306),
             charset='utf8mb4',
             cursorclass=pymysql.cursors.DictCursor,
@@ -54,11 +50,7 @@ def get_db_connection_without_dict():
             host=config.get('MYSQL_HOST', 'localhost'),
             user=config.get('MYSQL_USER', 'root'),
             password=config.get('MYSQL_PASSWORD', ''),
-<<<<<<< HEAD
-            database=config.get('MYSQL_DATABASE', 'bikehub'),
-=======
             database=config.get('MYSQL_DATABASE', 'bikehub_dev'),
->>>>>>> main
             port=config.get('MYSQL_PORT', 3306),
             charset='utf8mb4',
             autocommit=False
@@ -236,8 +228,4 @@ class DatabaseManager:
             self.rollback()
         else:
             self.commit()
-<<<<<<< HEAD
         self.close()
-=======
-        self.close()
->>>>>>> main
