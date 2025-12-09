@@ -26,7 +26,7 @@ import { RequireAuth } from '@/components/require-auth'
 import { useQuery } from '@tanstack/react-query'
 import { getUsers } from '@/features/users/service'
 import { getTasks } from '@/features/task_management/service'
-import { getStations } from '@/features/station_management/service'
+import { getDashboardStations } from '@/features/station_management/service'
 
 export function Dashboard() {
   // 获取真实调度任务数据
@@ -58,13 +58,18 @@ export function Dashboard() {
     }
   }
 
-  // 获取真实站点数据
-  const { data: stationData } = useQuery({
-    queryKey: ['stations'],
-    queryFn: () => getStations({ per_page: 100 }),
+  // 获取仪表盘站点数据 (包含实时单车量和预测需求)
+  const { data: dashboardData, error: dashboardError } = useQuery({
+    queryKey: ['dashboardStations'],
+    queryFn: () => getDashboardStations(),
   })
 
-  const stations = stationData?.data || []
+  if (dashboardError) {
+    console.error('Dashboard stations fetch error:', dashboardError)
+  }
+
+  const stations = dashboardData?.data || []
+  console.log('Dashboard stations loaded:', stations.length, stations[0])
 
   // 获取真实用户数据
   const { data: userData } = useQuery({
@@ -75,11 +80,20 @@ export function Dashboard() {
   const users = userData?.data || []
 
   // 站点分析所需数据
-  // 站点需求统计（临时：基于容量与ID派生一个稳定的“需求值”），取前五
+  // 站点需求统计（基于预测需求），取前五
   const demandTop5 = stations
     .map((s) => ({
       name: s.name,
-      value: s.capacity * 2 + (s.id % 50),
+      value: s.predicted_demand || 0,
+    }))
+    .sort((a, b) => b.value - a.value)
+    .slice(0, 5)
+
+  // 现存单车量统计，取前五
+  const bikesTop5 = stations
+    .map((s) => ({
+      name: s.name,
+      value: s.current_bikes || 0,
     }))
     .sort((a, b) => b.value - a.value)
     .slice(0, 5)
@@ -185,15 +199,23 @@ export function Dashboard() {
               <div className='grid grid-cols-1 gap-4 lg:grid-cols-7'>
                 <Card className='col-span-1 lg:col-span-4'>
                   <CardContent className='pt-6'>
-                    <Tabs defaultValue='heatmap' className='space-y-4'>
+                    <Tabs defaultValue='combined' className='space-y-4'>
                       <div className='w-full overflow-x-auto pb-2'>
                         <TabsList>
-                          <TabsTrigger value='heatmap'>热力图</TabsTrigger>
-                          <TabsTrigger value='markers'>图钉图</TabsTrigger>
+                          <TabsTrigger value='combined'>综合视图</TabsTrigger>
+                          <TabsTrigger value='heatmap'>预测需求热力图</TabsTrigger>
+                          <TabsTrigger value='real_demand_heatmap'>真实需求热力图</TabsTrigger>
+                          <TabsTrigger value='markers'>图钉图(单车)</TabsTrigger>
                         </TabsList>
                       </div>
+                      <TabsContent value='combined' className='ps-2'>
+                        <AmapComponent mode='combined' data={stations} />
+                      </TabsContent>
                       <TabsContent value='heatmap' className='ps-2'>
                         <AmapComponent mode='heatmap' data={stations} />
+                      </TabsContent>
+                      <TabsContent value='real_demand_heatmap' className='ps-2'>
+                        <AmapComponent mode='real_demand_heatmap' data={stations} />
                       </TabsContent>
                       <TabsContent value='markers' className='ps-2'>
                         <AmapComponent mode='markers' data={stations} />
@@ -203,13 +225,32 @@ export function Dashboard() {
                 </Card>
                 <Card className='col-span-1 lg:col-span-3'>
                   <CardHeader>
-                    <CardTitle>站点需求排行</CardTitle>
+                    <CardTitle>站点排行榜</CardTitle>
                     <CardDescription>
-                      按照调度需求量排序的站点。
+                      实时单车量与预测需求排行。
                     </CardDescription>
                   </CardHeader>
                   <CardContent>
-                    <RecentSales />
+                    <Tabs defaultValue='bikes' className='space-y-4'>
+                      <TabsList>
+                        <TabsTrigger value='bikes'>现存单车量</TabsTrigger>
+                        <TabsTrigger value='demand'>预测需求量</TabsTrigger>
+                      </TabsList>
+                      <TabsContent value='bikes'>
+                        <SimpleBarList
+                          items={bikesTop5}
+                          barClass='bg-blue-500'
+                          valueFormatter={(n) => `${n} 辆`}
+                        />
+                      </TabsContent>
+                      <TabsContent value='demand'>
+                        <SimpleBarList
+                          items={demandTop5}
+                          barClass='bg-red-500'
+                          valueFormatter={(n) => `${n}`}
+                        />
+                      </TabsContent>
+                    </Tabs>
                   </CardContent>
                 </Card>
               </div>
