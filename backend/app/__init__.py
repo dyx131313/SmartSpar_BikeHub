@@ -188,6 +188,10 @@ def register_cli_commands(app):
     def create_admin():
         """创建管理员用户"""
         from app.models.user import User
+        admin = User.query.filter_by(username='admin').first()
+        if admin:
+            print('管理员已存在，跳过创建。')
+            return
         admin = User(
             username='admin',
             email='admin@bikehub.com',
@@ -203,6 +207,10 @@ def register_cli_commands(app):
     def create_dispatcher():
         """创建调度员用户"""
         from app.models.user import User
+        dispatcher = User.query.filter_by(username='dispatcher').first()
+        if dispatcher:
+            print('调度员已存在，跳过创建。')
+            return
         dispatcher = User(
             username='dispatcher',
             email='dispatcher@bikehub.com',
@@ -218,6 +226,10 @@ def register_cli_commands(app):
     def create_operator():
         """创建运维员用户"""
         from app.models.user import User
+        operator = User.query.filter_by(username='operator').first()
+        if operator:
+            print('运维员已存在，跳过创建。')
+            return
         operator = User(
             username='operator',
             email='operator@bikehub.com',
@@ -225,6 +237,7 @@ def register_cli_commands(app):
             full_name='运维员'
         )
         operator.set_password('operator123')
+        db.session.add(operator)
         db.session.commit()
         print('运维员用户创建成功 - 用户名: operator, 密码: operator123')
 
