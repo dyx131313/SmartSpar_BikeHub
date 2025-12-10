@@ -35,3 +35,18 @@ export const importDemands = async (file: File) => {
     formData.append('file', file)
     return apiUpload('/api/demand-data/import', formData)
 }
+
+export const getPredictionParams = async (model: string) => {
+    return apiGet(`/api/predictions/models/${model}/params`)
+}
+
+export const getPredictionData = async (model: string, params?: { page?: number; per_page?: number; station_type?: string }) => {
+    const searchParams = new URLSearchParams()
+    if (params) {
+        if (params.page !== undefined) searchParams.append('page', params.page.toString())
+        if (params.per_page !== undefined) searchParams.append('per_page', params.per_page.toString())
+        if (params.station_type) searchParams.append('station_type', params.station_type)
+    }
+    const queryString = searchParams.toString() ? '?' + searchParams.toString() : ''
+    return apiGet(`/api/predictions/models/${model}/future${queryString}`)
+}

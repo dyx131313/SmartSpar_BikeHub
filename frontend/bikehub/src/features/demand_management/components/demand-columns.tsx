@@ -57,6 +57,14 @@ export const demandColumns: ColumnDef<Demand>[] = [
     cell: ({ row }) => <div className='w-[80px]'>{row.getValue('station_id')}</div>,
   },
   {
+    accessorKey: 'station_name',
+    header: ({ column }) => (
+      <DataTableColumnHeader column={column} title='站点名称' />
+    ),
+    meta: { title: '站点名称', className: 'ps-1', tdClassName: 'ps-4' },
+    cell: ({ row }) => <div className='w-[120px]'>{row.getValue('station_name')}</div>,
+  },
+  {
     accessorKey: 'station_type',
     header: ({ column }) => (
       <DataTableColumnHeader column={column} title='站点类型' />

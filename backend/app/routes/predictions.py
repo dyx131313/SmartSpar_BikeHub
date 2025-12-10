@@ -1,4 +1,5 @@
 import os
+import json
 from flask import request, jsonify
 from flask_jwt_extended import jwt_required
 from datetime import datetime, timedelta
@@ -7,44 +8,178 @@ from app.models.prediction import Prediction
 from app.models.station import Station
 from app.routes import api_bp
 from app.utils.permissions import require_dispatcher_or_admin
-from app.services.demand_predictor import get_demand_predictor, predict_demand_for_station
+from app.services.demand_predictor import (
+    get_demand_predictor,
+    predict_demand_for_station,
+)
 
-@api_bp.route('/predictions', methods=['GET'])
+
+@api_bp.route("/predictions/models/<model_name>/params", methods=["GET"])
+@jwt_required()
+def get_model_params(model_name):
+    """获取模型参数"""
+    try:
+        # 构建文件路径
+        base_path = os.path.join(
+            os.path.dirname(os.path.dirname(__file__)),
+            "services",
+            "time_series",
+            "checkpoints",
+        )
+        file_path = os.path.join(base_path, f"{model_name}_params.json")
+
+        if not os.path.exists(file_path):
+            return (
+                jsonify({"error": "Model parameters not found", "exists": False}),
+                404,
+            )
+
+        with open(file_path, "r", encoding="utf-8") as f:
+            data = json.load(f)
+
+        return jsonify({"data": data, "exists": True})
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
+
+@api_bp.route("/predictions/models/<model_name>/future", methods=["GET"])
+@api_bp.route("/predictions/models/<model_name>/future_data", methods=["GET"])
+@jwt_required()
+def get_model_future(model_name):
+    """获取模型预测的未来需求"""
+    try:
+        # 获取查询参数
+        page = request.args.get("page", 1, type=int)
+        per_page = min(request.args.get("per_page", 20, type=int), 100)
+        station_type_filter = request.args.get("station_type")
+        if station_type_filter == "undefined":
+            station_type_filter = None
+
+        # 获取系统时间 (这里暂时硬编码，与 system_time 保持一致)
+        system_time_str = "2025-12-08T00:00:00"
+        system_time = datetime.fromisoformat(system_time_str)
+
+        base_path = os.path.join(
+            os.path.dirname(os.path.dirname(__file__)),
+            "services",
+            "time_series",
+            "checkpoints",
+        )
+        file_path = os.path.join(base_path, f"{model_name}_future.json")
+
+        if not os.path.exists(file_path):
+            return (
+                jsonify(
+                    {
+                        "data": [],
+                        "total": 0,
+                        "pages": 0,
+                        "current_page": page,
+                        "per_page": per_page,
+                        "message": f"File not found: {file_path}",  # 增加调试信息
+                    }
+                ),
+                200,
+            )
+
+        with open(file_path, "r", encoding="utf-8") as f:
+            raw_data = json.load(f)
+
+        # 获取所有站点类型映射
+        stations = Station.query.all()
+        station_type_map = {s.id: s.station_type for s in stations}
+        station_name_map = {s.id: s.name for s in stations}
+
+        all_results = []
+        for item in raw_data:
+            station_id = item["station_id"]
+            station_type = station_type_map.get(station_id, "Unknown")
+            station_name = station_name_map.get(station_id, "Unknown")
+
+            # 站点类型筛选
+            if station_type_filter and station_type != station_type_filter:
+                continue
+
+            for pred in item["predictions"]:
+                pred_time = datetime.fromisoformat(pred["timestamp"])
+                if pred_time > system_time:
+                    all_results.append(
+                        {
+                            "id": f"{model_name}-{station_id}-{pred['timestamp']}",  # 生成一个临时ID
+                            "time": pred["timestamp"],
+                            "station_id": station_id,
+                            "station_name": station_name,
+                            "station_type": station_type,
+                            "demand": pred["demand"],
+                        }
+                    )
+
+        # 排序：时间升序，站点ID升序
+        all_results.sort(key=lambda x: (x["time"], x["station_id"]))
+
+        # 分页处理
+        total = len(all_results)
+        start = (page - 1) * per_page
+        end = start + per_page
+        paginated_data = all_results[start:end]
+        pages = (total + per_page - 1) // per_page
+
+        return jsonify(
+            {
+                "data": paginated_data,
+                "total": total,
+                "pages": pages,
+                "current_page": page,
+                "per_page": per_page,
+            }
+        )
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
+
+@api_bp.route("/predictions", methods=["GET"])
 @jwt_required()
 @require_dispatcher_or_admin()
 def get_predictions():
     """获取预测结果"""
     try:
-        page = request.args.get('page', 1, type=int)
-        per_page = min(request.args.get('per_page', 20, type=int), 100)
-        station_id = request.args.get('station_id', type=int)
-        start_time = request.args.get('start_time')
-        end_time = request.args.get('end_time')
+        page = request.args.get("page", 1, type=int)
+        per_page = min(request.args.get("per_page", 20, type=int), 100)
+        station_id = request.args.get("station_id", type=int)
+        start_time = request.args.get("start_time")
+        end_time = request.args.get("end_time")
 
         query = Prediction.query
 
         if station_id:
             query = query.filter(Prediction.station_id == station_id)
         if start_time:
-            query = query.filter(Prediction.prediction_time >= datetime.fromisoformat(start_time))
+            query = query.filter(
+                Prediction.prediction_time >= datetime.fromisoformat(start_time)
+            )
         if end_time:
-            query = query.filter(Prediction.prediction_time <= datetime.fromisoformat(end_time))
+            query = query.filter(
+                Prediction.prediction_time <= datetime.fromisoformat(end_time)
+            )
 
         pagination = query.order_by(Prediction.prediction_time.desc()).paginate(
             page=page, per_page=per_page, error_out=False
         )
 
-        return jsonify({
-            'data': [prediction.to_dict() for prediction in pagination.items],
-            'total': pagination.total,
-            'pages': pagination.pages,
-            'current_page': page,
-            'per_page': per_page
-        })
+        return jsonify(
+            {
+                "data": [prediction.to_dict() for prediction in pagination.items],
+                "total": pagination.total,
+                "pages": pagination.pages,
+                "current_page": page,
+                "per_page": per_page,
+            }
+        )
     except Exception as e:
-        return jsonify({'error': str(e)}), 500
+        return jsonify({"error": str(e)}), 500
 
-@api_bp.route('/predictions', methods=['POST'])
+
+@api_bp.route("/predictions", methods=["POST"])
 @jwt_required()
 @require_dispatcher_or_admin()
 def create_prediction():
@@ -53,30 +188,31 @@ def create_prediction():
         data = request.get_json()
 
         # 验证站点是否存在
-        station = Station.query.get(data['station_id'])
+        station = Station.query.get(data["station_id"])
         if not station:
-            return jsonify({'error': '站点不存在'}), 400
+            return jsonify({"error": "站点不存在"}), 400
 
         prediction = Prediction(
-            station_id=data['station_id'],
-            prediction_time=datetime.fromisoformat(data['prediction_time']),
-            predicted_demand=data['predicted_demand'],
-            confidence_score=data['confidence_score'],
-            model_version=data.get('model_version', 'v1.0')
+            station_id=data["station_id"],
+            prediction_time=datetime.fromisoformat(data["prediction_time"]),
+            predicted_demand=data["predicted_demand"],
+            confidence_score=data["confidence_score"],
+            model_version=data.get("model_version", "v1.0"),
         )
 
         db.session.add(prediction)
         db.session.commit()
 
-        return jsonify({
-            'message': '预测结果创建成功',
-            'data': prediction.to_dict()
-        }), 201
+        return (
+            jsonify({"message": "预测结果创建成功", "data": prediction.to_dict()}),
+            201,
+        )
     except Exception as e:
         db.session.rollback()
-        return jsonify({'error': str(e)}), 500
+        return jsonify({"error": str(e)}), 500
 
-@api_bp.route('/predictions/station/<int:station_id>', methods=['GET'])
+
+@api_bp.route("/predictions/station/<int:station_id>", methods=["GET"])
 @jwt_required()
 @require_dispatcher_or_admin()
 def get_station_predictions(station_id):
@@ -86,28 +222,36 @@ def get_station_predictions(station_id):
         station = Station.query.get_or_404(station_id)
 
         # 获取查询参数
-        hours_ahead = request.args.get('hours_ahead', 24, type=int)
-        limit = request.args.get('limit', 100, type=int)
+        hours_ahead = request.args.get("hours_ahead", 24, type=int)
+        limit = request.args.get("limit", 100, type=int)
 
         # 获取未来几小时的预测
         start_time = datetime.utcnow()
         end_time = start_time + timedelta(hours=hours_ahead)
 
-        predictions = Prediction.query.filter(
-            Prediction.station_id == station_id,
-            Prediction.prediction_time >= start_time,
-            Prediction.prediction_time <= end_time
-        ).order_by(Prediction.prediction_time).limit(limit).all()
+        predictions = (
+            Prediction.query.filter(
+                Prediction.station_id == station_id,
+                Prediction.prediction_time >= start_time,
+                Prediction.prediction_time <= end_time,
+            )
+            .order_by(Prediction.prediction_time)
+            .limit(limit)
+            .all()
+        )
 
-        return jsonify({
-            'station': station.to_dict(),
-            'predictions': [prediction.to_dict() for prediction in predictions],
-            'total': len(predictions)
-        })
+        return jsonify(
+            {
+                "station": station.to_dict(),
+                "predictions": [prediction.to_dict() for prediction in predictions],
+                "total": len(predictions),
+            }
+        )
     except Exception as e:
-        return jsonify({'error': str(e)}), 500
+        return jsonify({"error": str(e)}), 500
 
-@api_bp.route('/predictions/dashboard', methods=['GET'])
+
+@api_bp.route("/predictions/dashboard", methods=["GET"])
 @jwt_required()
 @require_dispatcher_or_admin()
 def get_prediction_dashboard():
@@ -118,45 +262,60 @@ def get_prediction_dashboard():
         end_time = start_time + timedelta(hours=24)
 
         # 获取所有站点的最新预测
-        latest_predictions = db.session.query(
-            Prediction.station_id,
-            db.func.max(Prediction.prediction_time).label('latest_time')
-        ).filter(
-            Prediction.prediction_time.between(start_time, end_time)
-        ).group_by(Prediction.station_id).subquery()
+        latest_predictions = (
+            db.session.query(
+                Prediction.station_id,
+                db.func.max(Prediction.prediction_time).label("latest_time"),
+            )
+            .filter(Prediction.prediction_time.between(start_time, end_time))
+            .group_by(Prediction.station_id)
+            .subquery()
+        )
 
-        predictions = db.session.query(Prediction, Station).join(
-            Station, Prediction.station_id == Station.id
-        ).join(
-            latest_predictions,
-            (Prediction.station_id == latest_predictions.c.station_id) &
-            (Prediction.prediction_time == latest_predictions.c.latest_time)
-        ).all()
+        predictions = (
+            db.session.query(Prediction, Station)
+            .join(Station, Prediction.station_id == Station.id)
+            .join(
+                latest_predictions,
+                (Prediction.station_id == latest_predictions.c.station_id)
+                & (Prediction.prediction_time == latest_predictions.c.latest_time),
+            )
+            .all()
+        )
 
         dashboard_data = []
         for prediction, station in predictions:
-            dashboard_data.append({
-                'station': station.to_dict(),
-                'prediction': prediction.to_dict()
-            })
+            dashboard_data.append(
+                {"station": station.to_dict(), "prediction": prediction.to_dict()}
+            )
 
         # 统计信息
         total_stations = len(dashboard_data)
-        high_demand_stations = len([p for p in dashboard_data if p['prediction']['predicted_demand'] > 20])
-        avg_confidence = sum(p['prediction']['confidence_score'] for p in dashboard_data) / total_stations if total_stations > 0 else 0
+        high_demand_stations = len(
+            [p for p in dashboard_data if p["prediction"]["predicted_demand"] > 20]
+        )
+        avg_confidence = (
+            sum(p["prediction"]["confidence_score"] for p in dashboard_data)
+            / total_stations
+            if total_stations > 0
+            else 0
+        )
 
-        return jsonify({
-            'summary': {
-                'total_stations': total_stations,
-                'high_demand_stations': high_demand_stations,
-                'avg_confidence': round(avg_confidence, 4)
-            },
-            'data': dashboard_data
-        })
+        return jsonify(
+            {
+                "summary": {
+                    "total_stations": total_stations,
+                    "high_demand_stations": high_demand_stations,
+                    "avg_confidence": round(avg_confidence, 4),
+                },
+                "data": dashboard_data,
+            }
+        )
     except Exception as e:
-        return jsonify({'error': str(e)}), 500
+        return jsonify({"error": str(e)}), 500
 
-@api_bp.route('/predictions/ai', methods=['POST'])
+
+@api_bp.route("/predictions/ai", methods=["POST"])
 @jwt_required()
 @require_dispatcher_or_admin()
 def ai_predict_demand():
@@ -165,42 +324,55 @@ def ai_predict_demand():
         data = request.get_json()
 
         # 验证必需字段
-        required_fields = ['station_type', 'temp', 'is_holiday', 'weather', 'weekday', 'date']
+        required_fields = [
+            "station_type",
+            "temp",
+            "is_holiday",
+            "weather",
+            "weekday",
+            "date",
+        ]
         for field in required_fields:
             if field not in data:
-                return jsonify({
-                    'error': f'缺少必需字段: {field}'
-                }), 400
+                return jsonify({"error": f"缺少必需字段: {field}"}), 400
 
         # 调用AI预测服务
         try:
             prediction_result = predict_demand_for_station(
-                station_type=data['station_type'],
-                temp=data['temp'],
-                is_holiday=data['is_holiday'],
-                weather=data['weather'],
-                weekday=data['weekday'],
-                date_str=data['date']
+                station_type=data["station_type"],
+                temp=data["temp"],
+                is_holiday=data["is_holiday"],
+                weather=data["weather"],
+                weekday=data["weekday"],
+                date_str=data["date"],
             )
 
-            return jsonify({
-                'success': True,
-                'prediction': prediction_result,
-                'input': data,
-                'message': 'AI预测成功'
-            })
+            return jsonify(
+                {
+                    "success": True,
+                    "prediction": prediction_result,
+                    "input": data,
+                    "message": "AI预测成功",
+                }
+            )
 
         except Exception as e:
-            return jsonify({
-                'success': False,
-                'error': f'AI预测失败: {str(e)}',
-                'message': '预测服务暂时不可用'
-            }), 500
+            return (
+                jsonify(
+                    {
+                        "success": False,
+                        "error": f"AI预测失败: {str(e)}",
+                        "message": "预测服务暂时不可用",
+                    }
+                ),
+                500,
+            )
 
     except Exception as e:
-        return jsonify({'error': str(e)}), 500
+        return jsonify({"error": str(e)}), 500
 
-@api_bp.route('/predictions/ai/batch', methods=['POST'])
+
+@api_bp.route("/predictions/ai/batch", methods=["POST"])
 @jwt_required()
 @require_dispatcher_or_admin()
 def ai_predict_batch():
@@ -208,37 +380,43 @@ def ai_predict_batch():
     try:
         data = request.get_json()
 
-        if 'predictions' not in data or not isinstance(data['predictions'], list):
-            return jsonify({
-                'error': '请求格式错误，需要predictions数组'
-            }), 400
+        if "predictions" not in data or not isinstance(data["predictions"], list):
+            return jsonify({"error": "请求格式错误，需要predictions数组"}), 400
 
-        input_data_list = data['predictions']
+        input_data_list = data["predictions"]
         predictor = get_demand_predictor()
 
         try:
             batch_results = predictor.predict_batch(input_data_list)
 
-            return jsonify({
-                'success': True,
-                'results': batch_results,
-                'total': len(batch_results),
-                'successful': len(batch_results),
-                'failed': 0,
-                'message': '批量AI预测成功'
-            })
+            return jsonify(
+                {
+                    "success": True,
+                    "results": batch_results,
+                    "total": len(batch_results),
+                    "successful": len(batch_results),
+                    "failed": 0,
+                    "message": "批量AI预测成功",
+                }
+            )
 
         except Exception as e:
-            return jsonify({
-                'success': False,
-                'error': f'批量AI预测失败: {str(e)}',
-                'message': '预测服务暂时不可用'
-            }), 500
+            return (
+                jsonify(
+                    {
+                        "success": False,
+                        "error": f"批量AI预测失败: {str(e)}",
+                        "message": "预测服务暂时不可用",
+                    }
+                ),
+                500,
+            )
 
     except Exception as e:
-        return jsonify({'error': str(e)}), 500
+        return jsonify({"error": str(e)}), 500
 
-@api_bp.route('/predictions/ai/model/info', methods=['GET'])
+
+@api_bp.route("/predictions/ai/model/info", methods=["GET"])
 @jwt_required()
 @require_dispatcher_or_admin()
 def get_ai_model_info():
@@ -247,18 +425,13 @@ def get_ai_model_info():
         predictor = get_demand_predictor()
         model_info = predictor.get_model_info()
 
-        return jsonify({
-            'success': True,
-            'model_info': model_info
-        })
+        return jsonify({"success": True, "model_info": model_info})
 
     except Exception as e:
-        return jsonify({
-            'success': False,
-            'error': str(e)
-        }), 500
+        return jsonify({"success": False, "error": str(e)}), 500
 
-@api_bp.route('/predictions/ai/model/retrain', methods=['POST'])
+
+@api_bp.route("/predictions/ai/model/retrain", methods=["POST"])
 @jwt_required()
 @require_dispatcher_or_admin()
 def retrain_ai_model():
@@ -267,27 +440,39 @@ def retrain_ai_model():
         predictor = get_demand_predictor()
 
         # 检查训练数据文件是否存在
-        train_data_path = 'train.csv'
+        train_data_path = "train.csv"
         if not os.path.exists(train_data_path):
-            return jsonify({
-                'success': False,
-                'error': '训练数据文件不存在',
-                'message': f'请确保 {train_data_path} 文件存在'
-            }), 400
+            return (
+                jsonify(
+                    {
+                        "success": False,
+                        "error": "训练数据文件不存在",
+                        "message": f"请确保 {train_data_path} 文件存在",
+                    }
+                ),
+                400,
+            )
 
         # 重新训练模型
         training_results = predictor.train(train_data_path)
 
-        return jsonify({
-            'success': True,
-            'message': 'AI模型重新训练完成',
-            'training_results': training_results,
-            'timestamp': datetime.now().isoformat()
-        })
+        return jsonify(
+            {
+                "success": True,
+                "message": "AI模型重新训练完成",
+                "training_results": training_results,
+                "timestamp": datetime.now().isoformat(),
+            }
+        )
 
     except Exception as e:
-        return jsonify({
-            'success': False,
-            'error': f'重新训练失败: {str(e)}',
-            'message': '模型重新训练过程中出现错误'
-        }), 500
+        return (
+            jsonify(
+                {
+                    "success": False,
+                    "error": f"重新训练失败: {str(e)}",
+                    "message": "模型重新训练过程中出现错误",
+                }
+            ),
+            500,
+        )

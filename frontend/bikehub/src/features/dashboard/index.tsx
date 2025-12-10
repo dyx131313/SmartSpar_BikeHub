@@ -27,8 +27,28 @@ import { useQuery } from '@tanstack/react-query'
 import { getUsers } from '@/features/users/service'
 import { getTasks } from '@/features/task_management/service'
 import { getDashboardStations } from '@/features/station_management/service'
+import { useEffect, useState } from 'react'
 
 export function Dashboard() {
+  const [systemTime, setSystemTime] = useState<string>('')
+
+  useEffect(() => {
+    const fetchTime = async () => {
+      try {
+        const res = await fetch('/api/system/time')
+        if (res.ok) {
+          const data = await res.json()
+          setSystemTime(data.current_time)
+        }
+      } catch (e) {
+        console.error('Failed to fetch system time', e)
+      }
+    }
+    fetchTime()
+    const interval = setInterval(fetchTime, 5000)
+    return () => clearInterval(interval)
+  }, [])
+
   // 获取真实调度任务数据
   const { data: tasksData } = useQuery({
     queryKey: ['tasks'],
@@ -121,7 +141,19 @@ export function Dashboard() {
         {/* ===== Main ===== */}
         <Main>
           <div className='mb-2 flex items-center justify-between space-y-2'>
-            <h1 className='text-2xl font-bold tracking-tight'>数据展示面板</h1>
+            <div className='flex items-center gap-4'>
+              <h1 className='text-2xl font-bold tracking-tight'>数据展示面板</h1>
+              {systemTime && (
+                <div className='flex items-center space-x-2 rounded-md bg-muted px-3 py-1'>
+                  <span className='text-sm font-medium text-muted-foreground'>
+                    系统时间:
+                  </span>
+                  <span className='font-mono text-sm font-bold'>
+                    {systemTime.replace('T', ' ')}
+                  </span>
+                </div>
+              )}
+            </div>
             {/* <div className='flex items-center space-x-2'>
             <Button>Download</Button>
           </div> */}

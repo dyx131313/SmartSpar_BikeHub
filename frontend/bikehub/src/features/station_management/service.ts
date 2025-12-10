@@ -1,4 +1,4 @@
-import { apiGet, apiPost, apiPut, apiDelete } from '@/lib/api'
+import { apiGet, apiPost, apiPut, apiDelete, apiUpload } from '@/lib/api'
 import { Station, StationDashboardData } from './data/schema'
 
 // 定义后端返回的列表结构
@@ -48,6 +48,12 @@ export const deleteStation = async (id: number) => {
     // 检查 lib/api.ts 发现没有 apiDelete，我需要先去添加 apiDelete 或者直接在这里实现
     // 为了保持一致性，我应该先去 lib/api.ts 添加 apiDelete
     // 但为了不打断流程，我先用 apiPost 模拟或者直接在这里写 fetch
-    // 还是先去 lib/api.ts 添加 apiDelete 比较好
     return apiDelete(`/api/stations/${id}`)
+}
+
+// 导入站点
+export const importStations = async (file: File) => {
+    const formData = new FormData()
+    formData.append('file', file)
+    return apiUpload('/api/stations/import', formData)
 }

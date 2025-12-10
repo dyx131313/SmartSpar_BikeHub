@@ -9,6 +9,8 @@ import { DemandTable } from './components/demand-table'
 import { RequireAuth } from '@/components/require-auth'
 import { useQuery } from '@tanstack/react-query'
 import { getDemands } from './service'
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
+import { PredictedDemandView } from './components/predicted-demand-view'
 
 export function DemandManagement() {
   const { data: demandData } = useQuery({
@@ -36,9 +38,26 @@ export function DemandManagement() {
                 这里是您的需求数据列表
               </p>
             </div>
-            <DemandPrimaryButtons />
           </div>
-          <DemandTable data={demands} />
+
+          <Tabs defaultValue="realtime" className="space-y-4">
+            <TabsList>
+              <TabsTrigger value="realtime">实时需求</TabsTrigger>
+              <TabsTrigger value="predicted">预测需求</TabsTrigger>
+            </TabsList>
+
+            <TabsContent value="realtime" className="space-y-4">
+              <div className="flex justify-end">
+                <DemandPrimaryButtons />
+              </div>
+              <DemandTable data={demands} />
+            </TabsContent>
+
+            <TabsContent value="predicted" className="space-y-4">
+              <PredictedDemandView />
+            </TabsContent>
+          </Tabs>
+
         </Main>
 
         <DemandDialogs />

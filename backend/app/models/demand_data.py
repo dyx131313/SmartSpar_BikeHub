@@ -29,6 +29,9 @@ class DemandData(db.Model):
             "id": self.id,
             "timestamp": self.timestamp.isoformat() if self.timestamp else None,
             "station_id": self.station_id,
+            "station_name": (
+                self.demand_station.name if self.demand_station else "Unknown"
+            ),
             "station_type": self.station_type,
             "weekday": self.weekday,
             "is_holiday": bool(self.is_holiday),
