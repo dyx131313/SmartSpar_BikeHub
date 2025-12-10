@@ -326,8 +326,10 @@ export const GroupChatList: React.FC<GroupChatListProps> = ({
               {groups.map((group) => (
                 <div
                   key={group.id}
-                  className={`relative p-3 rounded-lg cursor-pointer transition-colors hover:bg-accent/50 ${
-                    selectedGroupId === group.id ? 'bg-accent' : ''
+                  className={`relative p-3 rounded-lg cursor-pointer transition-colors hover:bg-[var(--sidebar-item-hover)] hover:text-[var(--sidebar-foreground)] ${
+                    selectedGroupId === group.id
+                      ? 'bg-[var(--group-item-active)] text-[var(--sidebar-item-active-text)]'
+                      : ''
                   }`}
                   onClick={() => onGroupSelect(group)}
                 >

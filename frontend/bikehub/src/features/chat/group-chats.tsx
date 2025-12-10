@@ -192,7 +192,7 @@ export function GroupChats() {
         <Main fixed>
           <section className="flex h-full gap-6">
             {/* 左侧群聊列表 */}
-            <div className="hidden w-80 flex-col gap-2 md:flex lg:w-96">
+            <div className="hidden w-80 flex-col gap-2 border-r border-border/80 pr-4 md:flex lg:w-96">
               <GroupChatList
                 selectedGroupId={selectedGroup?.id}
                 onGroupSelect={handleGroupSelect}
@@ -203,7 +203,7 @@ export function GroupChats() {
             </div>
 
             {/* 右侧聊天区域 */}
-            <div className="flex-1">
+            <div className="flex-1 pl-2">
               <GroupChatMessages
                 group={selectedGroup}
                 messages={messages}

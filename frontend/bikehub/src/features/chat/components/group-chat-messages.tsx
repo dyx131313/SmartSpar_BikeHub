@@ -364,11 +364,8 @@ export const GroupChatMessages: React.FC<GroupChatMessagesProps> = ({
   if (!group) {
     return (
       <div className="flex-1 flex items-center justify-center">
-        <div className="text-center">
-          <div className="w-16 h-16 bg-accent rounded-full flex items-center justify-center mx-auto mb-4">
-            <Reply className="h-8 w-8 text-muted-foreground" />
-          </div>
-          <h3 className="text-lg font-medium mb-2">选择一个群聊</h3>
+        <div className="text-center space-y-2">
+          <h3 className="text-lg font-medium">选择一个群聊</h3>
           <p className="text-muted-foreground">开始与其他成员交流</p>
         </div>
       </div>

@@ -1,0 +1,340 @@
+/* BikeHub 智斗单车 - 专业共享单车管理系统配色方案 */
+/* 设计理念：环保、科技、安全、高效 */
+
+:root {
+  /* === 核心品牌色 === */
+  /* 主色：清新的蓝绿色系，体现环保科技 */
+  --brand-primary: rgb(107, 166, 198);
+  --brand-primary-light: #33b8d6;
+  --brand-primary-dark: #0088aa;
+
+  /* 辅助色：活力橙，体现共享经济的活力 */
+  --brand-accent: #8e9297;
+  --brand-accent-light: #979b9f;
+  --brand-accent-dark:#74777b;
+
+  /* 环保绿：突出可持续发展理念 */
+  --brand-eco: #33cc88;
+  --brand-eco-light: #66ddaa;
+  --brand-eco-dark: #22aa66;
+
+  /* === 功能性色彩 === */
+  /* 背景色系 */
+  --bg-primary: #ffffff;
+  --bg-secondary: #f7fbff;
+  --bg-tertiary: #eef5fa;
+
+  /* 文字色彩 */
+  --text-primary: #1a3a4a;
+  --text-secondary: #4a6578;
+  --text-tertiary: #7a90a0;
+  --text-inverse: #ffffff;
+
+  /* 状态色彩 */
+  --success: #44dd88;
+  --success-light: #77eeaa;
+  --success-dark: #22cc66;
+
+  --warning: #ffcc44;
+  --warning-light: #ffdd77;
+  --warning-dark: #eeaa33;
+
+  --error: #ee4444;
+  --error-light: #ff7777;
+  --error-dark: #cc2222;
+
+  --info: #4499dd;
+  --info-light: #77bbee;
+  --info-dark: #2277cc;
+
+  /* === 系统组件色彩 === */
+  /* 主要操作按钮 */
+  --btn-primary: var(--brand-primary);
+  --btn-primary-hover: var(--brand-primary-light);
+  --btn-primary-active: var(--brand-primary-dark);
+  --btn-primary-text: var(--text-inverse);
+
+  /* 次要操作按钮 */
+  --btn-secondary: var(--bg-primary);
+  --btn-secondary-hover: var(--bg-secondary);
+  --btn-secondary-active: var(--bg-tertiary);
+  --btn-secondary-text: var(--brand-primary);
+  --btn-secondary-border: var(--brand-primary);
+
+  /* 输入框 */
+  --input-bg: var(--bg-primary);
+  --input-border: #ccdddd;
+  --input-border-focus: var(--brand-primary);
+  --input-text: var(--text-primary);
+  --input-placeholder: var(--text-tertiary);
+
+  /* 卡片和容器 */
+  --card-bg: var(--bg-primary);
+  --card-border: #e0e8ee;
+  --card-shadow: 0 2px 8px rgba(0, 168, 204, 0.08);
+  --card-hover-shadow: 0 4px 16px rgba(0, 168, 204, 0.12);
+
+  /* 导航栏 */
+  --nav-bg: var(--bg-primary);
+  --nav-border: var(--card-border);
+  --nav-item-hover: var(--bg-secondary);
+  --nav-item-active: var(--brand-primary);
+  --nav-item-active-text: var(--text-inverse);
+
+  /* 侧边栏 */
+  --sidebar-bg: #1d2a44;
+  --sidebar-border: #233252;
+  --sidebar-foreground: #e0e8ee;
+  --sidebar-item-hover: #24365a;
+  --sidebar-item-active: #e0e8ee;     /* 选中按钮浅灰背景 */
+  --sidebar-item-active-text: #1f2a3d; /* 选中按钮深灰文字 */
+
+  /* 群聊 */
+
+  --group-item-active: #e6e7e8;
+
+  /* 数据可视化 */
+  --chart-primary: var(--brand-primary);
+  --chart-secondary: var(--brand-accent);
+  --chart-tertiary: var(--brand-eco);
+  --chart-success: var(--success);
+  --chart-warning: var(--warning);
+  --chart-error: var(--error);
+
+  /* === 装饰性色彩 === */
+  /* 渐变色 */
+  --gradient-brand: linear-gradient(135deg, var(--brand-primary) 0%, var(--brand-primary-light) 100%);
+  --gradient-accent: linear-gradient(135deg, var(--brand-accent) 0%, var(--brand-accent-light) 100%);
+  --gradient-eco: linear-gradient(135deg, var(--brand-eco) 0%, var(--brand-eco-light) 100%);
+  --gradient-bg: linear-gradient(135deg, var(--bg-secondary) 0%, var(--bg-tertiary) 100%);
+
+  /* 阴影 */
+  --shadow-sm: 0 1px 2px rgba(0, 168, 204, 0.05);
+  --shadow-md: 0 2px 8px rgba(0, 168, 204, 0.08);
+  --shadow-lg: 0 4px 16px rgba(0, 168, 204, 0.12);
+  --shadow-xl: 0 8px 32px rgba(0, 168, 204, 0.16);
+
+  /* 边框半径 */
+  --radius-sm: 0.25rem;
+  --radius-md: 0.375rem;
+  --radius-lg: 0.5rem;
+  --radius-xl: 0.75rem;
+  --radius-2xl: 1rem;
+
+  /* 过渡动画 */
+  --transition-fast: 150ms ease-out;
+  --transition-normal: 250ms ease-out;
+  --transition-slow: 350ms ease-out;
+}
+
+/* === 深色主题 === */
+.dark {
+  /* 深色背景色系 */
+  --bg-primary: #1a2333;
+  --bg-secondary: #1f2a3d;
+  --bg-tertiary: #253147;
+
+  /* 深色文字色彩 */
+  --text-primary: #f0f4f8;
+  --text-secondary: #b8c5d3;
+  --text-tertiary: #8896aa;
+
+  /* 深色卡片和容器 */
+  --card-bg: #1f2a3d;
+  --card-border: #354050;
+  --card-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
+  --card-hover-shadow: 0 4px 16px rgba(0, 0, 0, 0.6);
+
+  /* 深色输入框 */
+  --input-bg: #253147;
+  --input-border: #405060;
+  --input-placeholder: #8896aa;
+
+  /* 深色导航栏 */
+  --nav-bg: #1f2a3d;
+  --nav-border: #354050;
+  --nav-item-hover: #2a3548;
+
+  /* 深色侧边栏 */
+  --sidebar-bg: #0f1a30;
+  --sidebar-border: #1b2945;
+  --sidebar-foreground: #e0e8ee;
+  --sidebar-item-hover: #152441;
+  --sidebar-item-active: #e0e8ee;
+  --sidebar-item-active-text: #1f2a3d;
+
+  /* 深色渐变 */
+  --gradient-bg: linear-gradient(135deg, #1f2a3d 0%, #253147 100%);
+
+  /* 深色阴影 */
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.3);
+  --shadow-md: 0 2px 8px rgba(0, 0, 0, 0.4);
+  --shadow-lg: 0 4px 16px rgba(0, 0, 0, 0.6);
+  --shadow-xl: 0 8px 32px rgba(0, 0, 0, 0.8);
+}
+
+/* === Tailwind 自定义颜色扩展 === */
+@layer theme {
+  :root {
+    --color-brand: var(--brand-primary);
+    --color-brand-light: var(--brand-primary-light);
+    --color-brand-dark: var(--brand-primary-dark);
+    --color-accent: var(--brand-accent);
+    --color-eco: var(--brand-eco);
+    --color-bike-primary: var(--brand-primary);
+    --color-bike-accent: var(--brand-accent);
+    --color-bike-eco: var(--brand-eco);
+    --color-bike-success: var(--success);
+    --color-bike-warning: var(--warning);
+    --color-bike-error: var(--error);
+    --color-bike-info: var(--info);
+  }
+
+  .dark {
+    --color-brand: var(--brand-primary);
+    --color-brand-light: var(--brand-primary-light);
+    --color-brand-dark: var(--brand-primary-dark);
+    --color-accent: var(--brand-accent);
+    --color-eco: var(--brand-eco);
+    --color-bike-primary: var(--brand-primary);
+    --color-bike-accent: var(--brand-accent);
+    --color-bike-eco: var(--brand-eco);
+    --color-bike-success: var(--success);
+    --color-bike-warning: var(--warning);
+    --color-bike-error: var(--error);
+    --color-bike-info: var(--info);
+  }
+}
+
+/* === 特殊用途配色类 === */
+.bike-gradient {
+  background: var(--gradient-brand);
+}
+
+.bike-gradient-accent {
+  background: var(--gradient-accent);
+}
+
+.bike-gradient-eco {
+  background: var(--gradient-eco);
+}
+
+.bike-glass {
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.dark .bike-glass {
+  background: rgba(0, 0, 0, 0.2);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.bike-shadow {
+  box-shadow: var(--shadow-md);
+}
+
+.bike-shadow-lg {
+  box-shadow: var(--shadow-lg);
+}
+
+/* === 共享单车专属状态色彩 === */
+.bike-available {
+  color: var(--success);
+  background-color: var(--success-light);
+}
+
+.bike-low {
+  color: var(--warning);
+  background-color: var(--warning-light);
+}
+
+.bike-unavailable {
+  color: var(--error);
+  background-color: var(--error-light);
+}
+
+.bike-maintenance {
+  color: var(--text-tertiary);
+  background-color: var(--bg-tertiary);
+}
+
+/* === 站点状态色彩 === */
+.station-active {
+  border-color: var(--success);
+  background-color: var(--bg-primary);
+}
+
+.station-full {
+  border-color: var(--error);
+  background-color: rgba(238, 68, 68, 0.05);
+}
+
+.station-normal {
+  border-color: var(--brand-primary);
+  background-color: var(--bg-primary);
+}
+
+/* === 调度任务状态色彩 === */
+.task-pending {
+  color: var(--warning);
+  border-color: var(--warning);
+}
+
+.task-in-progress {
+  color: var(--info);
+  border-color: var(--info);
+}
+
+.task-completed {
+  color: var(--success);
+  border-color: var(--success);
+}
+
+.task-cancelled {
+  color: var(--error);
+  border-color: var(--error);
+}
+
+/* === 响应式设计优化 === */
+@media (max-width: 768px) {
+  :root {
+    --card-shadow: 0 1px 4px rgba(0, 168, 204, 0.06);
+    --card-hover-shadow: 0 2px 8px rgba(0, 168, 204, 0.1);
+  }
+
+  .dark {
+    --card-shadow: 0 1px 4px rgba(0, 0, 0, 0.3);
+    --card-hover-shadow: 0 2px 8px rgba(0, 0, 0, 0.5);
+  }
+}
+
+/* === 打印样式 === */
+@media print {
+  :root {
+    --bg-primary: white;
+    --text-primary: black;
+    --brand-primary: #0088aa;
+    --card-shadow: none;
+    --card-border: #ccc;
+  }
+}
+
+/* === 无障碍优化 === */
+@media (prefers-reduced-motion: reduce) {
+  :root {
+    --transition-fast: 0ms;
+    --transition-normal: 0ms;
+    --transition-slow: 0ms;
+  }
+}
+
+/* === 高对比度模式 === */
+@media (prefers-contrast: high) {
+  :root {
+    --text-primary: black;
+    --bg-primary: white;
+    --brand-primary: #0066aa;
+    --card-border: #333;
+  }
+}
