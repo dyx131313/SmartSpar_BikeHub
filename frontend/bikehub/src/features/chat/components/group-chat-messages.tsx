@@ -43,6 +43,35 @@ export const GroupChatMessages: React.FC<GroupChatMessagesProps> = ({
   const scrollAreaRef = useRef<HTMLDivElement>(null);
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
+  // 获取当前用户ID，用于判断消息归属
+  const getCurrentUserId = (): number | null => {
+    // 1) 尝试从 localStorage 获取
+    const idKeys = ['user_id', 'userId', 'uid'];
+    for (const key of idKeys) {
+      const val = localStorage.getItem(key);
+      if (val) {
+        const num = Number(val);
+        if (!Number.isNaN(num)) return num;
+      }
+    }
+
+    // 2) 兜底：从 access_token 中解析 sub / user_id
+    const token = localStorage.getItem('access_token');
+    if (token && token.split('.').length === 3) {
+      try {
+        const payload = token.split('.')[1];
+        const decoded = JSON.parse(atob(payload.replace(/-/g, '+').replace(/_/g, '/')));
+        const sub = decoded?.sub || decoded?.user_id;
+        const num = Number(sub);
+        if (!Number.isNaN(num)) return num;
+      } catch {
+        // 忽略解析错误
+      }
+    }
+    return null;
+  };
+  const currentUserId = getCurrentUserId();
+
   // 自动滚动到底部
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
@@ -253,7 +282,7 @@ export const GroupChatMessages: React.FC<GroupChatMessagesProps> = ({
 
   // 渲染单条消息
   const renderMessage = (message: ChatMessage) => {
-    const isOwnMessage = message.sender_id === group?.created_by; // 这里应该是当前用户ID
+    const isOwnMessage = currentUserId ? message.sender_id === currentUserId : false;
     const isSystem = message.message_type === MessageType.SYSTEM;
 
     if (isSystem) {
