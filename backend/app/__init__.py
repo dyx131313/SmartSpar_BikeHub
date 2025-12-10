@@ -29,10 +29,14 @@ def create_app(config_name=None):
     # 初始化扩展
     db.init_app(app)
     migrate.init_app(app, db)
-    cors.init_app(app, origins=app.config['CORS_ORIGINS'],
-                  supports_credentials=True,
-                  allow_headers=['Content-Type', 'Authorization', 'X-Requested-With'],
-                  methods=['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'])
+
+    # 配置 CORS - 简单配置，自动处理预检请求
+    cors.init_app(app,
+        origins=app.config['CORS_ORIGINS'],
+        supports_credentials=True,
+        methods=['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+        allow_headers=['Content-Type', 'Authorization', 'X-Requested-With']
+    )
     jwt.init_app(app)
 
     # 配置JWT错误处理
@@ -42,7 +46,7 @@ def create_app(config_name=None):
     # 这里采用相对导入，确保模型类被注册到 SQLAlchemy 中
     with app.app_context():
         from . import models   # 或者 from app import models
-    
+
     # 配置日志
     configure_logging(app)
 

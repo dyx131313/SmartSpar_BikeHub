@@ -76,8 +76,13 @@ def register():
         db.session.add(user)
         db.session.commit()
 
-        # Create access token
-        access_token = create_access_token(identity=str(user.id))
+        # Create access token with user role
+        additional_claims = {
+            'role': user.role,
+            'username': user.username,
+            'email': user.email
+        }
+        access_token = create_access_token(identity=str(user.id), additional_claims=additional_claims)
 
         return (
             jsonify(
@@ -116,7 +121,13 @@ def login():
         )
 
         if user and user.check_password(password) and user.is_active:
-            access_token = create_access_token(identity=str(user.id))
+            # 创建包含用户角色信息的 JWT token
+            additional_claims = {
+                'role': user.role,
+                'username': user.username,
+                'email': user.email
+            }
+            access_token = create_access_token(identity=str(user.id), additional_claims=additional_claims)
             return jsonify({"access_token": access_token, "user": user.to_dict()})
         else:
             return jsonify({"error": "Invalid username/email or password"}), 401
@@ -176,6 +187,27 @@ def send_bind_email_code():
     except Exception as e:
         db.session.rollback()
         return jsonify({"error": str(e)}), 500
+
+
+@api_bp.route("/auth/debug", methods=["GET"])
+def debug_auth():
+    """调试端点：检查当前用户的身份信息"""
+    try:
+        from flask_jwt_extended import get_jwt, get_jwt_identity
+
+        current_user_id = get_jwt_identity()
+        jwt_data = get_jwt()
+
+        print(f"Current user ID: {current_user_id}")
+        print(f"JWT data: {jwt_data}")
+
+        return {
+            "user_id": current_user_id,
+            "jwt_claims": jwt_data,
+            "message": "Debug info sent"
+        }
+    except Exception as e:
+        return {"error": str(e)}, 500
 
 
 @api_bp.route("/auth/email/verify-bind", methods=["POST"])
@@ -360,7 +392,12 @@ def refresh():
             return jsonify({"error": "用户不存在或已被禁用"}), 401
 
         # 创建新的访问令牌
-        new_token = create_access_token(identity=str(user.id))
+        additional_claims = {
+            'role': user.role,
+            'username': user.username,
+            'email': user.email
+        }
+        new_token = create_access_token(identity=str(user.id), additional_claims=additional_claims)
 
         return jsonify({"access_token": new_token, "user": user.to_dict()})
 

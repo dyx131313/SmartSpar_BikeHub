@@ -13,6 +13,7 @@ import os
 from werkzeug.utils import secure_filename
 
 
+
 def allowed_file(filename):
     """检查文件类型是否允许"""
     ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'gif', 'pdf', 'doc', 'docx', 'txt', 'zip', 'rar'}
@@ -141,6 +142,66 @@ def create_chat_group():
     except Exception as e:
         current_app.logger.error(f"创建群聊失败: {str(e)}")
         return jsonify({'error': '创建群聊失败'}), 500
+
+
+@api_bp.route("/chat/admin/groups/<int:group_id>", methods=['DELETE'])
+@admin_required
+def admin_delete_chat_group(group_id):
+    """删除群聊（仅管理员）"""
+    try:
+        # 获取JWT token中的用户信息用于调试
+        from flask_jwt_extended import get_jwt
+        user_data = get_jwt()
+        print(f"=== JWT Token Debug ===")
+        print(f"User data: {user_data}")
+        print(f"User role: {user_data.get('role')}")
+        print(f"User identity: {get_jwt_identity()}")
+        print("=======================")
+
+        conn = get_db_connection()
+        cursor = conn.cursor()
+
+        # 获取群聊信息用于返回删除确认消息
+        select_query = """
+        SELECT cg.name as group_name, cg.created_by
+        FROM chat_groups cg
+        WHERE cg.id = %s
+        """
+        cursor.execute(select_query, (group_id,))
+        result = cursor.fetchone()
+
+        if not result:
+            cursor.close()
+            conn.close()
+            return jsonify({'error': '群聊不存在'}), 404
+
+        # 删除群聊相关的所有数据
+        # 1. 先删除群聊成员
+        cursor.execute("DELETE FROM chat_group_members WHERE group_id = %s", (group_id,))
+        # 2. 删除群聊消息
+        cursor.execute("DELETE FROM chat_messages WHERE group_id = %s", (group_id,))
+        # 3. 删除消息阅读状态
+        cursor.execute("DELETE FROM chat_message_reads WHERE message_id IN (SELECT id FROM chat_messages WHERE group_id = %s)", (group_id,))
+        # 4. 删除群聊
+        cursor.execute("DELETE FROM chat_groups WHERE id = %s", (group_id,))
+
+        if cursor.rowcount > 0:
+            conn.commit()
+            cursor.close()
+            conn.close()
+            return jsonify({
+                'message': f'群聊"{result["group_name"]}"已被删除',
+                'deleted_group_id': group_id,
+                'group_name': result['group_name']
+            }), 200
+        else:
+            cursor.close()
+            conn.close()
+            return jsonify({'error': '群聊不存在或已被删除'}), 404
+
+    except Exception as e:
+        current_app.logger.error(f"删除群聊失败: {str(e)}")
+        return jsonify({'error': '删除群聊失败'}), 500
 
 
 @api_bp.route("/chat/groups/<int:group_id>", methods=['GET'])

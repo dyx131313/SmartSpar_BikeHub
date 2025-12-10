@@ -173,7 +173,30 @@ def admin_required(f):
             user_data = get_jwt()
             user_role = user_data.get('role')
 
+            # 如果token里没有role信息，兜底从数据库查询
+            if not user_role:
+                try:
+                    from app.utils.database import get_db_connection
+                    conn = get_db_connection()
+                    cursor = conn.cursor()
+                    cursor.execute("SELECT role FROM users WHERE id = %s", (get_jwt_identity(),))
+                    db_user = cursor.fetchone()
+                    cursor.close()
+                    conn.close()
+                    if db_user:
+                        user_role = db_user.get('role')
+                except Exception as db_e:
+                    logger.warning(f"查询用户角色失败: {db_e}")
+
+            print(f"=== Admin Required Debug ===")
+            print(f"User data: {user_data}")
+            print(f"User role: {user_role}")
+            print(f"Role type: {type(user_role)}")
+            print(f"Role == 'admin': {user_role == 'admin'}")
+            print("===========================")
+
             if user_role != 'admin':
+                print(f"权限验证失败: 用户角色不是admin")
                 return jsonify({'error': '需要管理员权限'}), 403
 
             return f(*args, **kwargs)
