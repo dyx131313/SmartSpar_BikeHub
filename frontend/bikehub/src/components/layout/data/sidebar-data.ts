@@ -138,16 +138,16 @@ export const sidebarData: SidebarData = {
             //   url: '/settings/account',
             //   icon: Wrench,
             // },
-            {
-              title: '外观',
-              url: '/settings/appearance',
-              icon: Palette,
-            },
-            {
-              title: '通知',
-              url: '/settings/notifications',
-              icon: Bell,
-            },
+            // {
+            //   title: '外观',
+            //   url: '/settings/appearance',
+            //   icon: Palette,
+            // },
+            // {
+            //   title: '通知',
+            //   url: '/settings/notifications',
+            //   icon: Bell,
+            // },
               // {
               //   title: '显示',
               //   url: '/settings/display',

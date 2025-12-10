@@ -21,16 +21,16 @@ const sidebarNavItems = [
   //   href: '/settings/account',
   //   icon: <Wrench size={18} />,
   // },
-  {
-    title: '外观',
-    href: '/settings/appearance',
-    icon: <Palette size={18} />,
-  },
-  {
-    title: '通知',
-    href: '/settings/notifications',
-    icon: <Bell size={18} />,
-  },
+  // {
+  //   title: '外观',
+  //   href: '/settings/appearance',
+  //   icon: <Palette size={18} />,
+  // },
+  // {
+  //   title: '通知',
+  //   href: '/settings/notifications',
+  //   icon: <Bell size={18} />,
+  // },
   // {
   //   title: '显示',
   //   href: '/settings/display',
