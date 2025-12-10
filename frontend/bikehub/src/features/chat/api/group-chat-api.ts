@@ -58,7 +58,8 @@ export class GroupChatAPI {
    * 删除群聊
    */
   static async deleteGroup(groupId: number): Promise<{ message: string }> {
-    const response = await api.delete(`/api/chat/groups/${groupId}`);
+    // 使用管理员删除接口
+    const response = await api.delete(`/api/chat/admin/groups/${groupId}`);
     return response;
   }
 

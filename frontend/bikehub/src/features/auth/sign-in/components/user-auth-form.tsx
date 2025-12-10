@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { z } from 'zod'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
@@ -23,6 +23,26 @@ import {
 import { Input } from '@/components/ui/input'
 import { PasswordInput } from '@/components/password-input'
 
+// JWT解码函数（用于调试）
+function decodeJWT(token: string): any {
+  try {
+    // JWT由三部分组成，用点分隔
+    const parts = token.split('.')
+    if (parts.length !== 3) {
+      throw new Error('Invalid JWT format')
+    }
+
+    // 解码payload（第二部分）
+    const payload = parts[1]
+    // Base64解码
+    const decoded = atob(payload.replace(/-/g, '+').replace(/_/g, '/'))
+    return JSON.parse(decoded)
+  } catch (error) {
+    console.error('Failed to decode JWT:', error)
+    return null
+  }
+}
+
 const formSchema = z.object({
   // username: z.string().min(2).max(100).trim().toLowerCase().transform((val) => val.replace(/\s+/g, '')),
   username: z.string().min(2).max(100).trim(),
@@ -33,7 +53,6 @@ const formSchema = z.object({
   password: z
     .string()
     .min(1, 'Please enter your password')
-    .min(7, 'Password must be at least 7 characters long'),
 })
 
 interface UserAuthFormProps extends React.HTMLAttributes<HTMLFormElement> {
@@ -51,6 +70,16 @@ export function UserAuthForm({
   const setAccessToken = useAuthStore((s) => s.auth?.setAccessToken)
   const setUser = useAuthStore((s) => s.auth?.setUser)
   const readAuthState = () => useAuthStore.getState()?.auth
+
+  // 监听auth store的变化
+  useEffect(() => {
+    const unsubscribe = useAuthStore.subscribe((state) => {
+      console.log('Auth store changed:', state)
+      // 检查localStorage是否被清除
+      console.log('localStorage after auth store change:', localStorage.getItem('role'))
+    })
+    return unsubscribe
+  }, [])
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -117,19 +146,67 @@ export function UserAuthForm({
             // resp?.data?.token ??
             null
 
-
           if (token) {
             setAccessToken?.(token)
             console.log('setAccessToken called ->', token)
+            // Log the JWT token for debugging (show first 50 chars for security)
+            console.log('JWT token (first 50 chars):', token?.substring(0, 50) + '...')
+
+            // 解码JWT并打印payload内容（用于调试）
+            const decoded = decodeJWT(token)
+            console.log('JWT decoded payload:', decoded)
+
             try { localStorage.setItem('access_token', typeof token === 'string' ? token : String(token)) } catch { }
           } else {
             console.warn('No token extracted from login resp', resp)
           }
 
           const user = resp?.user ?? null
+          console.log('Login response:', resp)
+          console.log('User object:', user)
+          console.log('User role:', user?.role)
+          console.log('User role type:', typeof user?.role)
+          console.log('User role === "admin":', user?.role === 'admin')
+          console.log('User role value:', JSON.stringify(user?.role))
+
           if (user) {
             setUser?.(user)
             console.log('setUser called ->', user)
+            // 保存用户角色到 localStorage，供群聊功能使用
+            console.log('准备保存角色到 localStorage...')
+            console.log('user.role存在:', !!user.role)
+            console.log('user.role值:', user.role)
+
+            if (user.role) {
+              try {
+                const roleStr = typeof user.role === 'string' ? user.role : String(user.role)
+                console.log('转换后的角色字符串:', roleStr)
+
+                // 尝试用不同的键名保存
+                localStorage.setItem('role', roleStr)
+                localStorage.setItem('user_role', roleStr)
+                localStorage.setItem('user-role', roleStr)
+
+                console.log('Role saved to localStorage with multiple keys')
+                console.log('role:', localStorage.getItem('role'))
+                console.log('user_role:', localStorage.getItem('user_role'))
+                console.log('user-role:', localStorage.getItem('user-role'))
+
+                // 检查localStorage中的所有内容（用于调试）
+                console.log('=== localStorage 调试信息 (登录后) ===')
+                for (let i = 0; i < localStorage.length; i++) {
+                  const key = localStorage.key(i);
+                  if (key) {
+                    console.log(`${key}:`, localStorage.getItem(key));
+                  }
+                }
+                console.log('====================================')
+              } catch (error) {
+                console.warn('Failed to save role to localStorage:', error)
+              }
+            } else {
+              console.warn('User role is undefined or null')
+            }
           } else {
             console.warn('No user in login resp', resp)
           }
@@ -199,6 +276,29 @@ export function UserAuthForm({
           {isLoading ? <Loader2 className='animate-spin' /> : <LogIn />}
           登录
         </Button>
+
+        {/* 调试按钮：检查localStorage状态 */}
+        {import.meta.env.DEV && (
+          <Button
+            type='button'
+            variant='outline'
+            className='mt-2'
+            onClick={() => {
+              console.log('=== 当前localStorage状态 ===')
+              for (let i = 0; i < localStorage.length; i++) {
+                const key = localStorage.key(i);
+                if (key) {
+                  console.log(`${key}:`, localStorage.getItem(key));
+                }
+              }
+              console.log('========================')
+              console.log('当前用户角色:', localStorage.getItem('role'))
+              console.log('当前access_token:', localStorage.getItem('access_token')?.substring(0, 50) + '...')
+            }}
+          >
+            调试localStorage
+          </Button>
+        )}
 
         {/* <div className='relative my-2'>
           <div className='absolute inset-0 flex items-center'>

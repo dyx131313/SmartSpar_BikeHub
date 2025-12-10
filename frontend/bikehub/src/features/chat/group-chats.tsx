@@ -28,6 +28,7 @@ export function GroupChats() {
   const [hasMore, setHasMore] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
   const [createDialogOpen, setCreateDialogOpen] = useState(false);
+  const [latestCreatedGroup, setLatestCreatedGroup] = useState<ChatGroup | null>(null);
 
   console.log('📊 GroupChats 状态 - groups.length:', groups.length);
   console.log('📊 GroupChats 状态 - createDialogOpen:', createDialogOpen);
@@ -164,6 +165,7 @@ export function GroupChats() {
     setGroups(prev => [group, ...prev]);
     setSelectedGroup(group);
     loadMessages(group.id);
+    setLatestCreatedGroup(group);
   };
 
   // 处理搜索用户
@@ -196,6 +198,7 @@ export function GroupChats() {
                 onGroupSelect={handleGroupSelect}
                 onCreateGroup={() => setCreateDialogOpen(true)}
                 onSearchUsers={handleSearchUsers}
+                createdGroup={latestCreatedGroup}
               />
             </div>
 

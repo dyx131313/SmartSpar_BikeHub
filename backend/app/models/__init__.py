@@ -6,6 +6,7 @@ from .prediction import Prediction, PredictionModel
 from .bike_history import BikeHistory
 from .alert import Alert, AlertSubscription
 from .verification_code import VerificationCode
+from .feedback import Feedback
 
 __all__ = [
     'Station',
@@ -19,5 +20,6 @@ __all__ = [
     'BikeHistory',
     'Alert',
     'AlertSubscription',
-    'VerificationCode'
+    'VerificationCode',
+    'Feedback'
 ]

@@ -399,7 +399,7 @@ export function Dashboard() {
 const topNav = [
   {
     title: '总览',
-    href: 'dashboard/overview',
+    href: '',
     isActive: true,
     disabled: false,
   },

@@ -10,7 +10,7 @@ Flask-Mail==0.9.1
 PyMySQL==1.1.1
 cryptography==44.0.1
 
-# 工具
+# 工具库
 python-dotenv==1.0.1
 
 # 数据处理
@@ -24,10 +24,10 @@ python-dateutil==2.9.0.post0
 pytest==8.4.0
 pytest-cov==6.1.1
 
-# 图像处理（用于站点地图等
+# 图像处理（用于站点地图等）
 Pillow==11.0.0
 
-# HTTP客户
+# HTTP客户端
 requests==2.32.3
 
 # CORS支持

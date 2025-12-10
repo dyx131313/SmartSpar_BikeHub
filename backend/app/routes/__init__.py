@@ -15,4 +15,5 @@ from app.routes import (
     chat,
     dashboard,
     system_time,
+    feedback,
 )

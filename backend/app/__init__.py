@@ -29,10 +29,14 @@ def create_app(config_name=None):
     # 初始化扩展
     db.init_app(app)
     migrate.init_app(app, db)
-    cors.init_app(app, origins=app.config['CORS_ORIGINS'],
-                  supports_credentials=True,
-                  allow_headers=['Content-Type', 'Authorization', 'X-Requested-With'],
-                  methods=['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'])
+
+    # 配置 CORS - 简单配置，自动处理预检请求
+    cors.init_app(app,
+        origins=app.config['CORS_ORIGINS'],
+        supports_credentials=True,
+        methods=['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+        allow_headers=['Content-Type', 'Authorization', 'X-Requested-With']
+    )
     jwt.init_app(app)
 
     # 配置JWT错误处理
@@ -42,7 +46,7 @@ def create_app(config_name=None):
     # 这里采用相对导入，确保模型类被注册到 SQLAlchemy 中
     with app.app_context():
         from . import models   # 或者 from app import models
-    
+
     # 配置日志
     configure_logging(app)
 
@@ -184,6 +188,10 @@ def register_cli_commands(app):
     def create_admin():
         """创建管理员用户"""
         from app.models.user import User
+        admin = User.query.filter_by(username='admin').first()
+        if admin:
+            print('管理员已存在，跳过创建。')
+            return
         admin = User(
             username='admin',
             email='admin@bikehub.com',
@@ -199,6 +207,10 @@ def register_cli_commands(app):
     def create_dispatcher():
         """创建调度员用户"""
         from app.models.user import User
+        dispatcher = User.query.filter_by(username='dispatcher').first()
+        if dispatcher:
+            print('调度员已存在，跳过创建。')
+            return
         dispatcher = User(
             username='dispatcher',
             email='dispatcher@bikehub.com',
@@ -214,6 +226,10 @@ def register_cli_commands(app):
     def create_operator():
         """创建运维员用户"""
         from app.models.user import User
+        operator = User.query.filter_by(username='operator').first()
+        if operator:
+            print('运维员已存在，跳过创建。')
+            return
         operator = User(
             username='operator',
             email='operator@bikehub.com',
@@ -221,6 +237,7 @@ def register_cli_commands(app):
             full_name='运维员'
         )
         operator.set_password('operator123')
+        db.session.add(operator)
         db.session.commit()
         print('运维员用户创建成功 - 用户名: operator, 密码: operator123')
 

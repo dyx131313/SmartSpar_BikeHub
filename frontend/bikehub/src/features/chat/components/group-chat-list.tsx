@@ -2,16 +2,19 @@
  * 群聊列表组件
  */
 import React, { useEffect, useState } from 'react';
-import { Badge, Button, Input, ScrollArea, Avatar, AvatarFallback, AvatarImage, Tooltip, TooltipTrigger, TooltipContent, DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui';
-import { Search, Plus, MoreVertical, Bell, BellOff, Settings, Users, MessageSquare, Crown, Shield, User, X } from 'lucide-react';
+import { Badge, Button, Input, ScrollArea, Avatar, AvatarFallback, AvatarImage, Tooltip, TooltipTrigger, TooltipContent, DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger, AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from '@/components/ui';
+import { Search, Plus, MoreVertical, Bell, BellOff, Settings, Users, MessageSquare, Crown, Shield, User, X, Trash2, AlertTriangle } from 'lucide-react';
 import { groupChatAPI } from '../api/group-chat-api';
 import { ChatGroup, MemberRole, ChatGroupMember } from '../data/group-chat-types';
+import { useAuthStore } from '@/stores/auth-store';
 
 interface GroupChatListProps {
   selectedGroupId?: number | null;
   onGroupSelect: (group: ChatGroup) => void;
   onCreateGroup: () => void;
   onSearchUsers: () => void;
+  /** 最新创建的群聊，提供后会立即插入列表顶部 */
+  createdGroup?: ChatGroup | null;
 }
 
 export const GroupChatList: React.FC<GroupChatListProps> = ({
@@ -19,6 +22,7 @@ export const GroupChatList: React.FC<GroupChatListProps> = ({
   onGroupSelect,
   onCreateGroup,
   onSearchUsers,
+  createdGroup,
 }) => {
   const [groups, setGroups] = useState<ChatGroup[]>([]);
   const [loading, setLoading] = useState(true);
@@ -26,6 +30,10 @@ export const GroupChatList: React.FC<GroupChatListProps> = ({
   const [hasMore, setHasMore] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
   const [membersCache, setMembersCache] = useState<Map<number, ChatGroupMember[]>>(new Map());
+  const [userRole, setUserRole] = useState<string>('');
+  const [deletingGroup, setDeletingGroup] = useState<number | null>(null);
+  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
+  const [groupToDelete, setGroupToDelete] = useState<ChatGroup | null>(null);
 
   // 加载群聊列表
   const loadGroups = async (page = 1, query = '') => {
@@ -136,7 +144,8 @@ export const GroupChatList: React.FC<GroupChatListProps> = ({
   const getCurrentUserMemberId = (groupId: number, members: ChatGroupMember[]): number | undefined => {
     // 假设当前用户的ID可以从localStorage或其他地方获取
     // 这里我们通过用户名来匹配（在实际应用中应该使用用户ID）
-    const currentUserUsername = localStorage.getItem('username');
+    const currentUserUsername = localStorage.getItem('username') || localStorage.getItem('user');
+    console.log('获取用户名用于匹配:', currentUserUsername);
     if (currentUserUsername) {
       return members.find(member => member.username === currentUserUsername)?.id;
     }
@@ -159,9 +168,113 @@ export const GroupChatList: React.FC<GroupChatListProps> = ({
     }
   };
 
+  // 删除群聊
+  const handleDeleteGroup = async () => {
+    if (!groupToDelete) return;
+
+    try {
+      setDeletingGroup(groupToDelete.id);
+      await groupChatAPI.deleteGroup(groupToDelete.id);
+
+      // 从列表中移除群聊
+      setGroups(prev => prev.filter(group => group.id !== groupToDelete.id));
+
+      // 如果删除的是当前选中的群聊，清空选择
+      if (selectedGroupId === groupToDelete.id) {
+        onGroupSelect({} as ChatGroup);
+      }
+
+      // 重新加载群聊列表
+      loadGroups(1);
+
+      // 关闭对话框
+      setDeleteDialogOpen(false);
+      setGroupToDelete(null);
+
+      alert(`群聊"${groupToDelete.name}"已被删除`);
+    } catch (error) {
+      console.error('删除群聊失败:', error);
+      alert('删除群聊失败，请重试');
+    } finally {
+      setDeletingGroup(null);
+    }
+  };
+
+  // 打开删除确认对话框
+  const openDeleteDialog = (group: ChatGroup) => {
+    setGroupToDelete(group);
+    setDeleteDialogOpen(true);
+  };
+
+  // 检查用户是否有权限删除群聊（仅管理员）
+  const canDeleteGroup = (group: ChatGroup) => {
+    // 尝试从多个来源获取用户角色
+    let userRole: string | null = localStorage.getItem('role') ||
+                   localStorage.getItem('user_role') ||
+                   localStorage.getItem('user-role');
+
+    // 如果localStorage中没有，尝试从auth store获取
+    if (!userRole) {
+      const authState = useAuthStore.getState()?.auth?.user;
+      const roleFromAuth = authState?.role;
+      if (roleFromAuth) {
+        // 处理可能是字符串数组的情况
+        userRole = Array.isArray(roleFromAuth) ? roleFromAuth[0] : String(roleFromAuth);
+      }
+      console.log('从 auth store 获取的角色:', roleFromAuth);
+    }
+
+    // 只有管理员才能删除群聊
+    return userRole === 'admin';
+  };
+
+  // 获取删除按钮的显示文本
+  const getDeleteButtonText = (group: ChatGroup) => {
+    if (!canDeleteGroup(group)) {
+      return '无权限删除';
+    }
+    return '删除群聊';
+  };
+
   useEffect(() => {
+    // 获取用户角色 - 尝试多个可能的键名
+    const role = localStorage.getItem('role') ||
+                 localStorage.getItem('user_role') ||
+                 localStorage.getItem('user-role') ||
+                 '';
+
+    console.log('=== GroupChatList useEffect ===');
+    console.log('从 localStorage 获取的 role:', localStorage.getItem('role'));
+    console.log('从 localStorage 获取的 user_role:', localStorage.getItem('user_role'));
+    console.log('从 localStorage 获取的 user-role:', localStorage.getItem('user-role'));
+    console.log('最终使用的角色:', role);
+    console.log('role 类型:', typeof role);
+    console.log('localStorage 中的所有键:', Object.keys(localStorage));
+    console.log('localStorage 中的 access_token:', localStorage.getItem('access_token')?.substring(0, 50) + '...');
+    setUserRole(role);
+
     loadGroups(1);
   }, []);
+
+  // 当有新建的群聊传入时，立即插入到列表顶部（避免必须刷新）
+  useEffect(() => {
+    if (createdGroup?.id) {
+      setGroups(prev => [createdGroup, ...prev.filter(g => g.id !== createdGroup.id)]);
+    }
+  }, [createdGroup]);
+
+  // 添加一个定时器检查，以防localStorage在组件渲染后才被设置
+  useEffect(() => {
+    const checkRoleInterval = setInterval(() => {
+      const role = localStorage.getItem('role');
+      if (role && role !== userRole) {
+        console.log('检测到角色变化:', role);
+        setUserRole(role);
+      }
+    }, 1000);
+
+    return () => clearInterval(checkRoleInterval);
+  }, [userRole]);
 
   return (
     <div className="flex flex-col h-full">
@@ -169,13 +282,15 @@ export const GroupChatList: React.FC<GroupChatListProps> = ({
       <div className="p-4 border-b">
         <div className="flex items-center justify-between mb-4">
           <h2 className="text-lg font-semibold">群聊</h2>
-          <div className="flex gap-2">
-            <Button variant="ghost" size="sm" onClick={onSearchUsers}>
-              <Search className="h-4 w-4" />
-            </Button>
-            <Button variant="ghost" size="sm" onClick={onCreateGroup}>
-              <Plus className="h-4 w-4" />
-            </Button>
+          <div className="flex items-center gap-4">
+            <div className="flex gap-2">
+              <Button variant="ghost" size="sm" onClick={onSearchUsers}>
+                <Search className="h-4 w-4" />
+              </Button>
+              <Button variant="ghost" size="sm" onClick={onCreateGroup}>
+                <Plus className="h-4 w-4" />
+              </Button>
+            </div>
           </div>
         </div>
 
@@ -284,7 +399,7 @@ export const GroupChatList: React.FC<GroupChatListProps> = ({
                         <Button
                           variant="ghost"
                           size="sm"
-                          className="h-8 w-8 p-0 opacity-0 group-hover:opacity-100"
+                          className="h-8 w-8 p-0"
                           onClick={(e) => e.stopPropagation()}
                         >
                           <MoreVertical className="h-4 w-4" />
@@ -318,16 +433,18 @@ export const GroupChatList: React.FC<GroupChatListProps> = ({
                           <MessageSquare className="h-4 w-4 mr-2" />
                           进入聊天
                         </DropdownMenuItem>
+                        {canDeleteGroup(group) && (
                         <DropdownMenuItem
                           onClick={(e) => {
                             e.stopPropagation();
-                            handleLeaveGroup(group.id, group.name);
+                            openDeleteDialog(group);
                           }}
                           className="text-destructive"
                         >
-                          <X className="h-4 w-4 mr-2" />
-                          退出群聊
+                          <Trash2 className="h-4 w-4 mr-2" />
+                          {getDeleteButtonText(group)}
                         </DropdownMenuItem>
+                      )}
                       </DropdownMenuContent>
                     </DropdownMenu>
                   </div>
@@ -356,6 +473,31 @@ export const GroupChatList: React.FC<GroupChatListProps> = ({
           )}
         </div>
       </ScrollArea>
+
+      {/* 删除群聊确认对话框 */}
+      <AlertDialog open={deleteDialogOpen} onOpenChange={setDeleteDialogOpen}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle className="flex items-center gap-2">
+              <Trash2 className="h-5 w-5 text-destructive" />
+              删除群聊
+            </AlertDialogTitle>
+            <AlertDialogDescription className="text-base">
+              确定要删除群聊"{groupToDelete?.name}"吗？此操作将永久删除该群聊及其所有消息，且无法恢复。
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>取消</AlertDialogCancel>
+            <AlertDialogAction
+              onClick={handleDeleteGroup}
+              className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+              disabled={deletingGroup === groupToDelete?.id}
+            >
+              {deletingGroup === groupToDelete?.id ? '删除中...' : '确认删除'}
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </div>
   );
 };

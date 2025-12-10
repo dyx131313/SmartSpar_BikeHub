@@ -38,7 +38,10 @@ const IS_DEV = import.meta.env.DEV ?? false
 
 function buildUrl(path: string) {
   if (/^https?:\/\//.test(path)) return path
-  return IS_DEV ? path : `${API_BASE}${path}`
+  if (IS_DEV && API_BASE) {
+    return `${API_BASE}${path}`
+  }
+  return IS_DEV ? `http://localhost:5000${path}` : `${API_BASE}${path}`
 }
 
 function buildStaticUrl(path: string) {
@@ -172,7 +175,18 @@ export async function apiPut(path: string, body: any) {
 
 export async function apiDelete(path: string) {
   const url = buildUrl(path)
+  console.log('DELETE 请求:', {
+    path,
+    url: buildUrl(path),
+    apiBase: import.meta.env.VITE_API_BASE,
+    isDev: import.meta.env.DEV
+  })
   const res = await fetchWithAuth(url, { method: 'DELETE' })
+  console.log('DELETE 响应:', {
+    status: res.status,
+    statusText: res.statusText,
+    url: res.url
+  })
   const data = await res.json().catch(() => ({}))
   if (!res.ok) {
     const err: any = new Error(data?.error || data?.message || 'Request failed')
