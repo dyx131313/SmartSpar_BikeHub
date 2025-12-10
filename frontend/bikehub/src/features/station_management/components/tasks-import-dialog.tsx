@@ -1,7 +1,7 @@
 import { z } from 'zod'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { showSubmittedData } from '@/lib/show-submitted-data'
+import { toast } from 'sonner'
 import { Button } from '@/components/ui/button'
 import {
   Dialog,
@@ -21,6 +21,8 @@ import {
   FormMessage,
 } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
+import { useMutation, useQueryClient } from '@tanstack/react-query'
+import { importStations } from '../service'
 
 const formSchema = z.object({
   file: z
@@ -29,8 +31,8 @@ const formSchema = z.object({
       message: 'Please upload a file',
     })
     .refine(
-      (files) => ['text/csv'].includes(files?.[0]?.type),
-      'Please upload csv format.'
+      (files) => ['application/json', 'text/csv'].includes(files?.[0]?.type) || files?.[0]?.name.endsWith('.json'),
+      'Please upload json or csv format.'
     ),
 })
 
@@ -43,6 +45,7 @@ export function TasksImportDialog({
   open,
   onOpenChange,
 }: TaskImportDialogProps) {
+  const queryClient = useQueryClient()
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: { file: undefined },
@@ -50,18 +53,24 @@ export function TasksImportDialog({
 
   const fileRef = form.register('file')
 
+  const { mutate: importFile, isPending } = useMutation({
+    mutationFn: importStations,
+    onSuccess: () => {
+      toast.success('站点数据导入成功')
+      queryClient.invalidateQueries({ queryKey: ['stations'] })
+      onOpenChange(false)
+    },
+    onError: (error: any) => {
+      toast.error('导入失败: ' + (error.message || '未知错误'))
+    },
+  })
+
   const onSubmit = () => {
     const file = form.getValues('file')
 
     if (file && file[0]) {
-      const fileDetails = {
-        name: file[0].name,
-        size: file[0].size,
-        type: file[0].type,
-      }
-      showSubmittedData(fileDetails, 'You have imported the following file:')
+      importFile(file[0])
     }
-    onOpenChange(false)
   }
 
   return (
@@ -77,7 +86,7 @@ export function TasksImportDialog({
           <DialogTitle>导入站点数据</DialogTitle>
           <DialogDescription>
             {/* Import tasks quickly from a CSV file. */}
-            从 CSV 文件快速导入站点数据。
+            从 JSON 文件快速导入站点数据。
           </DialogDescription>
         </DialogHeader>
         <Form {...form}>
@@ -89,7 +98,7 @@ export function TasksImportDialog({
                 <FormItem className='my-2'>
                   <FormLabel>文件</FormLabel>
                   <FormControl>
-                    <Input type='file' {...fileRef} className='h-8 py-0' />
+                    <Input type='file' {...fileRef} className='h-8 py-0' accept=".json,.csv" />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -99,10 +108,10 @@ export function TasksImportDialog({
         </Form>
         <DialogFooter className='gap-2'>
           <DialogClose asChild>
-            <Button variant='outline'>关闭</Button>
+            <Button variant='outline'>取消</Button>
           </DialogClose>
-          <Button type='submit' form='task-import-form'>
-            导入
+          <Button type='submit' form='task-import-form' disabled={isPending}>
+            {isPending ? '导入中...' : '导入'}
           </Button>
         </DialogFooter>
       </DialogContent>
