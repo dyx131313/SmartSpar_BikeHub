@@ -14,4 +14,5 @@ from app.routes import (
     route_planning,
     chat,
     dashboard,
+    feedback,
 )
