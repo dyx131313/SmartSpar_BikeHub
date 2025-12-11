@@ -1,0 +1,17 @@
+{
+    "model": "TimesNet",
+    "data_path": "../../../data/api_demands.json",
+    "save_dir": "./checkpoints",
+    "seq_len": 96,
+    "pred_len": 24,
+    "enc_in": 6,
+    "c_out": 6,
+    "d_model": 64,
+    "d_ff": 128,
+    "e_layers": 2,
+    "d_layers": 1,
+    "dropout": 0.1,
+    "batch_size": 32,
+    "epochs": 10,
+    "learning_rate": 0.001
+}
