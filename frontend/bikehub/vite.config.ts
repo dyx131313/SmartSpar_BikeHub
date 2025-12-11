@@ -32,6 +32,12 @@ export default ({ mode }) => {
           secure: false,
           rewrite: (p) => p, // 保留 /api 前缀
         },
+        '/uploads': {
+          target,
+          changeOrigin: true,
+          secure: false,
+          rewrite: (p) => p, // 保留 /api 前缀
+        },
       },
     },
   })
