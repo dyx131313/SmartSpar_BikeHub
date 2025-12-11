@@ -3,6 +3,8 @@ import { useAuthStore } from '@/stores/auth-store'
 import { ACCESS_TOKEN_COOKIE } from '@/lib/config'
 
 export const API_BASE = import.meta.env.VITE_API_BASE ?? ''
+// 静态资源基础地址（可单独配置）；未设置时走当前站点域名
+const STATIC_BASE = import.meta.env.VITE_STATIC_BASE ?? ''
 
 function readTokenFromCookie(): string {
   try {
@@ -45,14 +47,22 @@ function buildUrl(path: string) {
 }
 
 function buildStaticUrl(path: string) {
-  // 构建静态资源URL（头像等）
+  // 构建静态资源URL（头像等），优先保持相对路径/当前域，避免写死 localhost
+  if (!path) return ''
   if (/^https?:\/\//.test(path)) return path
-  if (IS_DEV) {
-    // 开发环境使用后端地址
-    return `http://localhost:5000${path}`
+
+  // 优先使用当前页面域名，其次可选的 STATIC_BASE
+  const base = STATIC_BASE || (typeof window !== 'undefined' ? window.location.origin : '')
+
+  // 规范化拼接，避免重复斜杠
+  if (base) {
+    const normalizedBase = base.endsWith('/') ? base.slice(0, -1) : base
+    const normalizedPath = path.startsWith('/') ? path : `/${path}`
+    return `${normalizedBase}${normalizedPath}`
   }
-  // 生产环境使用相对路径
-  return path
+
+  // 若无基础域名配置，返回相对路径（适用于同源部署）
+  return path.startsWith('/') ? path : `/${path}`
 }
 
 async function fetchWithAuth(url: string, options: RequestInit = {}, retry = true) {

@@ -277,7 +277,7 @@ export function UserAuthForm({
           登录
         </Button>
 
-        {/* 调试按钮：检查localStorage状态 */}
+        {/* 调试按钮：检查localStorage状态
         {import.meta.env.DEV && (
           <Button
             type='button'
@@ -298,7 +298,7 @@ export function UserAuthForm({
           >
             调试localStorage
           </Button>
-        )}
+        )} */}
 
         {/* <div className='relative my-2'>
           <div className='absolute inset-0 flex items-center'>

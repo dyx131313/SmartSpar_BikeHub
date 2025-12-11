@@ -2,10 +2,9 @@
  * 群聊消息组件
  */
 import React, { useState, useRef, useEffect } from 'react';
-import { ScrollArea, Avatar, AvatarFallback, AvatarImage, Button, Input, Tooltip, TooltipTrigger, TooltipContent, DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui';
-import { Send, Paperclip, Smile, Reply, MoreVertical, Edit, Trash2, Copy, Download, RotateCcw, Check } from 'lucide-react';
-import { groupChatAPI } from '../api/group-chat-api';
-import { ChatGroup, ChatMessage, MessageType, SendMessageForm } from '../data/group-chat-types';
+import { ScrollArea, Avatar, AvatarFallback, AvatarImage, Button, Input, DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui';
+import { Send, Reply, MoreVertical, Edit, Trash2, Copy, Download, RotateCcw, Check } from 'lucide-react';
+import { ChatGroup, ChatMessage, MessageType } from '../data/group-chat-types';
 
 interface GroupChatMessagesProps {
   group: ChatGroup | null;
@@ -29,17 +28,15 @@ export const GroupChatMessages: React.FC<GroupChatMessagesProps> = ({
   hasMore,
   onLoadMore,
   onSendMessage,
-  onReplyMessage,
+  onReplyMessage: _onReplyMessage,
   onEditMessage,
   onDeleteMessage,
-  onMarkAsRead,
+  onMarkAsRead: _onMarkAsRead,
 }) => {
   const [messageContent, setMessageContent] = useState('');
   const [replyToMessage, setReplyToMessage] = useState<ChatMessage | null>(null);
   const [editingMessage, setEditingMessage] = useState<ChatMessage | null>(null);
   const [editContent, setEditContent] = useState('');
-  const [selectedFile, setSelectedFile] = useState<File | null>(null);
-  const fileInputRef = useRef<HTMLInputElement>(null);
   const scrollAreaRef = useRef<HTMLDivElement>(null);
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
@@ -79,34 +76,15 @@ export const GroupChatMessages: React.FC<GroupChatMessagesProps> = ({
 
   // 处理发送消息
   const handleSendMessage = () => {
-    if (!messageContent.trim() && !selectedFile) return;
+    if (!messageContent.trim()) return;
 
-    const messageType = selectedFile ?
-      (selectedFile.type.startsWith('image/') ? MessageType.IMAGE : MessageType.FILE) :
-      MessageType.TEXT;
+    const messageType = MessageType.TEXT;
 
-    onSendMessage(messageContent, messageType, selectedFile || undefined);
+    onSendMessage(messageContent, messageType);
 
     // 清空输入
     setMessageContent('');
-    setSelectedFile(null);
     setReplyToMessage(null);
-    if (fileInputRef.current) {
-      fileInputRef.current.value = '';
-    }
-  };
-
-  // 处理文件选择
-  const handleFileSelect = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const file = event.target.files?.[0];
-    if (file) {
-      // 检查文件大小 (10MB)
-      if (file.size > 10 * 1024 * 1024) {
-        alert('文件大小不能超过10MB');
-        return;
-      }
-      setSelectedFile(file);
-    }
   };
 
   // 处理回复
@@ -456,22 +434,6 @@ export const GroupChatMessages: React.FC<GroupChatMessagesProps> = ({
           </div>
         )}
 
-        {/* 文件预览 */}
-        {selectedFile && (
-          <div className="flex items-center justify-between p-2 bg-accent/50 rounded-lg mb-2">
-            <div className="flex items-center gap-2 text-sm">
-              <Paperclip className="h-3 w-3" />
-              <span>{selectedFile.name}</span>
-              <span className="text-muted-foreground">
-                ({(selectedFile.size / 1024).toFixed(1)} KB)
-              </span>
-            </div>
-            <Button size="sm" variant="ghost" onClick={() => setSelectedFile(null)}>
-              ×
-            </Button>
-          </div>
-        )}
-
         {/* 输入框 */}
         <div className="flex items-end gap-2">
           <div className="flex-1">
@@ -489,43 +451,10 @@ export const GroupChatMessages: React.FC<GroupChatMessagesProps> = ({
             />
           </div>
 
-          {/* 文件上传 */}
-          <input
-            ref={fileInputRef}
-            type="file"
-            onChange={handleFileSelect}
-            className="hidden"
-            accept="image/*,.pdf,.doc,.docx,.txt,.zip,.rar"
-          />
-          {/* 发送文件 */}
-          <Tooltip>
-            <TooltipTrigger asChild>
-              <Button
-                variant="outline"
-                size="icon"
-                onClick={() => fileInputRef.current?.click()}
-                disabled={sending}
-              >
-                <Paperclip className="h-4 w-4" />
-              </Button>
-            </TooltipTrigger>
-            <TooltipContent>发送文件</TooltipContent>
-          </Tooltip>
-
-          {/* 表情按钮 */}
-          <Tooltip>
-            <TooltipTrigger asChild>
-              <Button variant="outline" size="icon" disabled={sending}>
-                <Smile className="h-4 w-4" />
-              </Button>
-            </TooltipTrigger>
-            <TooltipContent>表情</TooltipContent>
-          </Tooltip>
-
           {/* 发送按钮 */}
           <Button
             onClick={handleSendMessage}
-            disabled={sending || (!messageContent.trim() && !selectedFile)}
+            disabled={sending || !messageContent.trim()}
           >
             {sending ? (
               <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white"></div>

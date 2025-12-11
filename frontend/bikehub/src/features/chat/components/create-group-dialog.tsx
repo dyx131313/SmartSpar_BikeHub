@@ -3,8 +3,8 @@
  */
 import React, { useState, useEffect, useCallback } from 'react';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from '@/components/ui';
-import { Button, Input, Textarea, Select, SelectContent, SelectItem, SelectTrigger, SelectValue, Avatar, AvatarFallback, AvatarImage, Badge, ScrollArea, Checkbox } from '@/components/ui';
-import { X, Users, Search } from 'lucide-react';
+import { Button, Input, Textarea, Select, SelectContent, SelectItem, SelectTrigger, SelectValue, Avatar, AvatarFallback, AvatarImage, Badge, ScrollArea } from '@/components/ui';
+import { Users, Search } from 'lucide-react';
 import { groupChatAPI } from '../api/group-chat-api';
 import { CreateGroupForm, GroupType, UserInfo } from '../data/group-chat-types';
 import { api } from '@/lib/api';
@@ -308,36 +308,6 @@ const CreateGroupDialog: React.FC<CreateGroupDialogProps> = React.memo(({
                 </ScrollArea>
               </div>
 
-              {/* 已选择的成员 */}
-              {selectedUsers.length > 0 && (
-                <div>
-                  <label className="text-sm font-medium">已选择的成员</label>
-                  <div className="flex flex-wrap gap-2 mt-2">
-                    {selectedUsers.map((user) => (
-                      <Badge key={user.id} variant="secondary" className="flex items-center gap-1">
-                        <Avatar className="h-4 w-4">
-                          <AvatarImage src="" alt={user.full_name} />
-                          <AvatarFallback className="text-xs">
-                            {user.full_name.charAt(0).toUpperCase()}
-                          </AvatarFallback>
-                        </Avatar>
-                        {user.full_name}
-                        <button
-                          type="button"
-                          onClick={(e) => {
-                            e.preventDefault();
-                            e.stopPropagation();
-                            handleUserToggle(user);
-                          }}
-                          className="ml-1 hover:bg-secondary-foreground/20 rounded"
-                        >
-                          <X className="h-3 w-3" />
-                        </button>
-                      </Badge>
-                    ))}
-                  </div>
-                </div>
-              )}
             </div>
           )}
 
