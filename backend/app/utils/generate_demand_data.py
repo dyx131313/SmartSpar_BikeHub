@@ -22,37 +22,37 @@ class APICompatibleDataGenerator:
         # 真点位坐标池（经纬度 + 类型 + 基础名）
         self.real_points = {
             'canteen': [
-                (31.2760, 121.5130, '第一食堂'),
-                (31.2755, 121.5140, '第二食堂'),
-                (31.2765, 121.5120, '美食广场'),
-                (31.2750, 121.5135, '学生餐厅')
+                (31.287659152883148, 121.2169606897436, '大食堂'),
+                (31.28755530532723, 121.21803411705396, '小食堂'),
+                (31.28764400845209, 121.21988223501046, '星巴克'),
+                (31.287862520680598, 121.22272783016359, '嘉实广场')
             ],
             'library': [
-                (31.2772, 121.5156, '图书馆'),
-                (31.2770, 121.5160, '阅览室'),
-                (31.2775, 121.5150, '学习中心')
+                (31.28689511868011, 121.21198518888175, '图书馆'),
+                (31.290188169848914, 121.21632920087872, '体育中心'),
+                (31.2881320399035, 121.21502284086417, '校医院')
             ],
             'teaching_building': [
-                (31.2761, 121.5102, '教学楼A栋'),
-                (31.2763, 121.5105, '教学楼B栋'),
-                (31.2758, 121.5098, '实验楼'),
-                (31.2765, 121.5100, '综合楼')
+                (31.28552442349322, 121.21551264834397, '复楼'),
+                (31.2857213803124, 121.21412679833715, '安楼'),
+                (31.287957847891327, 121.21279250074315, '智信馆'),
+                (31.282950989439797, 121.21426932551475, '济事楼')
             ],
             'dormitory': [
-                (31.2743, 121.5138, '宿舍区1号'),
-                (31.2745, 121.5142, '宿舍区2号'),
-                (31.2740, 121.5135, '研究生公寓'),
-                (31.2747, 121.5145, '留学生公寓')
+                (31.285962392702352, 121.21727756019918, '宿舍区1号'),
+                (31.289481334451224, 121.2178783301961, '宿舍区2号'),
+                (31.289898166569664, 121.22023965865807, '宿舍区3号'),
+                (31.281397287919805, 121.2105397883872, '天骄公寓')
             ],
             'gate': [
-                (31.2754, 121.5123, '正门'),
-                (31.2791, 121.5075, '西门'),
-                (31.2720, 121.5095, '南门'),
-                (31.2780, 121.5140, '北门')
+                (31.282353959967587, 121.21206024850576, '南门'),
+                (31.28527198186722, 121.20751354387971, '西门'),
+                (31.282619862470163, 121.22152308156367, '东门'),
+                (31.29140417777084, 121.21772982961366, '北门')
             ]
         }
         
-    def generate_stations(self, num_stations=120):
+    def generate_stations(self, num_stations=60):
         stations = []
         type_list = list(self.real_points.keys())
         # 先把所有真点位铺平，按顺序占用前 N 个 ID
@@ -63,16 +63,16 @@ class APICompatibleDataGenerator:
                 id=idx + 1,
                 name=base_name,
                 station_type=st_type,
-                lat=lat + random.uniform(-0.0005, 0.0005),   # 极小抖动
-                lng=lng + random.uniform(-0.0005, 0.0005)
+                lat=lat,   # 真实坐标不抖动，保持原始坐标
+                lng=lng
             ))
 
-        # 剩余站点：随机挑一个母点，做较大抖动，命名"母名+序号"
+        # 剩余站点：随机挑一个母点，做较小抖动，命名"母名+序号"
         counter = {base_name: 1 for _, _, _, base_name in real_flat}
         for idx in range(len(real_flat) + 1, num_stations + 1):
             st_type, lat, lng, base_name = random.choice(real_flat)
-            new_lat = lat + random.uniform(-0.045, 0.045)
-            new_lng = lng + random.uniform(-0.045, 0.045)
+            new_lat = lat + random.uniform(-0.005, 0.005)  # 缩小抖动范围，保持在校园内
+            new_lng = lng + random.uniform(-0.005, 0.005)
             seq = counter[base_name]
             counter[base_name] += 1
             stations.append(self._make_station_dict(
@@ -89,8 +89,8 @@ class APICompatibleDataGenerator:
             'id': id,
             'name': name,
             'station_type': station_type,
-            'latitude': round(lat, 6),
-            'longitude': round(lng, 6),
+            'latitude':  lat,   # 或者 round(lat, 12)
+            'longitude': lng,
             'capacity': random.randint(20, 60),
             'description': self.generate_description(name, station_type),
             'created_at': datetime.now().isoformat(),
@@ -216,7 +216,7 @@ class APICompatibleDataGenerator:
         
         print(f"开始生成需求数据，时间范围：{current_date.date()} 到 {datetime.now().date()}")
         
-        # 为了减少数据量，每个站点每天只生成6个时间点（每4小时一个）
+        # 为了减少数据量，每个站点每天只生成3个关键时间点（早高峰、午高峰、晚高峰）
         for station in stations_df.to_dict('records'):
             station_id = station['id']
             station_type = station['station_type']
@@ -227,8 +227,8 @@ class APICompatibleDataGenerator:
                 weather = random.choices(weather_types, weights=weather_weights)[0]
                 temp = round(random.uniform(-5, 35), 1)
                 
-                # 每天6个时间点：6, 10, 14, 18, 20, 22点
-                for hour in [6, 10, 14, 18, 20, 22]:
+                # 每天3个关键时间点：8点（早高峰）、12点（午高峰）、18点（晚高峰）
+                for hour in [8, 12, 18]:
                     timestamp = date.replace(hour=hour, minute=0, second=0, microsecond=0)
                     
                     # 计算需求
@@ -295,7 +295,7 @@ def main():
     
     # 生成需求数据（简化版，用于API导入）
     print("\n2. 生成需求数据...")
-    demands_df = generator.generate_demand_data_for_api(stations_df, days=120)
+    demands_df = generator.generate_demand_data_for_api(stations_df, days=30)  # 减少天数以降低数据量
     
     # 检查数据格式
     print("\n=== 数据格式检查 ===")
