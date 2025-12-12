@@ -1,6 +1,10 @@
 import { Mail, MessageSquare, Github } from 'lucide-react'
+import { Link } from '@tanstack/react-router'
+import { Button } from '@/components/ui/button'
+import { useFeedback } from '@/features/feedback/components/feedback-provider'
 
 export function HcContact() {
+    const feedback = useFeedback()
     return (
         <div className='space-y-3'>
             <h2 className='text-2xl font-semibold'>联系我们</h2>
@@ -27,6 +31,10 @@ export function HcContact() {
             <div className='rounded-md border p-4 text-sm text-muted-foreground'>
                 温馨提示：请尽可能附上问题复现步骤、截图/录屏、期望结果与实际结果，
                 以及浏览器控制台报错信息，这将帮助我们更快分析与处理。
+            </div>
+
+            <div className='pt-4'>
+                <Button onClick={() => feedback.setOpen('create')}>提交反馈</Button>
             </div>
         </div>
     )

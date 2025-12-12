@@ -17,15 +17,17 @@ export function AppSidebar() {
   const { collapsible, variant } = useLayout()
   const user = useAuthStore((s) => s.auth?.user)
 
-  const filteredNavGroups = sidebarData.navGroups.map((group) => {
-    const filteredItems = group.items.filter((item) => {
-      if (!item.roles || item.roles.length === 0) return true
-      if (!user) return false
-      const userRoles = Array.isArray(user.role) ? user.role : [user.role]
-      return item.roles.some((r) => userRoles.includes(r))
+  const filteredNavGroups = sidebarData.navGroups
+    .map((group) => {
+      const filteredItems = group.items.filter((item) => {
+        if (!item.roles || item.roles.length === 0) return true
+        if (!user) return false
+        const userRoles = Array.isArray(user.role) ? user.role : [user.role]
+        return item.roles.some((r) => userRoles.includes(r))
+      })
+      return { ...group, items: filteredItems }
     })
-    return { ...group, items: filteredItems }
-  })
+    .filter((g) => g.items && g.items.length > 0)
 
   return (
     <Sidebar collapsible={collapsible} variant={variant}>

@@ -1,4 +1,6 @@
 import { Link } from '@tanstack/react-router'
+import { MessageSquare } from 'lucide-react'
+import { useFeedback } from '@/features/feedback/components/feedback-provider'
 import useDialogState from '@/hooks/use-dialog-state'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { Button } from '@/components/ui/button'
@@ -16,6 +18,7 @@ import { SignOutDialog } from '@/components/sign-out-dialog'
 
 export function ProfileDropdown() {
   const [open, setOpen] = useDialogState()
+  const feedback = useFeedback()
 
   return (
     <>
@@ -39,6 +42,12 @@ export function ProfileDropdown() {
           </DropdownMenuLabel>
           <DropdownMenuSeparator />
           <DropdownMenuGroup>
+            <DropdownMenuItem onClick={() => feedback.setOpen('create')}>
+              <MessageSquare />
+              提交反馈
+              <DropdownMenuShortcut className='text-current' />
+            </DropdownMenuItem>
+            <DropdownMenuSeparator />
             <DropdownMenuItem asChild>
               <Link to='/settings'>
                 Profile

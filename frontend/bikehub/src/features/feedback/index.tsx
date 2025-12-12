@@ -3,9 +3,7 @@ import { Main } from '@/components/layout/main'
 import { ProfileDropdown } from '@/components/profile-dropdown'
 import { Search } from '@/components/search'
 import { ThemeSwitch } from '@/components/theme-switch'
-import { FeedbackDialogs } from './components/feedback-dialogs'
 import { FeedbackPrimaryButtons } from './components/feedback-primary-buttons'
-import { FeedbackProvider } from './components/feedback-provider'
 import { FeedbackTable } from './components/feedback-table'
 import { RequireAuth } from '@/components/require-auth'
 import { useQuery } from '@tanstack/react-query'
@@ -22,8 +20,7 @@ export default function Feedback() {
 
   return (
     <RequireAuth>
-      <FeedbackProvider>
-        <Header fixed>
+      <Header fixed>
           <Search />
           <div className='ms-auto flex items-center space-x-4'>
             <ThemeSwitch />
@@ -44,10 +41,7 @@ export default function Feedback() {
           </div>
           <FeedbackTable data={feedbacks} />
         </Main>
-
-        <FeedbackDialogs />
-      </FeedbackProvider>
-    </RequireAuth>
+      </RequireAuth>
   )
 }
 

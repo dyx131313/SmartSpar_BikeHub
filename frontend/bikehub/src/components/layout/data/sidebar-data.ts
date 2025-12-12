@@ -93,7 +93,7 @@ export const sidebarData: SidebarData = {
         {
           title: '反馈管理',
           url: '/feedback',
-          icon: Bug,
+          icon: MessagesSquare,
           roles: ['admin', 'dispatcher'],
         },
 
