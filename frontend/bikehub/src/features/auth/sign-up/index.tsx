@@ -59,15 +59,13 @@
 // ...existing code...
 import { Logo } from '@/assets/logo'
 import { cn } from '@/lib/utils'
-import dashboardDark from '../sign-in/assets/dashboard-dark.png'
-import dashboardLight from '../sign-in/assets/dashboard-light.png'
 import { SignUpForm } from './components/sign-up-form'
 import { Link } from '@tanstack/react-router'
 
 export function SignUp() {
   return (
-    <div className='relative container grid h-svh flex-col items-center justify-center lg:max-w-none lg:grid-cols-2 lg:px-0'>
-      <div className='lg:p-8'>
+    <div className='relative container h-svh flex flex-col items-center justify-center lg:max-w-none lg:px-0'>
+      <div className='p-8 w-full'>
         <div className='mx-auto flex w-full flex-col justify-center space-y-2 py-8 sm:w-[480px] sm:p-8'>
           <div className='mb-4 flex items-center justify-center'>
             {/* <Logo className='me-2' /> */}
@@ -109,28 +107,6 @@ export function SignUp() {
             .
           </p>
         </div>
-      </div>
-
-      <div
-        className={cn(
-          'bg-muted relative h-full overflow-hidden max-lg:hidden',
-          '[&>img]:absolute [&>img]:top-[15%] [&>img]:left-20 [&>img]:h-full [&>img]:w-full [&>img]:object-cover [&>img]:object-top-left [&>img]:select-none'
-        )}
-      >
-        <img
-          src={dashboardLight}
-          className='dark:hidden'
-          width={1024}
-          height={1151}
-          alt='Illustration'
-        />
-        <img
-          src={dashboardDark}
-          className='hidden dark:block'
-          width={1024}
-          height={1138}
-          alt='Illustration'
-        />
       </div>
     </div>
   )

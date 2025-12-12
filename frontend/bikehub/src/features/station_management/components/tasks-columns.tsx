@@ -105,6 +105,18 @@ export const tasksColumns: ColumnDef<Station>[] = [
     ),
   },
   {
+    accessorKey: 'current_bikes',
+    header: ({ column }) => (
+      <DataTableColumnHeader column={column} title='现存单车量' />
+    ),
+    meta: { title: '现存单车量', className: 'ps-1', tdClassName: 'ps-4' },
+    cell: ({ row }) => (
+      <div className='max-w-40 truncate text-sm text-gray-700'>
+        {row.getValue('current_bikes') ?? '—'}
+      </div>
+    ),
+  },
+  {
     accessorKey: 'description',
     header: ({ column }) => (
       <DataTableColumnHeader column={column} title='描述' />

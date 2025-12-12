@@ -55,9 +55,8 @@ def get_model_future(model_name):
         if station_type_filter == "undefined":
             station_type_filter = None
 
-        # 获取系统时间 (这里暂时硬编码，与 system_time 保持一致)
-        system_time_str = "2025-12-08T00:00:00"
-        system_time = datetime.fromisoformat(system_time_str)
+        # 使用当前系统时间（动态）
+        system_time = datetime.utcnow()
 
         base_path = os.path.join(
             os.path.dirname(os.path.dirname(__file__)),

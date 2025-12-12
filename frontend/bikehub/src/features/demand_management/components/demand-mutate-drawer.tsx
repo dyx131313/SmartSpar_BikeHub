@@ -38,7 +38,6 @@ type DemandMutateDrawerProps = {
 const formSchema = z.object({
   timestamp: z.string().min(1, '请选择时间'),
   station_id: z.coerce.number().min(1, '请输入站点ID'),
-  station_type: z.string().min(1, '请选择站点类型'),
   weekday: z.coerce.number().min(1).max(7, '星期必须在1-7之间'),
   is_holiday: z.boolean(),
   weather: z.string().min(1, '请选择天气'),
@@ -61,7 +60,6 @@ export function DemandMutateDrawer({
     defaultValues: {
       timestamp: '',
       station_id: 0,
-      station_type: '',
       weekday: 1,
       is_holiday: false,
       weather: '',
@@ -75,7 +73,6 @@ export function DemandMutateDrawer({
       form.reset({
         timestamp: currentRow.timestamp ? new Date(currentRow.timestamp).toISOString().slice(0, 16) : '',
         station_id: currentRow.station_id,
-        station_type: currentRow.station_type,
         weekday: currentRow.weekday,
         is_holiday: currentRow.is_holiday,
         weather: currentRow.weather,
@@ -86,7 +83,6 @@ export function DemandMutateDrawer({
       form.reset({
         timestamp: new Date().toISOString().slice(0, 16),
         station_id: 0,
-        station_type: '',
         weekday: 1,
         is_holiday: false,
         weather: '',
@@ -179,24 +175,7 @@ export function DemandMutateDrawer({
                 </FormItem>
               )}
             />
-            <FormField
-              control={form.control}
-              name='station_type'
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>站点类型</FormLabel>
-                  <FormControl>
-                    <SelectDropdown
-                      defaultValue={field.value}
-                      onValueChange={field.onChange}
-                      placeholder='选择站点类型'
-                      items={stationTypes}
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
+            {/* station_type removed: now derived from station_id on backend */}
             <div className='flex gap-4'>
               <FormField
                 control={form.control}

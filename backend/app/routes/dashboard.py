@@ -21,9 +21,8 @@ def get_dashboard_stations():
     包含站点基本信息、最新单车数量、最新预测需求
     """
     try:
-        # 获取系统时间 (暂时硬编码，与 system_time 保持一致)
-        system_time_str = "2025-12-08T00:00:00"
-        system_time = datetime.fromisoformat(system_time_str)
+        # 使用当前系统时间（动态）
+        system_time = datetime.utcnow()
 
         # 1. 获取所有站点
         stations = Station.query.all()
