@@ -75,15 +75,15 @@ export function TasksMutateDrawer({
     mutationFn: createStation,
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['stations'] })
-      toast.success('Station created', {
-        description: 'The new station has been created successfully.',
+      toast.success('站点创建成功', {
+        description: '新的站点已成功创建。',
       })
       onOpenChange(false)
       form.reset()
     },
     onError: (error: any) => {
-      toast.error('Error', {
-        description: error.message || 'Failed to create station.',
+      toast.error('错误', {
+        description: error.message || '创建站点失败。',
       })
     }
   })
@@ -92,15 +92,15 @@ export function TasksMutateDrawer({
     mutationFn: (data: TaskForm) => updateStation(currentRow!.id, data),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['stations'] })
-      toast.success('Station updated', {
-        description: 'The station has been updated successfully.',
+      toast.success('站点更新成功', {
+        description: '站点已成功更新。',
       })
       onOpenChange(false)
       form.reset()
     },
     onError: (error: any) => {
-      toast.error('Error', {
-        description: error.message || 'Failed to update station.',
+      toast.error('错误', {
+        description: error.message || '更新站点失败。',
       })
     }
   })

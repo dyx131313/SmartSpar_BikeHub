@@ -87,13 +87,31 @@ def get_stations():
     """获取所有站点"""
     try:
         page = request.args.get("page", 1, type=int)
-        per_page = min(request.args.get("per_page", 20, type=int), 100)
+        per_page = request.args.get("per_page", 20, type=int)
+        # 后端允许通过 per_page=0 来表示返回全部记录（不分页）
+        # 为避免滥用，仍然限制最大每页为 1000 当请求全量时
+        max_per_page = 1000
         station_type = request.args.get("station_type")
 
         query = Station.query
         if station_type:
             query = query.filter(Station.station_type == station_type)
 
+        # 如果 per_page <= 0，返回全部记录（不分页）
+        if per_page <= 0:
+            items = query.all()
+            total = len(items)
+            return jsonify(
+                {
+                    "data": [station.to_dict() for station in items],
+                    "total": total,
+                    "pages": 1,
+                    "current_page": 1,
+                    "per_page": total,
+                }
+            )
+
+        per_page = min(per_page, max_per_page)
         pagination = query.paginate(page=page, per_page=per_page, error_out=False)
 
         return jsonify(
