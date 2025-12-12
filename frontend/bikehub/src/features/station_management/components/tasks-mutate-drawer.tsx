@@ -1,7 +1,9 @@
+import React from 'react'
 import { z } from 'zod'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { Button } from '@/components/ui/button'
+import MapPicker from './map-picker'
 import {
   Form,
   FormControl,
@@ -64,8 +66,8 @@ export function TasksMutateDrawer({
     defaultValues: currentRow ?? {
       name: '',
       station_type: '',
-      latitude: 0,
-      longitude: 0,
+      latitude: 31.286054,
+      longitude: 121.215252,
       capacity: 0,
       description: '',
     },
@@ -112,6 +114,10 @@ export function TasksMutateDrawer({
       createMutation.mutate(data)
     }
   }
+
+  const initLat = (form.getValues('latitude') as number) ?? 0
+  const initLng = (form.getValues('longitude') as number) ?? 0
+  const mapInitial = { latitude: initLat, longitude: initLng }
 
   return (
     <Sheet
@@ -210,6 +216,21 @@ render={({ field }) => (
                 </FormItem>
               )}
             />
+
+            <div>
+              <FormLabel className='mb-2'>在地图上选择位置</FormLabel>
+              <div className='rounded-md overflow-hidden border'>
+                <MapPicker
+                  key={`${mapInitial.latitude}-${mapInitial.longitude}`}
+                  initial={mapInitial}
+                  height={280}
+                  onSelect={(lat, lng) => {
+                    form.setValue('latitude', lat, { shouldValidate: true, shouldDirty: true })
+                    form.setValue('longitude', lng, { shouldValidate: true, shouldDirty: true })
+                  }}
+                />
+              </div>
+            </div>
             <FormField
               control={form.control}
               name='capacity'
@@ -250,6 +271,7 @@ render={({ field }) => (
             保存更改
           </Button>
         </SheetFooter>
+        {/* inline MapPicker embedded above in the form */}
       </SheetContent>
     </Sheet>
   )
