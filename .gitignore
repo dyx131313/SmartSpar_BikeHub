@@ -44,3 +44,8 @@ venv.bak/
 .DS_Store
 Thumbs.db
 
+# backend/app/static/uploads/avatar/*
+backend/app/static/uploads/avatars/*
+frontend/bikehub/.env.development
+
+*.pyc
