@@ -11,6 +11,8 @@ import {
   FormMessage,
 } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
+import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from '@/components/ui/select'
+import { station_type } from '../data/data'
 import {
   Sheet,
   SheetClose,
@@ -151,12 +153,23 @@ export function TasksMutateDrawer({
             <FormField
               control={form.control}
               name='station_type'
-              render={({ field }) => (
+render={({ field }) => (
                 <FormItem>
                   <FormLabel>站点类型</FormLabel>
-                  <FormControl>
-                    <Input {...field} placeholder='输入站点类型' />
-                  </FormControl>
+                  <Select onValueChange={field.onChange} defaultValue={field.value}>
+                    <FormControl>
+                      <SelectTrigger>
+                        <SelectValue placeholder='选择站点类型' />
+                      </SelectTrigger>
+                    </FormControl>
+                    <SelectContent>
+                      {station_type.map((t) => (
+                        <SelectItem key={t.value} value={t.value}>
+                          {t.label}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
                   <FormMessage />
                 </FormItem>
               )}
