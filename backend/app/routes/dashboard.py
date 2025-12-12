@@ -3,6 +3,7 @@ import json
 from datetime import datetime
 from flask import jsonify
 from flask_jwt_extended import jwt_required
+from app.utils.permissions import require_role
 from app import db
 from app.models.station import Station
 from app.models.bike_history import BikeHistory
