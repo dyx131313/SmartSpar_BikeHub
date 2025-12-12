@@ -81,7 +81,7 @@ def get_demand_data():
 
 @api_bp.route("/demand-data", methods=["POST"])
 @jwt_required()
-@require_role("admin", "dispatcher", "user", "operator")
+@require_role("admin", "dispatcher")
 def create_demand_data():
     """创建需求数据"""
     try:
