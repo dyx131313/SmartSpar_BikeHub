@@ -3,6 +3,8 @@ from flask import request, jsonify
 from flask_jwt_extended import jwt_required
 from app import db
 from app.models.station import Station
+from app.models.bike_history import BikeHistory
+from datetime import datetime
 from app.routes import api_bp
 from app.utils.permissions import require_admin, require_any_role
 
@@ -87,18 +89,65 @@ def get_stations():
     """获取所有站点"""
     try:
         page = request.args.get("page", 1, type=int)
-        per_page = min(request.args.get("per_page", 20, type=int), 100)
+        per_page = request.args.get("per_page", 20, type=int)
+        # 后端允许通过 per_page=0 来表示返回全部记录（不分页）
+        # 为避免滥用，仍然限制最大每页为 1000 当请求全量时
+        max_per_page = 1000
         station_type = request.args.get("station_type")
 
         query = Station.query
         if station_type:
             query = query.filter(Station.station_type == station_type)
 
+        # 如果 per_page <= 0，返回全部记录（不分页）
+        if per_page <= 0:
+            items = query.all()
+            total = len(items)
+            data = []
+            now = datetime.utcnow()
+            for station in items:
+                s = station.to_dict()
+                # 获取该站点在 bike_history 中时间 <= now 的最新记录
+                last = (
+                    BikeHistory.query.filter(BikeHistory.station_id == station.id)
+                    .filter(BikeHistory.timestamp <= now)
+                    .order_by(BikeHistory.timestamp.desc())
+                    .first()
+                )
+                s["current_bikes"] = last.available_bikes if last else 0
+                data.append(s)
+            return (
+                jsonify(
+                    {
+                        "data": data,
+                        "total": total,
+                        "pages": 1,
+                        "current_page": 1,
+                        "per_page": total,
+                    }
+                )
+            )
+
+        per_page = min(per_page, max_per_page)
         pagination = query.paginate(page=page, per_page=per_page, error_out=False)
+
+        # 构建包含 current_bikes 的数据列表
+        now = datetime.utcnow()
+        data = []
+        for station in pagination.items:
+            s = station.to_dict()
+            last = (
+                BikeHistory.query.filter(BikeHistory.station_id == station.id)
+                .filter(BikeHistory.timestamp <= now)
+                .order_by(BikeHistory.timestamp.desc())
+                .first()
+            )
+            s["current_bikes"] = last.available_bikes if last else 0
+            data.append(s)
 
         return jsonify(
             {
-                "data": [station.to_dict() for station in pagination.items],
+                "data": data,
                 "total": pagination.total,
                 "pages": pagination.pages,
                 "current_page": page,
@@ -142,7 +191,16 @@ def get_station(id):
     """获取单个站点"""
     try:
         station = Station.query.get_or_404(id)
-        return jsonify({"data": station.to_dict()})
+        s = station.to_dict()
+        now = datetime.utcnow()
+        last = (
+            BikeHistory.query.filter(BikeHistory.station_id == station.id)
+            .filter(BikeHistory.timestamp <= now)
+            .order_by(BikeHistory.timestamp.desc())
+            .first()
+        )
+        s["current_bikes"] = last.available_bikes if last else 0
+        return jsonify({"data": s})
     except Exception as e:
         return jsonify({"error": str(e)}), 500
 

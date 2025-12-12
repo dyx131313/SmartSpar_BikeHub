@@ -33,10 +33,10 @@ export function DataTableBulkActions<TData>({
   const handleBulkStatusChange = (status: string) => {
     const selectedTasks = selectedRows.map((row) => row.original as Station)
     toast.promise(sleep(2000), {
-      loading: 'Updating status...',
+      loading: '更新状态中...',
       success: () => {
         table.resetRowSelection()
-        return `Status updated to "${status}" for ${selectedTasks.length} task${selectedTasks.length > 1 ? 's' : ''}.`
+        return `更新状态为 "${status}"，共更新了 ${selectedTasks.length} 个站点。`
       },
       error: 'Error',
     })
@@ -46,10 +46,10 @@ export function DataTableBulkActions<TData>({
   const handleBulkPriorityChange = (priority: string) => {
     const selectedTasks = selectedRows.map((row) => row.original as Station)
     toast.promise(sleep(2000), {
-      loading: 'Updating priority...',
+      loading: '更新优先级中...',
       success: () => {
         table.resetRowSelection()
-        return `Priority updated to "${priority}" for ${selectedTasks.length} task${selectedTasks.length > 1 ? 's' : ''}.`
+        return `更新优先级为 "${priority}"，共更新了 ${selectedTasks.length} 个站点。`
       },
       error: 'Error',
     })
@@ -59,10 +59,10 @@ export function DataTableBulkActions<TData>({
   const handleBulkExport = () => {
     const selectedTasks = selectedRows.map((row) => row.original as Station)
     toast.promise(sleep(2000), {
-      loading: 'Exporting tasks...',
+      loading: '导出站点中...',
       success: () => {
         table.resetRowSelection()
-        return `Exported ${selectedTasks.length} task${selectedTasks.length > 1 ? 's' : ''} to CSV.`
+        return `成功导出 ${selectedTasks.length} 个站点到 CSV。`
       },
       error: 'Error',
     })

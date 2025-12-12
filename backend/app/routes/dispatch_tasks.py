@@ -4,6 +4,7 @@ from datetime import datetime
 from app import db
 from app.models.dispatch_task import DispatchTask
 from app.models.station import Station
+from app.models.bike_history import BikeHistory
 from app.models.user import User
 from app.routes import api_bp
 
@@ -145,7 +146,64 @@ def update_dispatch_task(id):
             if 'status' in data:
                 if data['status'] not in ['in_progress', 'completed']:
                     return jsonify({'error': '运维员只能将任务更新为进行中或已完成'}), 400
+                # 记录旧状态以便后续判断是否需要更新单车记录
+                old_status = task.status
                 task.status = data['status']
+                new_status = task.status
+                # 如果任务刚刚被标记为已完成，调整出/入站点的单车数量并创建 BikeHistory 记录
+                if old_status != 'completed' and new_status == 'completed':
+                    try:
+                        bike_count = int(task.bike_count or 0)
+                        now = datetime.utcnow()
+
+                        # 出发站扣车
+                        if task.from_station_id and bike_count > 0:
+                            latest_from = (
+                                BikeHistory.query.filter_by(station_id=task.from_station_id)
+                                .order_by(BikeHistory.timestamp.desc())
+                                .first()
+                            )
+                            from_available = latest_from.available_bikes if latest_from else 0
+                            from_total = latest_from.total_bikes if latest_from else from_available
+                            new_from_available = max(0, from_available - bike_count)
+
+                            from_history = BikeHistory(
+                                station_id=task.from_station_id,
+                                timestamp=now,
+                                available_bikes=new_from_available,
+                                available_docks=(latest_from.available_docks if latest_from else 0),
+                                total_bikes=from_total,
+                                total_docks=(latest_from.total_docks if latest_from else 0),
+                                is_station_active=(latest_from.is_station_active if latest_from else True),
+                                last_report_time=now,
+                            )
+                            db.session.add(from_history)
+
+                        # 到达站加车
+                        if task.to_station_id and bike_count > 0:
+                            latest_to = (
+                                BikeHistory.query.filter_by(station_id=task.to_station_id)
+                                .order_by(BikeHistory.timestamp.desc())
+                                .first()
+                            )
+                            to_available = latest_to.available_bikes if latest_to else 0
+                            to_total = latest_to.total_bikes if latest_to else to_available
+                            new_to_available = to_available + bike_count
+
+                            to_history = BikeHistory(
+                                station_id=task.to_station_id,
+                                timestamp=now,
+                                available_bikes=new_to_available,
+                                available_docks=(latest_to.available_docks if latest_to else 0),
+                                total_bikes=to_total,
+                                total_docks=(latest_to.total_docks if latest_to else 0),
+                                is_station_active=(latest_to.is_station_active if latest_to else True),
+                                last_report_time=now,
+                            )
+                            db.session.add(to_history)
+                    except Exception as e:
+                        db.session.rollback()
+                        return jsonify({'error': f'更新单车记录失败: {str(e)}'}), 500
             else:
                 return jsonify({'error': '权限不足'}), 403
         elif current_user.role in ['dispatcher', 'admin']:

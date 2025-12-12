@@ -143,6 +143,38 @@ def register_cli_commands(app):
     def init_db():
         """初始化数据库"""
         db.create_all()
+        # 确保 predictions 表包含模型中预期的列（补齐缺失列，便于在新环境中初始化）
+        from sqlalchemy import text
+        try:
+            with db.engine.connect() as conn:
+                # 获取当前 predictions 表的列名
+                q = text("SELECT COLUMN_NAME FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_SCHEMA = DATABASE() AND TABLE_NAME = 'predictions';")
+                res = conn.execute(q)
+                existing_cols = {row[0] for row in res}
+
+                # 需要补齐的列及其 ALTER 语句（保持与模型定义一致）
+                alter_stmts = {
+                    'predicted_bikes_needed': "ALTER TABLE predictions ADD COLUMN predicted_bikes_needed INT DEFAULT 0 COMMENT '预测需要的单车数量'",
+                    'prediction_type': "ALTER TABLE predictions ADD COLUMN prediction_type ENUM('demand','supply','dispatch') DEFAULT 'demand' COMMENT '预测类型'",
+                    'weather_forecast': "ALTER TABLE predictions ADD COLUMN weather_forecast VARCHAR(20) NULL COMMENT '天气预报'",
+                    'temp_forecast': "ALTER TABLE predictions ADD COLUMN temp_forecast DECIMAL(5,2) NULL COMMENT '温度预报'",
+                    'is_holiday': "ALTER TABLE predictions ADD COLUMN is_holiday TINYINT(1) DEFAULT 0 COMMENT '是否节假日'",
+                    'weekday': "ALTER TABLE predictions ADD COLUMN weekday INT NULL COMMENT '星期几(1-7)'",
+                    'actual_demand': "ALTER TABLE predictions ADD COLUMN actual_demand INT NULL COMMENT '实际需求(用于模型评估)'",
+                    'accuracy_score': "ALTER TABLE predictions ADD COLUMN accuracy_score DECIMAL(5,4) NULL COMMENT '预测准确度'",
+                    'updated_at': "ALTER TABLE predictions ADD COLUMN updated_at TIMESTAMP NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间'",
+                }
+
+                for col, stmt in alter_stmts.items():
+                    if col not in existing_cols:
+                        try:
+                            conn.execute(text(stmt))
+                            print(f"已添加列: {col}")
+                        except Exception as e:
+                            print(f"添加列 {col} 失败: {e}")
+                conn.commit()
+        except Exception as e:
+            print(f"检查/更新 predictions 表列时出错: {e}")
         
         # 执行额外的SQL脚本（用于非ORM管理的表，如群聊功能）
         import os

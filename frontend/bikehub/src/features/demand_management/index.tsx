@@ -6,7 +6,7 @@ import { DemandDialogs } from './components/demand-dialogs'
 import { DemandPrimaryButtons } from './components/demand-primary-buttons'
 import { DemandProvider } from './components/demand-provider'
 import { DemandTable } from './components/demand-table'
-import { RequireAuth } from '@/components/require-auth'
+import { RequireRole } from '@/components/require-role'
 import { useQuery } from '@tanstack/react-query'
 import { getDemands } from './service'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
@@ -21,7 +21,7 @@ export function DemandManagement() {
   const demands = demandData?.data || []
 
   return (
-    <RequireAuth>
+    <RequireRole roles={["admin", "dispatcher"]}>
       <DemandProvider>
         <Header fixed>
           <Search />
@@ -62,6 +62,6 @@ export function DemandManagement() {
 
         <DemandDialogs />
       </DemandProvider>
-    </RequireAuth>
+    </RequireRole>
   )
 }

@@ -9,6 +9,7 @@ export const stationSchema = z.object({
   latitude: z.number(),
   longitude: z.number(),
   capacity: z.number(),
+  current_bikes: z.number().optional(),
   description: z.string(),
   created_at: z.string().nullish(),
   updated_at: z.string().nullish(),

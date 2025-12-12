@@ -7,8 +7,9 @@
     CreditCard,
     LogOut,
     LogIn,
-    Sparkles,
+    MessageSquare,
   } from 'lucide-react'
+  import { useFeedback } from '@/features/feedback/components/feedback-provider'
   import useDialogState from '@/hooks/use-dialog-state'
   import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
   import {
@@ -66,6 +67,7 @@
     // 读取侧栏 state，判断是否折叠
     const { isMobile, state } = useSidebar()
     const [open, setOpen] = useDialogState()
+    const feedback = useFeedback()
 
 
       // 从全局 store 读取 user（只使用 store 的 user；若未登录则显示 登录/注册 按钮）
@@ -257,9 +259,9 @@
                   </div>
                 </DropdownMenuLabel>
                 {/* <DropdownMenuSeparator /> */}
-                <DropdownMenuGroup>
+                  <DropdownMenuGroup>
                   {/* <DropdownMenuItem>
-                    <Sparkles />
+                    <MessageSquare />
                     Upgrade to Pro
                   </DropdownMenuItem> */}
                 </DropdownMenuGroup>
@@ -282,6 +284,10 @@
                       <Bell />
                       通知
                     </Link>
+                  </DropdownMenuItem>
+                  <DropdownMenuItem onClick={() => feedback.setOpen('create')}>
+                    <MessageSquare />
+                    提交反馈
                   </DropdownMenuItem>
                 </DropdownMenuGroup>
                 <DropdownMenuSeparator />
