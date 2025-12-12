@@ -32,20 +32,20 @@ type TaskMutateDrawerProps = {
 }
 
 const formSchema = z.object({
-  name: z.string().min(1, 'Name is required.'),
-  station_type: z.string().min(1, 'Station type is required.'),
+  name: z.string().min(1, '站点名称是必填项.'),
+  station_type: z.string().min(1, '站点类型是必填项.'),
   latitude: z.coerce
     .number()
-    .min(-90, 'Latitude must be between -90 and 90.')
-    .max(90, 'Latitude must be between -90 and 90.'),
+    .min(-90, '纬度必须在 -90 到 90 之间.')
+    .max(90, '纬度必须在 -90 到 90 之间.'),
   longitude: z.coerce
     .number()
-    .min(-180, 'Longitude must be between -180 and 180.')
-    .max(180, 'Longitude must be between -180 and 180.'),
+    .min(-180, '经度必须在 -180 到 180 之间.')
+    .max(180, '经度必须在 -180 到 180 之间.'),
   capacity: z.coerce
     .number()
-    .min(0, 'Capacity cannot be negative.'),
-  description: z.string().min(1, 'Description is required.'),
+    .min(0, '容量不能为负数.'),
+  description: z.string().min(1, '描述是必填项.'),
 })
 type TaskForm = z.infer<typeof formSchema>
 
