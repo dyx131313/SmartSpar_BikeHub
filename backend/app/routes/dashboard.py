@@ -21,8 +21,10 @@ def get_dashboard_stations():
     包含站点基本信息、最新单车数量、最新预测需求
     """
     try:
-        # 使用当前系统时间（动态）
-        system_time = datetime.utcnow()
+        # 使用统一的虚拟/系统时间（与预测服务一致）
+        from app.services.time_service import time_service
+
+        system_time = time_service.get_current_time()
 
         # 1. 获取所有站点
         stations = Station.query.all()

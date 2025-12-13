@@ -239,6 +239,27 @@ class DataImporter:
                         )
                         db.session.add(station)
                         imported_count += 1
+                        # 初始化站点的单车历史，使当前可用车辆等于站点容量
+                        try:
+                            from app.models.bike_history import BikeHistory
+                            from app.services.time_service import time_service
+
+                            now = time_service.get_current_time()
+
+                            bh = BikeHistory(
+                                station=station,
+                                timestamp=now,
+                                available_bikes=int(item.get('capacity', 20)),
+                                available_docks=0,
+                                total_bikes=int(item.get('capacity', 20)),
+                                total_docks=int(item.get('capacity', 20)),
+                                is_station_active=True,
+                                last_report_time=now,
+                            )
+                            db.session.add(bh)
+                        except Exception:
+                            # 如果无法导入 BikeHistory（模型不存在或其他原因），继续而不阻塞站点创建
+                            pass
                     
                     # 每50条提交一次
                     if (imported_count + updated_count) % 50 == 0:

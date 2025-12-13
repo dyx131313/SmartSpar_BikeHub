@@ -236,9 +236,24 @@ def register_cli_commands(app):
     @app.cli.command()
     def reset_db():
         """重置数据库"""
-        db.drop_all()
-        db.create_all()
-        print("数据库重置完成")
+        # 注意：此操作会删除所有表和数据，请谨慎执行
+        from sqlalchemy import text
+
+        try:
+            # 在 MySQL 中临时关闭外键检查，以便能安全地 drop 所有表
+            with db.engine.begin() as conn:
+                conn.execute(text("SET FOREIGN_KEY_CHECKS=0;"))
+
+            db.drop_all()
+
+            # 恢复外键检查
+            with db.engine.begin() as conn:
+                conn.execute(text("SET FOREIGN_KEY_CHECKS=1;"))
+
+            db.create_all()
+            print("数据库重置完成")
+        except Exception as e:
+            print(f"数据库重置失败: {e}")
 
     @app.cli.command()
     def create_admin():
