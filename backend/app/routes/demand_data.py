@@ -42,8 +42,10 @@ def get_demand_data():
         if weekday is not None:
             query = query.filter(DemandData.weekday == weekday)
 
-        # 使用当前系统时间（动态）
-        system_time = datetime.utcnow()
+        # 获取系统时间
+        from app.services.time_service import time_service
+
+        system_time = time_service.get_current_time()
 
         # 默认只显示系统时间之前的数据，除非显式指定了 end_date 且该 end_date 大于系统时间（通常不应该发生，除非查看未来计划）
         # 这里为了满足"实时需求展示系统时间之前的需求"的要求，强制或默认过滤
@@ -191,6 +193,11 @@ def import_demand_data():
         content = file.read().decode("utf-8")
         data = json.loads(content)
 
+        # 获取所有有效的站点ID，用于验证
+        valid_station_ids = {
+            s.id for s in Station.query.with_entities(Station.id).all()
+        }
+
         # 批量导入数据
         imported_count = 0
         skipped_count = 0
@@ -199,6 +206,15 @@ def import_demand_data():
         for item in data:
             try:
                 demand_item = DemandData.create_from_json(item)
+
+                # 处理 station_id
+                if "station_id" in item:
+                    sid = item["station_id"]
+                    if sid in valid_station_ids:
+                        demand_item.station_id = sid
+                    else:
+                        raise ValueError(f"站点ID {sid} 不存在")
+
                 db.session.add(demand_item)
                 imported_count += 1
             except Exception as e:
