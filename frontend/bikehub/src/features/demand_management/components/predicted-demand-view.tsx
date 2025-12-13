@@ -34,7 +34,7 @@ import {
     SelectTrigger,
     SelectValue,
 } from '@/components/ui/select'
-import { Info, Loader2, Play } from 'lucide-react'
+import { Info, Loader2, Play, Calendar as CalendarIcon } from 'lucide-react'
 import { getPredictionData, getPredictionParams, runPrediction, getPredictionStatus } from '../service'
 import {
     useReactTable,
@@ -45,6 +45,10 @@ import {
 } from '@tanstack/react-table'
 import { DataTablePagination } from '@/components/data-table'
 import { stationTypes } from '../data/data'
+import { format } from "date-fns"
+import { zhCN } from "date-fns/locale"
+import { Calendar } from "@/components/ui/calendar"
+import { cn } from "@/lib/utils"
 
 const MODELS = ['DLinear', 'TiDE', 'TimesNet']
 
@@ -158,14 +162,68 @@ export function PredictedDemandView() {
                                     <Label htmlFor="time" className="text-right">
                                         时间
                                     </Label>
-                                    <Input
-                                        id="time"
-                                        type="datetime-local"
-                                        className="col-span-3"
-                                        value={targetTime}
-                                        onChange={(e) => setTargetTime(e.target.value)}
-                                        disabled={polling}
-                                    />
+                                    <div className="col-span-3">
+                                        <Popover>
+                                            <PopoverTrigger asChild>
+                                                <Button
+                                                    variant={"outline"}
+                                                    className={cn(
+                                                        "w-full justify-start text-left font-normal",
+                                                        !targetTime && "text-muted-foreground"
+                                                    )}
+                                                    disabled={polling}
+                                                >
+                                                    <CalendarIcon className="mr-2 h-4 w-4" />
+                                                    {targetTime ? (
+                                                        format(new Date(targetTime), "yyyy年MM月dd日 HH:mm", { locale: zhCN })
+                                                    ) : (
+                                                        <span>选择时间</span>
+                                                    )}
+                                                </Button>
+                                            </PopoverTrigger>
+                                            <PopoverContent className="w-auto p-0" align="start">
+                                                <Calendar
+                                                    mode="single"
+                                                    selected={targetTime ? new Date(targetTime) : undefined}
+                                                    onSelect={(date) => {
+                                                        if (date) {
+                                                            const current = targetTime ? new Date(targetTime) : new Date()
+                                                            current.setFullYear(date.getFullYear())
+                                                            current.setMonth(date.getMonth())
+                                                            current.setDate(date.getDate())
+                                                            // 如果之前没有时间，默认设为当前小时
+                                                            if (!targetTime) {
+                                                                const now = new Date()
+                                                                current.setHours(now.getHours())
+                                                                current.setMinutes(now.getMinutes())
+                                                            }
+                                                            const iso = format(current, "yyyy-MM-dd'T'HH:mm")
+                                                            setTargetTime(iso)
+                                                        }
+                                                    }}
+                                                    initialFocus
+                                                    locale={zhCN}
+                                                />
+                                                <div className="p-3 border-t">
+                                                    <Input
+                                                        type="time"
+                                                        value={targetTime ? format(new Date(targetTime), "HH:mm") : "00:00"}
+                                                        onChange={(e) => {
+                                                            const timeStr = e.target.value
+                                                            if (timeStr) {
+                                                                const [hours, minutes] = timeStr.split(':').map(Number)
+                                                                const date = targetTime ? new Date(targetTime) : new Date()
+                                                                date.setHours(hours)
+                                                                date.setMinutes(minutes)
+                                                                const iso = format(date, "yyyy-MM-dd'T'HH:mm")
+                                                                setTargetTime(iso)
+                                                            }
+                                                        }}
+                                                    />
+                                                </div>
+                                            </PopoverContent>
+                                        </Popover>
+                                    </div>
                                 </div>
                                 {polling && (
                                     <div className="space-y-2">
