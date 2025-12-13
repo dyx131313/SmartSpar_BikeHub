@@ -239,6 +239,27 @@ class DataImporter:
                         )
                         db.session.add(station)
                         imported_count += 1
+                        # 初始化站点的单车历史，使当前可用车辆等于站点容量
+                        try:
+                            from app.models.bike_history import BikeHistory
+                            from app.services.time_service import time_service
+
+                            now = time_service.get_current_time()
+
+                            bh = BikeHistory(
+                                station=station,
+                                timestamp=now,
+                                available_bikes=int(item.get('capacity', 20)),
+                                available_docks=0,
+                                total_bikes=int(item.get('capacity', 20)),
+                                total_docks=int(item.get('capacity', 20)),
+                                is_station_active=True,
+                                last_report_time=now,
+                            )
+                            db.session.add(bh)
+                        except Exception:
+                            # 如果无法导入 BikeHistory（模型不存在或其他原因），继续而不阻塞站点创建
+                            pass
                     
                     # 每50条提交一次
                     if (imported_count + updated_count) % 50 == 0:
@@ -387,3 +408,67 @@ class DataImporter:
                 'success': False,
                 'error': str(e)
             }
+
+    @staticmethod
+    def import_dispatch_tasks(tasks_data):
+        """
+        导入调度任务数据
+        :param tasks_data: 任务数据列表或文件路径
+        """
+        from app.models.dispatch_task import DispatchTask
+        
+        # 如果是文件路径，读取文件
+        if isinstance(tasks_data, str):
+            if tasks_data.endswith('.json'):
+                with open(tasks_data, 'r', encoding='utf-8') as f:
+                    tasks_data = json.load(f)
+            elif tasks_data.endswith('.csv'):
+                import pandas as pd
+                df = pd.read_csv(tasks_data)
+                tasks_data = df.to_dict('records')
+        
+        imported_count = 0
+        skipped_count = 0
+        errors = []
+        
+        for idx, task in enumerate(tasks_data):
+            try:
+                # 检查是否已存在相同ID的任务
+                existing_task = DispatchTask.query.get(task.get('id'))
+                
+                if existing_task:
+                    # 更新现有任务
+                    existing_task.task_name = task.get('task_name', existing_task.task_name)
+                    existing_task.from_station_id = task.get('from_station_id', existing_task.from_station_id)
+                    existing_task.to_station_id = task.get('to_station_id', existing_task.to_station_id)
+                    existing_task.bike_count = task.get('bike_count', existing_task.bike_count)
+                    existing_task.priority = task.get('priority', existing_task.priority)
+                    existing_task.status = task.get('status', existing_task.status)
+                    existing_task.assigned_to = task.get('assigned_to', existing_task.assigned_to)
+                    existing_task.created_by = task.get('created_by', existing_task.created_by)
+                    existing_task.created_at = task.get('created_at', existing_task.created_at)
+                    existing_task.updated_at = task.get('updated_at', existing_task.updated_at)
+                    skipped_count += 1
+                else:
+                    # 创建新任务
+                    new_task = DispatchTask(**task)
+                    db.session.add(new_task)
+                    imported_count += 1
+                
+                # 每50条提交一次
+                if (imported_count + skipped_count) % 50 == 0:
+                    db.session.commit()
+                    
+            except Exception as e:
+                errors.append(f"任务 {idx+1} (ID: {task.get('id', '未知')}) 导入失败: {str(e)}")
+                skipped_count += 1
+        
+        db.session.commit()
+        
+        return {
+            'success': True,
+            'message': f'调度任务导入完成，新增 {imported_count} 条，跳过 {skipped_count} 条',
+            'imported_count': imported_count,
+            'skipped_count': skipped_count,
+            'errors': errors[:10] if errors else []
+        }
