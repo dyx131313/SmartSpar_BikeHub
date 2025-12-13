@@ -45,7 +45,7 @@ export function Dashboard() {
       }
     }
     fetchTime()
-    const interval = setInterval(fetchTime, 5000)
+    const interval = setInterval(fetchTime, 1000)
     return () => clearInterval(interval)
   }, [])
 

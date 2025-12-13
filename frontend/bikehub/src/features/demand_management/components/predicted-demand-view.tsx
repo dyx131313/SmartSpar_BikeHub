@@ -1,7 +1,19 @@
-import { useState, useMemo } from 'react'
-import { useQuery } from '@tanstack/react-query'
+import { useState, useMemo, useEffect } from 'react'
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { Button } from '@/components/ui/button'
+import { Progress } from "@/components/ui/progress"
+import {
+    Dialog,
+    DialogContent,
+    DialogDescription,
+    DialogFooter,
+    DialogHeader,
+    DialogTitle,
+    DialogTrigger,
+} from "@/components/ui/dialog"
+import { Input } from "@/components/ui/input"
+import { Label } from "@/components/ui/label"
 import {
     Table,
     TableBody,
@@ -22,8 +34,8 @@ import {
     SelectTrigger,
     SelectValue,
 } from '@/components/ui/select'
-import { Info } from 'lucide-react'
-import { getPredictionData, getPredictionParams } from '../service'
+import { Info, Loader2, Play } from 'lucide-react'
+import { getPredictionData, getPredictionParams, runPrediction, getPredictionStatus } from '../service'
 import {
     useReactTable,
     getCoreRowModel,
@@ -47,17 +59,134 @@ type PredictionItem = {
 
 export function PredictedDemandView() {
     const [activeModel, setActiveModel] = useState('DLinear')
+    const [isDialogOpen, setIsDialogOpen] = useState(false)
+    const [selectedModel, setSelectedModel] = useState('DLinear')
+    const [targetTime, setTargetTime] = useState('')
+    const [polling, setPolling] = useState(false)
+    const [progress, setProgress] = useState(0)
+    const [statusMessage, setStatusMessage] = useState('')
+    const queryClient = useQueryClient()
+
+    const runPredictionMutation = useMutation({
+        mutationFn: (data: { model: string, time: string }) => runPrediction(data.model, data.time),
+        onSuccess: () => {
+            setPolling(true)
+        },
+    })
+
+    useEffect(() => {
+        let interval: NodeJS.Timeout
+        if (polling) {
+            interval = setInterval(async () => {
+                try {
+                    const res = await getPredictionStatus(selectedModel)
+                    setProgress(res.progress)
+                    setStatusMessage(res.message)
+
+                    if (res.status === 'completed' || res.status === 'failed') {
+                        setPolling(false)
+                        if (res.status === 'completed') {
+                            setIsDialogOpen(false)
+                            queryClient.invalidateQueries({ queryKey: ['predictionData'] })
+                        }
+                    }
+                } catch (e) {
+                    console.error(e)
+                    setPolling(false)
+                }
+            }, 1000)
+        }
+        return () => clearInterval(interval)
+    }, [polling, selectedModel, queryClient])
+
+    const handleRunPrediction = () => {
+        setProgress(0)
+        setStatusMessage('Starting...')
+        runPredictionMutation.mutate({ model: selectedModel, time: targetTime })
+    }
 
     return (
         <div className="space-y-4">
-            <Tabs value={activeModel} onValueChange={setActiveModel}>
-                <TabsList>
-                    {MODELS.map((model) => (
-                        <TabsTrigger key={model} value={model}>
-                            {model}
-                        </TabsTrigger>
-                    ))}
-                </TabsList>
+            <Tabs value={activeModel} onValueChange={setActiveModel} className="w-full">
+                <div className="flex justify-between items-center mb-4">
+                    <TabsList>
+                        {MODELS.map((model) => (
+                            <TabsTrigger key={model} value={model}>
+                                {model}
+                            </TabsTrigger>
+                        ))}
+                    </TabsList>
+
+                    <Dialog open={isDialogOpen} onOpenChange={(open) => {
+                        if (!polling) setIsDialogOpen(open)
+                    }}>
+                        <DialogTrigger asChild>
+                            <Button variant="outline" onClick={() => {
+                                setSelectedModel(activeModel)
+                                setTargetTime('')
+                                setProgress(0)
+                                setStatusMessage('')
+                            }}>
+                                <Play className="mr-2 h-4 w-4" />
+                                手动预测
+                            </Button>
+                        </DialogTrigger>
+                        <DialogContent className="sm:max-w-[425px]">
+                            <DialogHeader>
+                                <DialogTitle>手动触发预测</DialogTitle>
+                                <DialogDescription>
+                                    选择模型和目标时间进行即时预测。如果不指定时间，将使用当前系统时间。
+                                </DialogDescription>
+                            </DialogHeader>
+                            <div className="grid gap-4 py-4">
+                                <div className="grid grid-cols-4 items-center gap-4">
+                                    <Label htmlFor="model" className="text-right">
+                                        模型
+                                    </Label>
+                                    <Select value={selectedModel} onValueChange={setSelectedModel} disabled={polling}>
+                                        <SelectTrigger className="col-span-3">
+                                            <SelectValue placeholder="选择模型" />
+                                        </SelectTrigger>
+                                        <SelectContent>
+                                            {MODELS.map((m) => (
+                                                <SelectItem key={m} value={m}>{m}</SelectItem>
+                                            ))}
+                                        </SelectContent>
+                                    </Select>
+                                </div>
+                                <div className="grid grid-cols-4 items-center gap-4">
+                                    <Label htmlFor="time" className="text-right">
+                                        时间
+                                    </Label>
+                                    <Input
+                                        id="time"
+                                        type="datetime-local"
+                                        className="col-span-3"
+                                        value={targetTime}
+                                        onChange={(e) => setTargetTime(e.target.value)}
+                                        disabled={polling}
+                                    />
+                                </div>
+                                {polling && (
+                                    <div className="space-y-2">
+                                        <div className="flex justify-between text-sm">
+                                            <span>{statusMessage}</span>
+                                            <span>{progress}%</span>
+                                        </div>
+                                        <Progress value={progress} />
+                                    </div>
+                                )}
+                            </div>
+                            <DialogFooter>
+                                <Button type="submit" onClick={handleRunPrediction} disabled={runPredictionMutation.isPending || polling}>
+                                    {(runPredictionMutation.isPending || polling) && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+                                    {polling ? '预测中...' : '开始预测'}
+                                </Button>
+                            </DialogFooter>
+                        </DialogContent>
+                    </Dialog>
+                </div>
+
                 {MODELS.map((model) => (
                     <TabsContent key={model} value={model}>
                         <ModelView model={model} />
