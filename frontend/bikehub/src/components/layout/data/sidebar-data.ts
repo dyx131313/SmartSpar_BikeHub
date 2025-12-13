@@ -32,11 +32,11 @@ export const sidebarData: SidebarData = {
   user: {
     name: 'satnaing',
     email: 'satnaingdev@gmail.com',
-    avatar: '/avatars/shadcn.jpg',
+    avatar: '/images/logo_design.svg',
   },
   teams: [
     {
-      name: 'Shadcn Admin',
+      name: 'SmartSpar_BikeHub',
       logo: Command,
       plan: 'Vite + ShadcnUI',
     },

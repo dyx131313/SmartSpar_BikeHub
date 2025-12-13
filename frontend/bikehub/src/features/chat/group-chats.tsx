@@ -16,6 +16,8 @@ import { GroupChatMessages } from './components/group-chat-messages';
 import CreateGroupDialog from './components/create-group-dialog';
 import { groupChatAPI } from './api/group-chat-api';
 import { ChatGroup, ChatMessage, MessageType, UserInfo } from './data/group-chat-types';
+import { toast } from 'sonner';
+import { useConfirm } from '@/components/confirm-provider'
 
 export function GroupChats() {
   console.log('🔄 GroupChats 组件渲染');
@@ -29,6 +31,8 @@ export function GroupChats() {
   const [currentPage, setCurrentPage] = useState(1);
   const [createDialogOpen, setCreateDialogOpen] = useState(false);
   const [latestCreatedGroup, setLatestCreatedGroup] = useState<ChatGroup | null>(null);
+
+  const confirmFn = useConfirm()
 
   console.log('📊 GroupChats 状态 - groups.length:', groups.length);
   console.log('📊 GroupChats 状态 - createDialogOpen:', createDialogOpen);
@@ -102,7 +106,7 @@ export function GroupChats() {
       ));
     } catch (error) {
       console.error('发送消息失败:', error);
-      alert('发送消息失败，请重试');
+      toast.error('发送消息失败，请重试');
     } finally {
       setSending(false);
     }
@@ -123,20 +127,21 @@ export function GroupChats() {
       ));
     } catch (error) {
       console.error('编辑消息失败:', error);
-      alert('编辑消息失败，请重试');
+      toast.error('编辑消息失败，请重试');
     }
   };
 
   // 删除消息
   const handleDeleteMessage = async (messageId: number) => {
-    if (!confirm('确定要删除这条消息吗？')) return;
+    const ok = await confirmFn({ title: '删除消息', desc: '确定要删除这条消息吗？', confirmText: '删除', cancelBtnText: '取消', destructive: true })
+    if (!ok) return
 
     try {
       await groupChatAPI.recallMessage(messageId);
       setMessages(prev => prev.filter(msg => msg.id !== messageId));
     } catch (error) {
       console.error('删除消息失败:', error);
-      alert('删除消息失败，请重试');
+      toast.error('删除消息失败，请重试');
     }
   };
 

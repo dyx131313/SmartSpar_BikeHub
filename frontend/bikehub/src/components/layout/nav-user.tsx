@@ -285,10 +285,22 @@
                       通知
                     </Link>
                   </DropdownMenuItem>
-                  <DropdownMenuItem onClick={() => feedback.setOpen('create')}>
-                    <MessageSquare />
-                    提交反馈
-                  </DropdownMenuItem>
+                  {(() => {
+                    const roles = Array.isArray(effectiveUser?.role)
+                      ? effectiveUser.role
+                      : effectiveUser?.role
+                      ? [effectiveUser.role]
+                      : []
+                    if (roles.includes('user')) {
+                      return (
+                        <DropdownMenuItem onClick={() => feedback.setOpen('create')}>
+                          <MessageSquare />
+                          提交反馈
+                        </DropdownMenuItem>
+                      )
+                    }
+                    return null
+                  })()}
                 </DropdownMenuGroup>
                 <DropdownMenuSeparator />
                 <DropdownMenuItem

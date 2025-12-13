@@ -32,7 +32,7 @@ export function UsersMultiDeleteDialog<TData>({
 
   const handleDelete = () => {
     if (value.trim() !== CONFIRM_WORD) {
-      toast.error(`Please type "${CONFIRM_WORD}" to confirm.`)
+      toast.error(`请键入 "${CONFIRM_WORD}" 以确认。`)
       return
     }
 

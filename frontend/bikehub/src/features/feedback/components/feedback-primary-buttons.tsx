@@ -6,8 +6,12 @@ import { useFeedback } from './feedback-provider'
 export function FeedbackPrimaryButtons() {
   const { setOpen } = useFeedback()
   const { user } = useAuthStore((state) => state.auth)
-  
-  // 所有人都可以创建反馈
+
+  const userRoles = Array.isArray(user?.role) ? user?.role : user?.role ? [user.role] : []
+  const isNormalUser = userRoles.includes('user')
+
+  if (!isNormalUser) return null
+
   return (
     <div className='flex gap-2'>
       <Button onClick={() => setOpen('create')} className='space-x-1'>

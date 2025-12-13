@@ -7,6 +7,8 @@ import { Search, Plus, MoreVertical, Bell, BellOff, Settings, Users, MessageSqua
 import { groupChatAPI } from '../api/group-chat-api';
 import { ChatGroup, MemberRole, ChatGroupMember } from '../data/group-chat-types';
 import { useAuthStore } from '@/stores/auth-store';
+import { toast } from 'sonner';
+import { useConfirm } from '@/components/confirm-provider'
 
 interface GroupChatListProps {
   selectedGroupId?: number | null;
@@ -34,6 +36,7 @@ export const GroupChatList: React.FC<GroupChatListProps> = ({
   const [deletingGroup, setDeletingGroup] = useState<number | null>(null);
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
   const [groupToDelete, setGroupToDelete] = useState<ChatGroup | null>(null);
+  const confirmFn = useConfirm()
 
   // 加载群聊列表
   const loadGroups = async (page = 1, query = '') => {
@@ -102,7 +105,8 @@ export const GroupChatList: React.FC<GroupChatListProps> = ({
 
   // 退出群聊
   const handleLeaveGroup = async (groupId: number, groupName: string) => {
-    if (!confirm(`确定要退出群聊"${groupName}"吗？`)) return;
+    const ok = await confirmFn({ title: '退出群聊', desc: `确定要退出群聊"${groupName}"吗？`, confirmText: '退出', cancelBtnText: '取消', destructive: true })
+    if (!ok) return
 
     try {
       await groupChatAPI.leaveGroup(groupId);
@@ -112,7 +116,7 @@ export const GroupChatList: React.FC<GroupChatListProps> = ({
       }
     } catch (error) {
       console.error('退出群聊失败:', error);
-      alert('退出群聊失败，请重试');
+      toast.error('退出群聊失败，请重试');
     }
   };
 
@@ -191,10 +195,10 @@ export const GroupChatList: React.FC<GroupChatListProps> = ({
       setDeleteDialogOpen(false);
       setGroupToDelete(null);
 
-      alert(`群聊"${groupToDelete.name}"已被删除`);
+      toast.success(`群聊"${groupToDelete.name}"已被删除`);
     } catch (error) {
       console.error('删除群聊失败:', error);
-      alert('删除群聊失败，请重试');
+      toast.error('删除群聊失败，请重试');
     } finally {
       setDeletingGroup(null);
     }

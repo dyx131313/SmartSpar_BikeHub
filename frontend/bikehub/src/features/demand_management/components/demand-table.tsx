@@ -73,7 +73,23 @@ export function DemandTable({ data }: DemandTableProps) {
     onSortingChange: setSorting,
     onColumnVisibilityChange: setColumnVisibility,
     globalFilterFn: (row, _columnId, filterValue) => {
-      return true
+      const q = String(filterValue ?? '').toLowerCase().trim()
+      if (!q) return true
+
+      const fields = [
+        'station_name',
+        'station_id',
+        'station_type',
+        'weather',
+        'timestamp',
+        'demand',
+      ]
+
+      return fields.some((f) => {
+        const v = row.getValue(f)
+        if (v === undefined || v === null) return false
+        return String(v).toLowerCase().includes(q)
+      })
     },
     getCoreRowModel: getCoreRowModel(),
     getFilteredRowModel: getFilteredRowModel(),
@@ -100,16 +116,16 @@ export function DemandTable({ data }: DemandTableProps) {
     >
       <DataTableToolbar
         table={table}
-        searchPlaceholder='Search...'
+        searchPlaceholder='根据站点名称、ID搜索...'
         filters={[
           {
             columnId: 'station_type',
-            title: 'Station Type',
+            title: '站点类型',
             options: stationTypes,
           },
           {
             columnId: 'weather',
-            title: 'Weather',
+            title: '天气',
             options: weatherTypes,
           },
         ]}

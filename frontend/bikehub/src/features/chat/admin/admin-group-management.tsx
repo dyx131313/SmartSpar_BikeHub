@@ -6,6 +6,8 @@ import { Button, Input, Badge, Table, TableBody, TableCell, TableHead, TableHead
 import { Search, Plus, Users, Settings, Eye, Edit, Trash2, Shield, Ban, Check, X, MoreVertical, Crown, Filter } from 'lucide-react';
 import { groupChatAPI } from '../api/group-chat-api';
 import { ChatGroup, GroupType, MemberRole, ChatGroupMember } from '../data/group-chat-types';
+import { toast } from 'sonner';
+import { useConfirm } from '@/components/confirm-provider'
 
 // 过滤器接口
 interface GroupFilters {
@@ -49,6 +51,8 @@ export const AdminGroupManagement: React.FC<AdminGroupManagementProps> = ({ onGr
   const [currentPage, setCurrentPage] = useState(1);
   const [pageSize, setPageSize] = useState(20);
   const [totalPages, setTotalPages] = useState(0);
+
+  const confirmFn = useConfirm()
 
   // 加载群聊列表
   const loadGroups = async (page = 1, filters: GroupFilters = {}) => {
@@ -97,7 +101,7 @@ export const AdminGroupManagement: React.FC<AdminGroupManagementProps> = ({ onGr
   // 创建群聊
   const handleCreateGroup = async () => {
     if (!formData.name.trim()) {
-      alert('请输入群聊名称');
+      toast.error('请输入群聊名称');
       return;
     }
 
@@ -139,14 +143,14 @@ export const AdminGroupManagement: React.FC<AdminGroupManagementProps> = ({ onGr
         errorMessage = `创建失败: ${error.message}`;
       }
 
-      alert(errorMessage);
+      toast.error(errorMessage);
     }
   };
 
   // 更新群聊
   const handleUpdateGroup = async () => {
     if (!selectedGroup || !formData.name.trim()) {
-      alert('请输入群聊名称');
+      toast.error('请输入群聊名称');
       return;
     }
 
@@ -157,13 +161,15 @@ export const AdminGroupManagement: React.FC<AdminGroupManagementProps> = ({ onGr
       resetForm();
     } catch (error) {
       console.error('更新群聊失败:', error);
-      alert('更新群聊失败，请重试');
+      toast.error('更新群聊失败，请重试');
     }
   };
 
   // 删除群聊
   const handleDeleteGroup = async (group: ChatGroup) => {
-    if (!confirm(`确定要删除群聊"${group.name}"吗？此操作不可恢复！`)) {
+    const confirmFn = useConfirm()
+    const ok = await confirmFn({ title: '删除群聊', desc: `确定要删除群聊"${group.name}"吗？此操作不可恢复！`, confirmText: '删除', cancelBtnText: '取消', destructive: true })
+    if (!ok) {
       return;
     }
 
@@ -176,7 +182,7 @@ export const AdminGroupManagement: React.FC<AdminGroupManagementProps> = ({ onGr
       }
     } catch (error) {
       console.error('删除群聊失败:', error);
-      alert('删除群聊失败，请重试');
+      toast.error('删除群聊失败，请重试');
     }
   };
 
@@ -187,7 +193,8 @@ export const AdminGroupManagement: React.FC<AdminGroupManagementProps> = ({ onGr
       ? `确定要禁用群聊"${group.name}"吗？`
       : `确定要启用群聊"${group.name}"吗？`;
 
-    if (!confirm(confirmMessage)) return;
+    const ok2 = await confirmFn({ title: '确认操作', desc: confirmMessage, confirmText: action === 'disable' ? '禁用' : '启用', cancelBtnText: '取消', destructive: action === 'disable' })
+    if (!ok2) return;
 
     try {
       if (action === 'disable') {
@@ -201,7 +208,7 @@ export const AdminGroupManagement: React.FC<AdminGroupManagementProps> = ({ onGr
       ));
     } catch (error) {
       console.error(`${action === 'disable' ? '禁用' : '启用'}群聊失败:`, error);
-      alert(`${action === 'disable' ? '禁用' : '启用'}群聊失败，请重试`);
+      toast.error(`${action === 'disable' ? '禁用' : '启用'}群聊失败，请重试`);
     }
   };
 
@@ -216,21 +223,22 @@ export const AdminGroupManagement: React.FC<AdminGroupManagementProps> = ({ onGr
       ));
     } catch (error) {
       console.error('更新成员角色失败:', error);
-      alert('更新成员角色失败，请重试');
+      toast.error('更新成员角色失败，请重试');
     }
   };
 
   // 移除成员
   const handleRemoveMember = async (member: ChatGroupMember) => {
     if (!selectedGroup) return;
-    if (!confirm(`确定要将 ${member.full_name} 移出群聊吗？`)) return;
+    const ok3 = await confirmFn({ title: '移除成员', desc: `确定要将 ${member.full_name} 移出群聊吗？`, confirmText: '移除', cancelBtnText: '取消', destructive: true })
+    if (!ok3) return;
 
     try {
       await groupChatAPI.removeGroupMember(selectedGroup.id, member.id);
       setGroupMembers(prev => prev.filter(m => m.id !== member.id));
     } catch (error) {
       console.error('移除成员失败:', error);
-      alert('移除成员失败，请重试');
+      toast.error('移除成员失败，请重试');
     }
   };
 
