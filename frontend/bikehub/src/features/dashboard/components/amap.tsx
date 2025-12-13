@@ -8,6 +8,8 @@ window._AMapSecurityConfig = {
     securityJsCode: AMAP_SECURITY_KEY,
 }
 
+// 默认中心设为同济大学嘉定校区 (lng, lat)
+// 使用提供的精确坐标：经度 121.215252，纬度 31.286054
 const defaultCenter: [number, number] = [121.215252, 31.286054]
 
 export type AmapMode = 'heatmap' | 'markers' | 'combined' | 'real_demand_heatmap'

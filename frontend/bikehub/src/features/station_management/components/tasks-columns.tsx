@@ -3,6 +3,7 @@ import { Checkbox } from '@/components/ui/checkbox'
 import { DataTableColumnHeader } from '@/components/data-table'
 import { type Station } from '../data/schema'
 import { DataTableRowActions } from './data-table-row-actions'
+import { station_type } from '../data/data'
 
 export const tasksColumns: ColumnDef<Station>[] = [
   {
@@ -56,11 +57,16 @@ export const tasksColumns: ColumnDef<Station>[] = [
       <DataTableColumnHeader column={column} title='站点类型' />
     ),
     meta: { title: '站点类型', className: 'ps-1', tdClassName: 'ps-4' },
-    cell: ({ row }) => (
-      <div className='max-w-40 truncate text-sm text-gray-700'>
-        {row.getValue('station_type') ?? '—'}
-      </div>
-    ),
+    cell: ({ row }) => {
+      const val = row.getValue('station_type') as string | null
+      const option = station_type.find((t) => t.value === val)
+      const label = option ? option.label : val ?? '—'
+      return (
+        <div className='max-w-40 truncate text-sm text-gray-700'>
+          {label}
+        </div>
+      )
+    },
   },
   {
     accessorKey: 'latitude',
@@ -95,6 +101,18 @@ export const tasksColumns: ColumnDef<Station>[] = [
     cell: ({ row }) => (
       <div className='max-w-40 truncate text-sm text-gray-700'>
         {row.getValue('capacity') ?? '—'}
+      </div>
+    ),
+  },
+  {
+    accessorKey: 'current_bikes',
+    header: ({ column }) => (
+      <DataTableColumnHeader column={column} title='现存单车量' />
+    ),
+    meta: { title: '现存单车量', className: 'ps-1', tdClassName: 'ps-4' },
+    cell: ({ row }) => (
+      <div className='max-w-40 truncate text-sm text-gray-700'>
+        {row.getValue('current_bikes') ?? '—'}
       </div>
     ),
   },

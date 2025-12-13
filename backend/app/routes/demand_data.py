@@ -42,9 +42,10 @@ def get_demand_data():
         if weekday is not None:
             query = query.filter(DemandData.weekday == weekday)
 
-        # 获取系统时间 (暂时硬编码，与 system_time 保持一致)
-        system_time_str = "2025-12-08T00:00:00"
-        system_time = datetime.fromisoformat(system_time_str)
+        # 获取系统时间
+        from app.services.time_service import time_service
+
+        system_time = time_service.get_current_time()
 
         # 默认只显示系统时间之前的数据，除非显式指定了 end_date 且该 end_date 大于系统时间（通常不应该发生，除非查看未来计划）
         # 这里为了满足"实时需求展示系统时间之前的需求"的要求，强制或默认过滤
@@ -81,7 +82,7 @@ def get_demand_data():
 
 @api_bp.route("/demand-data", methods=["POST"])
 @jwt_required()
-@require_role("admin", "dispatcher", "user", "operator")
+@require_role("admin", "dispatcher")
 def create_demand_data():
     """创建需求数据"""
     try:
@@ -95,8 +96,19 @@ def create_demand_data():
             # 批量创建
             demand_items = []
             for item in data:
+                # 如果提供了 station_id 但没有 station_type，先读取站点类型并补入，避免 create_from_json 抛 KeyError
+                if "station_id" in item and "station_type" not in item:
+                    station = Station.query.get(item["station_id"])
+                    if not station:
+                        return (
+                            jsonify({"error": f"站点ID {item['station_id']} 不存在"}),
+                            400,
+                        )
+                    item = dict(item)
+                    item["station_type"] = station.station_type
+
                 demand_item = DemandData.create_from_json(item)
-                # 如果提供了station_id，验证站点是否存在
+                # 如果提供了station_id，验证站点是否存在并赋值（重复检查以防外部并发或数据异常）
                 if "station_id" in item:
                     station = Station.query.get(item["station_id"])
                     if not station:
@@ -105,6 +117,8 @@ def create_demand_data():
                             400,
                         )
                     demand_item.station_id = item["station_id"]
+                    # 覆盖 station_type 为站点当前类型，保证一致性
+                    demand_item.station_type = station.station_type
                 demand_items.append(demand_item)
 
             db.session.add_all(demand_items)
@@ -121,9 +135,20 @@ def create_demand_data():
             )
         else:
             # 单个创建
+            # 如果提供了 station_id 且没有 station_type，先读取并补入，避免 create_from_json 抛 KeyError
+            if "station_id" in data and "station_type" not in data:
+                station = Station.query.get(data["station_id"])
+                if not station:
+                    return (
+                        jsonify({"error": f"站点ID {data['station_id']} 不存在"}),
+                        400,
+                    )
+                data = dict(data)
+                data["station_type"] = station.station_type
+
             demand_item = DemandData.create_from_json(data)
 
-            # 如果提供了station_id，验证站点是否存在
+            # 如果提供了station_id，验证站点是否存在并赋值
             if "station_id" in data:
                 station = Station.query.get(data["station_id"])
                 if not station:
@@ -132,6 +157,8 @@ def create_demand_data():
                         400,
                     )
                 demand_item.station_id = data["station_id"]
+                # 覆盖 station_type 为站点当前类型，保证一致性
+                demand_item.station_type = station.station_type
 
             db.session.add(demand_item)
             db.session.commit()
@@ -166,6 +193,11 @@ def import_demand_data():
         content = file.read().decode("utf-8")
         data = json.loads(content)
 
+        # 获取所有有效的站点ID，用于验证
+        valid_station_ids = {
+            s.id for s in Station.query.with_entities(Station.id).all()
+        }
+
         # 批量导入数据
         imported_count = 0
         skipped_count = 0
@@ -174,6 +206,15 @@ def import_demand_data():
         for item in data:
             try:
                 demand_item = DemandData.create_from_json(item)
+
+                # 处理 station_id
+                if "station_id" in item:
+                    sid = item["station_id"]
+                    if sid in valid_station_ids:
+                        demand_item.station_id = sid
+                    else:
+                        raise ValueError(f"站点ID {sid} 不存在")
+
                 db.session.add(demand_item)
                 imported_count += 1
             except Exception as e:
@@ -229,7 +270,11 @@ def update_demand_data(id):
             if not station:
                 return jsonify({"error": f"站点ID {data['station_id']} 不存在"}), 400
             demand_item.station_id = data["station_id"]
-        if "station_type" in data:
+            # 覆盖 station_type 为站点当前类型，保证一致性
+            demand_item.station_type = station.station_type
+        # 如果用户传入 station_type，但同时传入了 station_id，则已由 station_id 覆盖；
+        # 如果没有传 station_id，但传了 station_type，则保留用户传入的值。
+        if "station_type" in data and "station_id" not in data:
             demand_item.station_type = data["station_type"]
         if "weekday" in data:
             demand_item.weekday = data["weekday"]

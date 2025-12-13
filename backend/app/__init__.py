@@ -1,5 +1,6 @@
 import os
 from dotenv import load_dotenv
+
 load_dotenv()  # ✅ 关键：加载 .env 文件
 
 from flask import Flask
@@ -9,7 +10,8 @@ from flask_cors import CORS
 from flask_jwt_extended import JWTManager
 import logging
 from app.config.config import config
-#from app.models import *
+
+# from app.models import *
 
 # 初始化扩展
 db = SQLAlchemy()
@@ -17,10 +19,11 @@ migrate = Migrate()
 cors = CORS()
 jwt = JWTManager()
 
+
 def create_app(config_name=None):
     """应用工厂函数"""
     if config_name is None:
-        config_name = os.environ.get('FLASK_ENV', 'development')
+        config_name = os.environ.get("FLASK_ENV", "development")
 
     app = Flask(__name__)
     app.config.from_object(config[config_name])
@@ -31,11 +34,12 @@ def create_app(config_name=None):
     migrate.init_app(app, db)
 
     # 配置 CORS - 简单配置，自动处理预检请求
-    cors.init_app(app,
-        origins=app.config['CORS_ORIGINS'],
+    cors.init_app(
+        app,
+        origins=app.config["CORS_ORIGINS"],
         supports_credentials=True,
-        methods=['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-        allow_headers=['Content-Type', 'Authorization', 'X-Requested-With']
+        methods=["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+        allow_headers=["Content-Type", "Authorization", "X-Requested-With"],
     )
     jwt.init_app(app)
 
@@ -45,7 +49,7 @@ def create_app(config_name=None):
     # **延后导入 models，避免循环导入**
     # 这里采用相对导入，确保模型类被注册到 SQLAlchemy 中
     with app.app_context():
-        from . import models   # 或者 from app import models
+        from . import models  # 或者 from app import models
 
     # 配置日志
     configure_logging(app)
@@ -59,30 +63,47 @@ def create_app(config_name=None):
     # 注册CLI命令
     register_cli_commands(app)
 
+    # 启动后台调度器 (仅在主进程中运行)
+    if not app.debug or os.environ.get("WERKZEUG_RUN_MAIN") == "true":
+        try:
+            from app.services.scheduler import scheduler
+
+            scheduler.app = app
+            scheduler.start()
+        except Exception as e:
+            app.logger.error(f"Failed to start scheduler: {e}")
+
     return app
+
 
 def configure_logging(app):
     """配置日志"""
     if not app.debug and not app.testing:
         # 配置文件日志
-        log_file = app.config.get('LOG_FILE')
+        log_file = app.config.get("LOG_FILE")
         if log_file:
             file_handler = logging.FileHandler(log_file)
-            file_handler.setFormatter(logging.Formatter(
-                '%(asctime)s %(levelname)s: %(message)s [in %(pathname)s:%(lineno)d]'
-            ))
-            file_handler.setLevel(getattr(logging, app.config.get('LOG_LEVEL', 'INFO')))
+            file_handler.setFormatter(
+                logging.Formatter(
+                    "%(asctime)s %(levelname)s: %(message)s [in %(pathname)s:%(lineno)d]"
+                )
+            )
+            file_handler.setLevel(getattr(logging, app.config.get("LOG_LEVEL", "INFO")))
             app.logger.addHandler(file_handler)
 
-        app.logger.setLevel(getattr(logging, app.config.get('LOG_LEVEL', 'INFO')))
-        app.logger.info('SmartSpar BikeHub Backend startup')
+        app.logger.setLevel(getattr(logging, app.config.get("LOG_LEVEL", "INFO")))
+        app.logger.info("SmartSpar BikeHub Backend startup")
+
 
 def register_blueprints(app):
     """注册蓝图"""
     from app.routes import api_bp
-    app.register_blueprint(api_bp, url_prefix='/api')
+
+    app.register_blueprint(api_bp, url_prefix="/api")
     from app.routes.static import static_bp
+
     app.register_blueprint(static_bp)
+
 
 def configure_jwt_errors(app):
     """配置JWT错误处理"""
@@ -91,155 +112,193 @@ def configure_jwt_errors(app):
     @jwt.expired_token_loader
     def expired_token_callback(jwt_header, jwt_payload):
         """Token过期回调"""
-        return {'msg': 'Token已过期，请重新登录'}, 401
+        return {"msg": "Token已过期，请重新登录"}, 401
 
     @jwt.invalid_token_loader
     def invalid_token_callback(error):
         """无效Token回调"""
-        return {'msg': '无效的Token，请重新登录'}, 401
+        return {"msg": "无效的Token，请重新登录"}, 401
 
     @jwt.unauthorized_loader
     def missing_token_callback(error):
         """缺少Token回调"""
-        return {'msg': '需要提供Token才能访问此接口'}, 401
+        return {"msg": "需要提供Token才能访问此接口"}, 401
 
     @jwt.needs_fresh_token_loader
     def token_not_fresh_callback(jwt_header, jwt_payload):
         """Token需要刷新回调"""
-        return {'msg': '需要新鲜的Token，请重新登录'}, 401
+        return {"msg": "需要新鲜的Token，请重新登录"}, 401
 
     @jwt.revoked_token_loader
     def revoked_token_callback(jwt_header, jwt_payload):
         """Token被撤销回调"""
-        return {'msg': 'Token已被撤销，请重新登录'}, 401
+        return {"msg": "Token已被撤销，请重新登录"}, 401
 
 
 def register_error_handlers(app):
     """注册错误处理器"""
+
     @app.errorhandler(404)
     def not_found_error(error):
-        return {'error': 'Resource not found'}, 404
+        return {"error": "Resource not found"}, 404
 
     @app.errorhandler(500)
     def internal_error(error):
         db.session.rollback()
-        return {'error': 'Internal server error'}, 500
+        return {"error": "Internal server error"}, 500
 
     @app.errorhandler(400)
     def bad_request_error(error):
-        return {'error': 'Bad request'}, 400
+        return {"error": "Bad request"}, 400
 
     @app.errorhandler(401)
     def unauthorized_error(error):
-        return {'error': 'Unauthorized'}, 401
+        return {"error": "Unauthorized"}, 401
 
     @app.errorhandler(403)
     def forbidden_error(error):
-        return {'error': 'Forbidden'}, 403
+        return {"error": "Forbidden"}, 403
+
 
 def register_cli_commands(app):
     """注册CLI命令"""
+
     @app.cli.command()
     def init_db():
         """初始化数据库"""
         db.create_all()
+        # 确保 predictions 表包含模型中预期的列（补齐缺失列，便于在新环境中初始化）
+        from sqlalchemy import text
+        try:
+            with db.engine.connect() as conn:
+                # 获取当前 predictions 表的列名
+                q = text("SELECT COLUMN_NAME FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_SCHEMA = DATABASE() AND TABLE_NAME = 'predictions';")
+                res = conn.execute(q)
+                existing_cols = {row[0] for row in res}
+
+                # 需要补齐的列及其 ALTER 语句（保持与模型定义一致）
+                alter_stmts = {
+                    'predicted_bikes_needed': "ALTER TABLE predictions ADD COLUMN predicted_bikes_needed INT DEFAULT 0 COMMENT '预测需要的单车数量'",
+                    'prediction_type': "ALTER TABLE predictions ADD COLUMN prediction_type ENUM('demand','supply','dispatch') DEFAULT 'demand' COMMENT '预测类型'",
+                    'weather_forecast': "ALTER TABLE predictions ADD COLUMN weather_forecast VARCHAR(20) NULL COMMENT '天气预报'",
+                    'temp_forecast': "ALTER TABLE predictions ADD COLUMN temp_forecast DECIMAL(5,2) NULL COMMENT '温度预报'",
+                    'is_holiday': "ALTER TABLE predictions ADD COLUMN is_holiday TINYINT(1) DEFAULT 0 COMMENT '是否节假日'",
+                    'weekday': "ALTER TABLE predictions ADD COLUMN weekday INT NULL COMMENT '星期几(1-7)'",
+                    'actual_demand': "ALTER TABLE predictions ADD COLUMN actual_demand INT NULL COMMENT '实际需求(用于模型评估)'",
+                    'accuracy_score': "ALTER TABLE predictions ADD COLUMN accuracy_score DECIMAL(5,4) NULL COMMENT '预测准确度'",
+                    'updated_at': "ALTER TABLE predictions ADD COLUMN updated_at TIMESTAMP NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间'",
+                }
+
+                for col, stmt in alter_stmts.items():
+                    if col not in existing_cols:
+                        try:
+                            conn.execute(text(stmt))
+                            print(f"已添加列: {col}")
+                        except Exception as e:
+                            print(f"添加列 {col} 失败: {e}")
+                conn.commit()
+        except Exception as e:
+            print(f"检查/更新 predictions 表列时出错: {e}")
         
         # 执行额外的SQL脚本（用于非ORM管理的表，如群聊功能）
         import os
         from sqlalchemy import text
-        
+
         # 获取项目根目录
         base_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-        chat_schema_path = os.path.join(base_dir, 'database', 'chat_schema.sql')
-        
+        chat_schema_path = os.path.join(base_dir, "database", "chat_schema.sql")
+
         if os.path.exists(chat_schema_path):
-            print(f'正在执行SQL脚本: database/chat_schema.sql...')
+            print(f"正在执行SQL脚本: database/chat_schema.sql...")
             try:
-                with open(chat_schema_path, 'r', encoding='utf-8') as f:
+                with open(chat_schema_path, "r", encoding="utf-8") as f:
                     sql_content = f.read()
-                    
+
                 # 简单的语句分割
-                statements = sql_content.split(';')
+                statements = sql_content.split(";")
                 with db.engine.connect() as conn:
                     for statement in statements:
                         if statement.strip():
                             # 跳过 USE 语句
-                            if statement.strip().upper().startswith('USE '):
+                            if statement.strip().upper().startswith("USE "):
                                 continue
                             try:
                                 conn.execute(text(statement))
                             except Exception as e:
                                 print(f"执行语句警告: {str(e)}")
                     conn.commit()
-                print('SQL脚本执行完成')
+                print("SQL脚本执行完成")
             except Exception as e:
                 print(f"执行SQL脚本失败: {str(e)}")
-        
-        print('数据库初始化完成')
+
+        print("数据库初始化完成")
 
     @app.cli.command()
     def reset_db():
         """重置数据库"""
         db.drop_all()
         db.create_all()
-        print('数据库重置完成')
+        print("数据库重置完成")
 
     @app.cli.command()
     def create_admin():
         """创建管理员用户"""
         from app.models.user import User
-        admin = User.query.filter_by(username='admin').first()
+
+        admin = User.query.filter_by(username="admin").first()
         if admin:
-            print('管理员已存在，跳过创建。')
+            print("管理员已存在，跳过创建。")
             return
         admin = User(
-            username='admin',
-            email='admin@bikehub.com',
-            role='admin',
-            full_name='系统管理员'
+            username="admin",
+            email="admin@bikehub.com",
+            role="admin",
+            full_name="系统管理员",
         )
-        admin.set_password('admin123')
+        admin.set_password("admin123")
         db.session.add(admin)
         db.session.commit()
-        print('管理员用户创建成功 - 用户名: admin, 密码: admin123')
+        print("管理员用户创建成功 - 用户名: admin, 密码: admin123")
 
     @app.cli.command()
     def create_dispatcher():
         """创建调度员用户"""
         from app.models.user import User
-        dispatcher = User.query.filter_by(username='dispatcher').first()
+
+        dispatcher = User.query.filter_by(username="dispatcher").first()
         if dispatcher:
-            print('调度员已存在，跳过创建。')
+            print("调度员已存在，跳过创建。")
             return
         dispatcher = User(
-            username='dispatcher',
-            email='dispatcher@bikehub.com',
-            role='dispatcher',
-            full_name='调度员'
+            username="dispatcher",
+            email="dispatcher@bikehub.com",
+            role="dispatcher",
+            full_name="调度员",
         )
-        dispatcher.set_password('dispatcher123')
+        dispatcher.set_password("dispatcher123")
         db.session.add(dispatcher)
         db.session.commit()
-        print('调度员用户创建成功 - 用户名: dispatcher, 密码: dispatcher123')
+        print("调度员用户创建成功 - 用户名: dispatcher, 密码: dispatcher123")
 
     @app.cli.command()
     def create_operator():
         """创建运维员用户"""
         from app.models.user import User
-        operator = User.query.filter_by(username='operator').first()
+
+        operator = User.query.filter_by(username="operator").first()
         if operator:
-            print('运维员已存在，跳过创建。')
+            print("运维员已存在，跳过创建。")
             return
         operator = User(
-            username='operator',
-            email='operator@bikehub.com',
-            role='operator',
-            full_name='运维员'
+            username="operator",
+            email="operator@bikehub.com",
+            role="operator",
+            full_name="运维员",
         )
-        operator.set_password('operator123')
+        operator.set_password("operator123")
         db.session.add(operator)
         db.session.commit()
-        print('运维员用户创建成功 - 用户名: operator, 密码: operator123')
+        print("运维员用户创建成功 - 用户名: operator, 密码: operator123")
 
     @app.cli.command()
     def create_test_users():
@@ -248,39 +307,39 @@ def register_cli_commands(app):
 
         # 创建管理员
         admin = User(
-            username='admin',
-            email='admin@bikehub.com',
-            role='admin',
-            full_name='系统管理员'
+            username="admin",
+            email="admin@bikehub.com",
+            role="admin",
+            full_name="系统管理员",
         )
-        admin.set_password('admin123')
+        admin.set_password("admin123")
         db.session.add(admin)
 
         # 创建调度员
         dispatcher = User(
-            username='dispatcher',
-            email='dispatcher@bikehub.com',
-            role='dispatcher',
-            full_name='调度员'
+            username="dispatcher",
+            email="dispatcher@bikehub.com",
+            role="dispatcher",
+            full_name="调度员",
         )
-        dispatcher.set_password('dispatcher123')
+        dispatcher.set_password("dispatcher123")
         db.session.add(dispatcher)
 
         # 创建运维员
         operator = User(
-            username='operator',
-            email='operator@bikehub.com',
-            role='operator',
-            full_name='运维员'
+            username="operator",
+            email="operator@bikehub.com",
+            role="operator",
+            full_name="运维员",
         )
-        operator.set_password('operator123')
+        operator.set_password("operator123")
         db.session.add(operator)
 
         db.session.commit()
-        print('测试用户创建成功:')
-        print('管理员 - 用户名: admin, 密码: admin123')
-        print('调度员 - 用户名: dispatcher, 密码: dispatcher123')
-        print('运维员 - 用户名: operator, 密码: operator123')
+        print("测试用户创建成功:")
+        print("管理员 - 用户名: admin, 密码: admin123")
+        print("调度员 - 用户名: dispatcher, 密码: dispatcher123")
+        print("运维员 - 用户名: operator, 密码: operator123")
 
     @app.cli.command()
     def train_demand_model():
@@ -290,7 +349,7 @@ def register_cli_commands(app):
         print("开始训练需求预测模型...")
         try:
             predictor = get_demand_predictor()
-            train_data_path = 'train.csv'
+            train_data_path = "train.csv"
 
             if not os.path.exists(train_data_path):
                 print(f"错误: 训练数据文件 {train_data_path} 不存在")
@@ -301,14 +360,18 @@ def register_cli_commands(app):
             print("\n=== 模型训练完成 ===")
             print(f"最佳模型: {results['best_model']}")
             print("训练结果:")
-            for model_name, metrics in results['training_results'].items():
-                print(f"  {model_name}: MAE={metrics['mae']:.2f}, R2={metrics['r2']:.3f}")
+            for model_name, metrics in results["training_results"].items():
+                print(
+                    f"  {model_name}: MAE={metrics['mae']:.2f}, R2={metrics['r2']:.3f}"
+                )
 
             print(f"\n模型已保存到: {predictor.model_path}")
             print("特征重要性:")
 
             importance = predictor.get_feature_importance()
-            sorted_importance = sorted(importance.items(), key=lambda x: x[1], reverse=True)
+            sorted_importance = sorted(
+                importance.items(), key=lambda x: x[1], reverse=True
+            )
             for feature, score in sorted_importance[:10]:
                 print(f"  {feature}: {score:.4f}")
 
@@ -324,32 +387,32 @@ def register_cli_commands(app):
 
         test_cases = [
             {
-                'name': '早高峰工作日',
-                'params': {
-                    'station_type': 1,
-                    'temp': 22.0,
-                    'is_holiday': 0,
-                    'weather': 0,
-                    'weekday': 1,
-                    'date_str': '2024/9/2 8:00'
-                }
+                "name": "早高峰工作日",
+                "params": {
+                    "station_type": 1,
+                    "temp": 22.0,
+                    "is_holiday": 0,
+                    "weather": 0,
+                    "weekday": 1,
+                    "date_str": "2024/9/2 8:00",
+                },
             },
             {
-                'name': '周末午后',
-                'params': {
-                    'station_type': 2,
-                    'temp': 28.0,
-                    'is_holiday': 0,
-                    'weather': 0,
-                    'weekday': 6,
-                    'date_str': '2024/9/7 14:00'
-                }
-            }
+                "name": "周末午后",
+                "params": {
+                    "station_type": 2,
+                    "temp": 28.0,
+                    "is_holiday": 0,
+                    "weather": 0,
+                    "weekday": 6,
+                    "date_str": "2024/9/7 14:00",
+                },
+            },
         ]
 
         try:
             for test_case in test_cases:
-                result = predict_demand_for_station(**test_case['params'])
+                result = predict_demand_for_station(**test_case["params"])
                 print(f"\n{test_case['name']}:")
                 print(f"  预测需求量: {result['prediction']}")
                 print(f"  置信度: {result['confidence']:.3f}")

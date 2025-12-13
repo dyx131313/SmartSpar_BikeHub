@@ -22,7 +22,7 @@ import { ListTodo, HelpCircle, Timer, CheckCircle, Circle } from 'lucide-react'
 // import { tasks } from '@/features/task_management/data/tasks'
 // import { users } from '@/features/users/data/users'
 import { status as userStatuses, roles as userRoles } from '@/features/users/data/data'
-import { RequireAuth } from '@/components/require-auth'
+import { RequireRole } from '@/components/require-role'
 import { useQuery } from '@tanstack/react-query'
 import { getUsers } from '@/features/users/service'
 import { getTasks } from '@/features/task_management/service'
@@ -45,7 +45,7 @@ export function Dashboard() {
       }
     }
     fetchTime()
-    const interval = setInterval(fetchTime, 5000)
+    const interval = setInterval(fetchTime, 1000)
     return () => clearInterval(interval)
   }, [])
 
@@ -126,7 +126,7 @@ export function Dashboard() {
     .map((s) => ({ name: s.name, value: s.capacity }))
   return (
     <>
-      <RequireAuth>
+      <RequireRole roles={["admin", "dispatcher"]}>
         {/* ===== Top Heading ===== */}
         <Header>
           <TopNav links={topNav} />
@@ -391,7 +391,7 @@ export function Dashboard() {
             </TabsContent>
           </Tabs>
         </Main>
-      </RequireAuth>
+      </RequireRole>
     </>
   )
 }

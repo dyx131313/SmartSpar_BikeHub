@@ -221,7 +221,7 @@ export function UserAuthForm({
             : ''
           toast.success(`欢迎${displayName}${rolePart}`)
 
-          const targetPath = redirectTo || '/'
+          const targetPath = redirectTo || '/help-center'
           navigate({ to: targetPath, replace: true })
         } catch (err) {
           handleServerError(err)
@@ -244,9 +244,9 @@ export function UserAuthForm({
           name='username'
           render={({ field }) => (
             <FormItem>
-              <FormLabel>用户名 / QQ邮箱</FormLabel>
+              <FormLabel>用户名 / 邮箱</FormLabel>
               <FormControl>
-                <Input placeholder='请输入用户名或 QQ 邮箱' {...field} />
+                <Input placeholder='请输入用户名或邮箱' {...field} />
               </FormControl>
               <FormMessage />
             </FormItem>

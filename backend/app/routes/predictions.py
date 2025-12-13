@@ -55,9 +55,10 @@ def get_model_future(model_name):
         if station_type_filter == "undefined":
             station_type_filter = None
 
-        # 获取系统时间 (这里暂时硬编码，与 system_time 保持一致)
-        system_time_str = "2025-12-08T00:00:00"
-        system_time = datetime.fromisoformat(system_time_str)
+        # 获取系统时间
+        from app.services.time_service import time_service
+
+        system_time = time_service.get_current_time()
 
         base_path = os.path.join(
             os.path.dirname(os.path.dirname(__file__)),
@@ -476,3 +477,61 @@ def retrain_ai_model():
             ),
             500,
         )
+
+
+@api_bp.route("/predictions/run", methods=["POST"])
+@jwt_required()
+@require_dispatcher_or_admin()
+def run_prediction():
+    """手动触发预测"""
+    try:
+        data = request.get_json()
+        model_name = data.get("model_name")
+        target_time_str = data.get("target_time")
+
+        if not model_name:
+            return jsonify({"error": "Model name is required"}), 400
+
+        # 获取系统时间或使用指定时间
+        from app.services.time_service import time_service
+
+        if target_time_str:
+            try:
+                target_time = datetime.fromisoformat(target_time_str)
+            except ValueError:
+                return jsonify({"error": "Invalid time format"}), 400
+        else:
+            target_time = time_service.get_current_time()
+
+        # 调用调度器运行预测
+        from app.services.scheduler import scheduler
+
+        # 在新线程中运行以避免阻塞请求
+        import threading
+
+        thread = threading.Thread(
+            target=scheduler.run_prediction_cycle, args=(target_time, model_name)
+        )
+        thread.start()
+
+        return jsonify(
+            {
+                "message": f"Prediction started for {model_name} at {target_time}",
+                "status": "started",
+            }
+        )
+
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
+
+@api_bp.route("/predictions/status/<model_name>", methods=["GET"])
+@jwt_required()
+def get_prediction_status(model_name):
+    """获取预测任务状态"""
+    from app.services.scheduler import scheduler
+
+    status = scheduler.prediction_status.get(
+        model_name, {"status": "idle", "progress": 0, "message": "Idle"}
+    )
+    return jsonify(status)

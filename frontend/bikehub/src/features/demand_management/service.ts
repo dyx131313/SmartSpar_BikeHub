@@ -50,3 +50,11 @@ export const getPredictionData = async (model: string, params?: { page?: number;
     const queryString = searchParams.toString() ? '?' + searchParams.toString() : ''
     return apiGet(`/api/predictions/models/${model}/future${queryString}`)
 }
+
+export const runPrediction = async (model: string, targetTime?: string) => {
+    return apiPost('/api/predictions/run', { model_name: model, target_time: targetTime })
+}
+
+export const getPredictionStatus = async (model: string) => {
+    return apiGet(`/api/predictions/status/${model}`) as Promise<{ status: string, progress: number, message: string }>
+}
