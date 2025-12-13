@@ -59,10 +59,16 @@ export const stationTypes = [
     icon: Home,
   },
   {
+    label: '大门',
+    value: 'gate',
+    icon: Building2,
+  },
+  {
     label: '其他',
     value: 'other',
     icon: Briefcase,
   },
+
 ]
 
 export const weatherTypes = [
