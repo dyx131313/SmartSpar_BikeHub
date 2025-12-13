@@ -32,11 +32,11 @@ export const sidebarData: SidebarData = {
   user: {
     name: 'satnaing',
     email: 'satnaingdev@gmail.com',
-    avatar: '/avatars/shadcn.jpg',
+    avatar: '/images/logo_design.svg',
   },
   teams: [
     {
-      name: 'Shadcn Admin',
+      name: 'SmartSpar_BikeHub',
       logo: Command,
       plan: 'Vite + ShadcnUI',
     },
@@ -59,12 +59,13 @@ export const sidebarData: SidebarData = {
           title: '数据展示面板',
           url: '/',
           icon: BarChart2,
+          roles: ['admin', 'dispatcher'],
         },        
         {
           title: '站点管理',
           url: '/station_management',
           icon: MapPin,
-          roles: ['admin', 'dispatcher', 'operator'],
+          roles: ['admin', 'dispatcher'],
         },
         {
           title: '调度管理',
@@ -76,7 +77,7 @@ export const sidebarData: SidebarData = {
           title: '需求数据管理',
           url: '/demand-management',
           icon: TrendingUp,
-          roles: ['admin', 'dispatcher', 'operator'],
+          roles: ['admin', 'dispatcher'],
         },
         // {
         //   title: 'Apps',
@@ -92,7 +93,8 @@ export const sidebarData: SidebarData = {
         {
           title: '反馈管理',
           url: '/feedback',
-          icon: Bug,
+          icon: MessagesSquare,
+          roles: ['admin', 'dispatcher'],
         },
 
         // {

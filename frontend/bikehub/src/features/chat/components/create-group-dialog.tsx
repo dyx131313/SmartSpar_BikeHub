@@ -8,6 +8,7 @@ import { Users, Search } from 'lucide-react';
 import { groupChatAPI } from '../api/group-chat-api';
 import { CreateGroupForm, GroupType, UserInfo } from '../data/group-chat-types';
 import { api } from '@/lib/api';
+import { toast } from 'sonner';
 
 interface CreateGroupDialogProps {
   open: boolean;
@@ -95,7 +96,7 @@ const CreateGroupDialog: React.FC<CreateGroupDialogProps> = React.memo(({
         const currentMaxMembers = 100; // 默认值，确保不会出错
         if (prev.length >= currentMaxMembers - 1) {
           console.log('👤 已达到最大选择数量限制');
-          alert(`最多只能选择 ${currentMaxMembers - 1} 个成员`);
+          toast.error(`最多只能选择 ${currentMaxMembers - 1} 个成员`);
           return prev;
         }
         console.log('👤 添加用户到选择列表:', user.full_name);
@@ -111,17 +112,17 @@ const CreateGroupDialog: React.FC<CreateGroupDialogProps> = React.memo(({
     e.preventDefault();
 
     if (!formData.name.trim()) {
-      alert('请输入群聊名称');
+      toast.error('请输入群聊名称');
       return;
     }
 
     if (formData.max_members < 2) {
-      alert('群聊最大成员数量不能少于2人');
+      toast.error('群聊最大成员数量不能少于2人');
       return;
     }
 
     if (selectedUsers.length === 0 && formData.group_type !== GroupType.SYSTEM) {
-      alert('请至少选择一个成员');
+      toast.error('请至少选择一个成员');
       return;
     }
 
@@ -140,7 +141,7 @@ const CreateGroupDialog: React.FC<CreateGroupDialogProps> = React.memo(({
       handleClose();
     } catch (error) {
       console.error('创建群聊失败:', error);
-      alert('创建群聊失败，请重试');
+      toast.error('创建群聊失败，请重试');
     } finally {
       setLoading(false);
     }

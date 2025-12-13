@@ -94,7 +94,12 @@ export const station_type = [
     value: 'dormitory' as const,
   },
   {
+    label: '大门',
+    value: 'gate' as const,
+  },
+  {
     label: '其他',
     value: 'other' as const,
   },
+
 ]

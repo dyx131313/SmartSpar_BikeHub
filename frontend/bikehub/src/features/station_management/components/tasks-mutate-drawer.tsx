@@ -1,7 +1,9 @@
+import React from 'react'
 import { z } from 'zod'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { Button } from '@/components/ui/button'
+import MapPicker from './map-picker'
 import {
   Form,
   FormControl,
@@ -11,6 +13,8 @@ import {
   FormMessage,
 } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
+import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from '@/components/ui/select'
+import { station_type } from '../data/data'
 import {
   Sheet,
   SheetClose,
@@ -32,20 +36,20 @@ type TaskMutateDrawerProps = {
 }
 
 const formSchema = z.object({
-  name: z.string().min(1, 'Name is required.'),
-  station_type: z.string().min(1, 'Station type is required.'),
+  name: z.string().min(1, '站点名称是必填项.'),
+  station_type: z.string().min(1, '站点类型是必填项.'),
   latitude: z.coerce
     .number()
-    .min(-90, 'Latitude must be between -90 and 90.')
-    .max(90, 'Latitude must be between -90 and 90.'),
+    .min(-90, '纬度必须在 -90 到 90 之间.')
+    .max(90, '纬度必须在 -90 到 90 之间.'),
   longitude: z.coerce
     .number()
-    .min(-180, 'Longitude must be between -180 and 180.')
-    .max(180, 'Longitude must be between -180 and 180.'),
+    .min(-180, '经度必须在 -180 到 180 之间.')
+    .max(180, '经度必须在 -180 到 180 之间.'),
   capacity: z.coerce
     .number()
-    .min(0, 'Capacity cannot be negative.'),
-  description: z.string().min(1, 'Description is required.'),
+    .min(0, '容量不能为负数.'),
+  description: z.string().min(1, '描述是必填项.'),
 })
 type TaskForm = z.infer<typeof formSchema>
 
@@ -62,8 +66,8 @@ export function TasksMutateDrawer({
     defaultValues: currentRow ?? {
       name: '',
       station_type: '',
-      latitude: 0,
-      longitude: 0,
+      latitude: 31.286054,
+      longitude: 121.215252,
       capacity: 0,
       description: '',
     },
@@ -73,15 +77,15 @@ export function TasksMutateDrawer({
     mutationFn: createStation,
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['stations'] })
-      toast.success('Station created', {
-        description: 'The new station has been created successfully.',
+      toast.success('站点创建成功', {
+        description: '新的站点已成功创建。',
       })
       onOpenChange(false)
       form.reset()
     },
     onError: (error: any) => {
-      toast.error('Error', {
-        description: error.message || 'Failed to create station.',
+      toast.error('错误', {
+        description: error.message || '创建站点失败。',
       })
     }
   })
@@ -90,15 +94,15 @@ export function TasksMutateDrawer({
     mutationFn: (data: TaskForm) => updateStation(currentRow!.id, data),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['stations'] })
-      toast.success('Station updated', {
-        description: 'The station has been updated successfully.',
+      toast.success('站点更新成功', {
+        description: '站点已成功更新。',
       })
       onOpenChange(false)
       form.reset()
     },
     onError: (error: any) => {
-      toast.error('Error', {
-        description: error.message || 'Failed to update station.',
+      toast.error('错误', {
+        description: error.message || '更新站点失败。',
       })
     }
   })
@@ -110,6 +114,10 @@ export function TasksMutateDrawer({
       createMutation.mutate(data)
     }
   }
+
+  const initLat = (form.getValues('latitude') as number) ?? 0
+  const initLng = (form.getValues('longitude') as number) ?? 0
+  const mapInitial = { latitude: initLat, longitude: initLng }
 
   return (
     <Sheet
@@ -151,12 +159,23 @@ export function TasksMutateDrawer({
             <FormField
               control={form.control}
               name='station_type'
-              render={({ field }) => (
+render={({ field }) => (
                 <FormItem>
                   <FormLabel>站点类型</FormLabel>
-                  <FormControl>
-                    <Input {...field} placeholder='输入站点类型' />
-                  </FormControl>
+                  <Select onValueChange={field.onChange} defaultValue={field.value}>
+                    <FormControl>
+                      <SelectTrigger>
+                        <SelectValue placeholder='选择站点类型' />
+                      </SelectTrigger>
+                    </FormControl>
+                    <SelectContent>
+                      {station_type.map((t) => (
+                        <SelectItem key={t.value} value={t.value}>
+                          {t.label}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
                   <FormMessage />
                 </FormItem>
               )}
@@ -197,6 +216,21 @@ export function TasksMutateDrawer({
                 </FormItem>
               )}
             />
+
+            <div>
+              <FormLabel className='mb-2'>在地图上选择位置</FormLabel>
+              <div className='rounded-md overflow-hidden border'>
+                <MapPicker
+                  key={`${mapInitial.latitude}-${mapInitial.longitude}`}
+                  initial={mapInitial}
+                  height={280}
+                  onSelect={(lat, lng) => {
+                    form.setValue('latitude', lat, { shouldValidate: true, shouldDirty: true })
+                    form.setValue('longitude', lng, { shouldValidate: true, shouldDirty: true })
+                  }}
+                />
+              </div>
+            </div>
             <FormField
               control={form.control}
               name='capacity'
@@ -237,6 +271,7 @@ export function TasksMutateDrawer({
             保存更改
           </Button>
         </SheetFooter>
+        {/* inline MapPicker embedded above in the form */}
       </SheetContent>
     </Sheet>
   )

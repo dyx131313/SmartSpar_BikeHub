@@ -55,10 +55,15 @@ def get_model_future(model_name):
         if station_type_filter == "undefined":
             station_type_filter = None
 
+<<<<<<< HEAD
         # 获取系统时间
         from app.services.time_service import time_service
 
         system_time = time_service.get_current_time()
+=======
+        # 使用当前系统时间（动态）
+        system_time = datetime.utcnow()
+>>>>>>> main
 
         base_path = os.path.join(
             os.path.dirname(os.path.dirname(__file__)),

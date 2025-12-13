@@ -41,10 +41,10 @@ def register():
         if not username.replace("_", "").replace("-", "").isalnum():
             return jsonify({"error": "Username may only contain letters, numbers, underscore and hyphen"}), 400
 
-        # Validate password strength (length only for now)
+        # Validate password presence (require non-empty)
         password = data["password"]
-        if len(password) < 6:
-            return jsonify({"error": "Password length must be at least 6 characters"}), 400
+        if not password or len(str(password).strip()) == 0:
+            return jsonify({"error": "Password is required"}), 400
 
         # Validate email format (allow any valid email domain)
         email = data["email"].strip().lower()

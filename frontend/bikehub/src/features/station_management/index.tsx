@@ -15,7 +15,8 @@ import { getStations } from './service'
 export function Management() {
   const { data, isLoading, error } = useQuery({
     queryKey: ['stations'],
-    queryFn: () => getStations({ per_page: 100 }),
+    // 请求所有站点（后端支持 per_page=0 返回全部）
+    queryFn: () => getStations({ per_page: 0 }),
   })
 
   const stations = data?.data || []
