@@ -17,20 +17,33 @@ def get_db_connection():
         pymysql.Connection: 数据库连接对象
     """
     try:
-        # 从配置获取数据库参数
-        config = current_app.config
-
+        # 从环境变量或Flask配置获取数据库参数
+        # 优先使用环境变量，然后是Flask配置
+        config = current_app.config if current_app.config else {}
+        
+        # 读取环境变量（如果.env文件已加载）
+        host = config.get('MYSQL_HOST') or 'localhost'
+        user = config.get('MYSQL_USER') or 'root'
+        password = config.get('MYSQL_PASSWORD') or ''
+        database = config.get('MYSQL_DB')
+        port = int(config.get('MYSQL_PORT') or 3306)
+        
+        # 如果没有配置数据库名称，抛出明确错误
+        if not database:
+            raise ValueError("数据库名称未配置。请在.env文件中设置DB_NAME或MYSQL_DATABASE")
+        
         connection = pymysql.connect(
-            host=config.get('MYSQL_HOST', 'localhost'),
-            user=config.get('MYSQL_USER', 'root'),
-            password=config.get('MYSQL_PASSWORD', ''),
-            database=config.get('MYSQL_DATABASE', 'bikehub_dev'),
-            port=config.get('MYSQL_PORT', 3306),
+            host=host,
+            user=user,
+            password=password,
+            database=database,
+            port=port,
             charset='utf8mb4',
             cursorclass=pymysql.cursors.DictCursor,
             autocommit=False
         )
-
+        
+        logger.debug(f"成功连接到数据库: {database}@{host}")
         return connection
 
     except Exception as e:
@@ -44,18 +57,27 @@ def get_db_connection_without_dict():
         pymysql.Connection: 数据库连接对象
     """
     try:
-        config = current_app.config
-
+        config = current_app.config if current_app.config else {}
+        
+        host = config.get('MYSQL_HOST') or 'localhost'
+        user = config.get('MYSQL_USER') or 'root'
+        password = config.get('MYSQL_PASSWORD') or ''
+        database = config.get('MYSQL_DB')
+        port = int(config.get('MYSQL_PORT') or 3306)
+        
+        if not database:
+            raise ValueError("数据库名称未配置。请在.env文件中设置DB_NAME或MYSQL_DATABASE")
+        
         connection = pymysql.connect(
-            host=config.get('MYSQL_HOST', 'localhost'),
-            user=config.get('MYSQL_USER', 'root'),
-            password=config.get('MYSQL_PASSWORD', ''),
-            database=config.get('MYSQL_DATABASE', 'bikehub_dev'),
-            port=config.get('MYSQL_PORT', 3306),
+            host=host,
+            user=user,
+            password=password,
+            database=database,
+            port=port,
             charset='utf8mb4',
             autocommit=False
         )
-
+        
         return connection
 
     except Exception as e:
