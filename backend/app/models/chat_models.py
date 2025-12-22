@@ -1,282 +1,148 @@
 """
-群聊相关数据模型
+群聊相关数据模型 (SQLAlchemy ORM)
 """
 from datetime import datetime
-from typing import Optional, List
-from pydantic import BaseModel, Field
 from enum import Enum
-
+from app import db
+from sqlalchemy import func
 
 class GroupType(str, Enum):
     """群聊类型枚举"""
-    PUBLIC = "public"
-    PRIVATE = "private"
-    SYSTEM = "system"
-
+    public = "public"
+    private = "private"
+    system = "system"
 
 class MessageType(str, Enum):
     """消息类型枚举"""
-    TEXT = "text"
-    IMAGE = "image"
-    FILE = "file"
-    SYSTEM = "system"
-    VOICE = "voice"
-
+    text = "text"
+    image = "image"
+    file = "file"
+    system = "system"
+    voice = "voice"
 
 class MemberRole(str, Enum):
     """成员角色枚举"""
-    OWNER = "owner"
-    ADMIN = "admin"
-    MEMBER = "member"
-
-
-# 群聊相关模型
-class ChatGroupBase(BaseModel):
-    """群聊基础模型"""
-    name: str = Field(..., min_length=1, max_length=100, description="群聊名称")
-    description: Optional[str] = Field(None, description="群聊描述")
-    avatar_url: Optional[str] = Field(None, description="群聊头像URL")
-    group_type: GroupType = Field(GroupType.PUBLIC, description="群聊类型")
-    max_members: int = Field(100, ge=1, le=500, description="最大成员数量")
-
-
-class ChatGroupCreate(ChatGroupBase):
-    """创建群聊模型"""
-    initial_members: Optional[List[int]] = Field(default_factory=list, description="初始成员ID列表")
-    welcome_message: Optional[str] = Field(None, max_length=500, description="欢迎消息")
-
-
-class ChatGroupUpdate(BaseModel):
-    """更新群聊模型"""
-    name: Optional[str] = Field(None, min_length=1, max_length=100, description="群聊名称")
-    description: Optional[str] = Field(None, description="群聊描述")
-    avatar_url: Optional[str] = Field(None, description="群聊头像URL")
-    max_members: Optional[int] = Field(None, ge=1, le=500, description="最大成员数量")
-
-
-class ChatGroup(ChatGroupBase):
-    """群聊完整模型"""
-    id: int
-    created_by: int
-    is_active: bool
-    created_at: datetime
-    updated_at: datetime
-    member_count: Optional[int] = 0
-
-    class Config:
-        from_attributes = True
-
-
-class ChatGroupWithMembers(ChatGroup):
-    """包含成员信息的群聊模型"""
-    members: List['ChatGroupMember'] = []
-
-
-# 群聊成员相关模型
-class ChatGroupMemberBase(BaseModel):
-    """群聊成员基础模型"""
-    group_id: int
-    user_id: int
-    role: MemberRole = Field(MemberRole.MEMBER, description="群内角色")
-    nickname: Optional[str] = Field(None, max_length=50, description="群内昵称")
-    is_muted: bool = Field(False, description="是否免打扰")
-
-
-class ChatGroupMemberCreate(ChatGroupMemberBase):
-    """添加群聊成员模型"""
-    invited_by: Optional[int] = Field(None, description="邀请人ID")
-
-
-class ChatGroupMemberUpdate(BaseModel):
-    """更新群聊成员模型"""
-    role: Optional[MemberRole] = Field(None, description="群内角色")
-    nickname: Optional[str] = Field(None, max_length=50, description="群内昵称")
-    is_muted: Optional[bool] = Field(None, description="是否免打扰")
-
-
-class ChatGroupMember(ChatGroupMemberBase):
-    """群聊成员完整模型"""
-    id: int
-    is_active: bool
-    joined_at: datetime
-    last_read_at: Optional[datetime] = None
-
-    class Config:
-        from_attributes = True
-
-
-class ChatGroupMemberWithUser(ChatGroupMember):
-    """包含用户信息的群聊成员模型"""
-    user: dict = {}  # 用户基本信息
-
-
-# 消息相关模型
-class ChatMessageBase(BaseModel):
-    """消息基础模型"""
-    group_id: Optional[int] = Field(None, description="群聊ID")
-    receiver_id: Optional[int] = Field(None, description="接收者ID（私聊）")
-    message_type: MessageType = Field(MessageType.TEXT, description="消息类型")
-    content: str = Field(..., min_length=1, description="消息内容")
-    reply_to_id: Optional[int] = Field(None, description="回复的消息ID")
-
-
-class ChatMessageCreate(ChatMessageBase):
-    """发送消息模型"""
-    file_url: Optional[str] = Field(None, description="文件URL")
-    file_name: Optional[str] = Field(None, description="文件名")
-    file_size: Optional[int] = Field(None, description="文件大小（字节）")
-
-
-class ChatMessageUpdate(BaseModel):
-    """更新消息模型"""
-    content: Optional[str] = Field(None, min_length=1, description="消息内容")
-
-
-class ChatMessage(ChatMessageBase):
-    """消息完整模型"""
-    id: int
-    sender_id: int
-    file_url: Optional[str] = None
-    file_name: Optional[str] = None
-    file_size: Optional[int] = None
-    is_deleted: bool
-    is_edited: bool
-    edited_at: Optional[datetime] = None
-    created_at: datetime
-
-    class Config:
-        from_attributes = True
-
-
-class ChatMessageWithDetails(ChatMessage):
-    """包含详细信息的消息模型"""
-    sender: dict = {}  # 发送者基本信息
-    reply_to: Optional['ChatMessage'] = None  # 回复的消息
-    read_count: int = 0  # 已读人数
-    is_read_by_me: bool = False  # 当前用户是否已读
-
-
-# 消息阅读状态模型
-class ChatMessageReadBase(BaseModel):
-    """消息阅读状态基础模型"""
-    message_id: int
-    user_id: int
-
-
-class ChatMessageRead(ChatMessageReadBase):
-    """消息阅读状态完整模型"""
-    id: int
-    read_at: datetime
-
-    class Config:
-        from_attributes = True
-
-
-# 用户聊天设置模型
-class UserChatSettingBase(BaseModel):
-    """用户聊天设置基础模型"""
-    setting_key: str = Field(..., max_length=50, description="设置键")
-    setting_value: str = Field(..., description="设置值")
-
-
-class UserChatSettingCreate(UserChatSettingBase):
-    """创建用户聊天设置模型"""
-    pass
-
-
-class UserChatSettingUpdate(BaseModel):
-    """更新用户聊天设置模型"""
-    setting_value: str = Field(..., description="设置值")
-
-
-class UserChatSetting(UserChatSettingBase):
-    """用户聊天设置完整模型"""
-    id: int
-    user_id: int
-    created_at: datetime
-    updated_at: datetime
-
-    class Config:
-        from_attributes = True
-
-
-# API响应模型
-class ChatGroupListResponse(BaseModel):
-    """群聊列表响应模型"""
-    groups: List[ChatGroup]
-    total: int
-    page: int
-    page_size: int
-
-
-class ChatMessageListResponse(BaseModel):
-    """消息列表响应模型"""
-    messages: List[ChatMessageWithDetails]
-    total: int
-    page: int
-    page_size: int
-    has_more: bool
-
-
-class ChatGroupMemberListResponse(BaseModel):
-    """群聊成员列表响应模型"""
-    members: List[ChatGroupMemberWithUser]
-    total: int
-    page: int
-    page_size: int
-
-
-class ChatStatisticsResponse(BaseModel):
-    """聊天统计响应模型"""
-    total_groups: int
-    total_messages: int
-    unread_messages: int
-    active_groups: int
-
-
-# WebSocket消息模型
-class WebSocketMessage(BaseModel):
-    """WebSocket消息模型"""
-    type: str = Field(..., description="消息类型")
-    data: dict = Field(..., description="消息数据")
-    timestamp: datetime = Field(default_factory=datetime.now, description="时间戳")
-
-
-class ChatNotificationMessage(WebSocketMessage):
-    """聊天通知消息模型"""
-    type: str = "chat_notification"
-    data: dict = {
-        "message_id": int,
-        "group_id": Optional[int],
-        "sender_id": int,
-        "sender_name": str,
-        "message_type": str,
-        "content": str,
-        "group_name": Optional[str],
-        "is_private": bool
-    }
-
-
-# 文件上传模型
-class FileUploadResponse(BaseModel):
-    """文件上传响应模型"""
-    url: str = Field(..., description="文件URL")
-    filename: str = Field(..., description="文件名")
-    size: int = Field(..., description="文件大小")
-    content_type: str = Field(..., description="文件类型")
-
-
-# 搜索模型
-class ChatSearchRequest(BaseModel):
-    """聊天搜索请求模型"""
-    query: str = Field(..., min_length=1, max_length=100, description="搜索关键词")
-    search_type: str = Field("all", description="搜索类型: groups, messages, users")
-    group_id: Optional[int] = Field(None, description="限制搜索的群聊ID")
-
-
-class ChatSearchResponse(BaseModel):
-    """聊天搜索响应模型"""
-    groups: List[ChatGroup] = []
-    messages: List[ChatMessageWithDetails] = []
-    users: List[dict] = []
-    total_results: int
+    owner = "owner"
+    admin = "admin"
+    member = "member"
+
+class ChatGroup(db.Model):
+    """群聊模型"""
+    __tablename__ = 'chat_groups'
+
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(100), nullable=False)
+    description = db.Column(db.Text)
+    avatar_url = db.Column(db.String(255))
+    group_type = db.Column(db.Enum(GroupType), default=GroupType.public)
+    max_members = db.Column(db.Integer, default=100)
+    created_by = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
+    is_active = db.Column(db.Boolean, default=True)
+    created_at = db.Column(db.DateTime, default=datetime.now)
+    updated_at = db.Column(db.DateTime, default=datetime.now, onupdate=datetime.now)
+
+    # 关系 (可选，视User模型定义而定，这里暂不定义backref以避免循环导入问题)
+    # members = db.relationship('ChatGroupMember', backref='group', lazy='dynamic')
+
+    def to_dict(self):
+        return {
+            'id': self.id,
+            'name': self.name,
+            'description': self.description,
+            'avatar_url': self.avatar_url,
+            'group_type': self.group_type.value if hasattr(self.group_type, 'value') else self.group_type,
+            'max_members': self.max_members,
+            'created_by': self.created_by,
+            'is_active': self.is_active,
+            'created_at': self.created_at.isoformat() if self.created_at else None,
+            'updated_at': self.updated_at.isoformat() if self.updated_at else None
+        }
+
+class ChatGroupMember(db.Model):
+    """群聊成员模型"""
+    __tablename__ = 'chat_group_members'
+
+    id = db.Column(db.Integer, primary_key=True)
+    group_id = db.Column(db.Integer, db.ForeignKey('chat_groups.id'), nullable=False)
+    user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
+    role = db.Column(db.Enum(MemberRole), default=MemberRole.member)
+    nickname = db.Column(db.String(50))
+    is_muted = db.Column(db.Boolean, default=False)
+    is_active = db.Column(db.Boolean, default=True)
+    joined_at = db.Column(db.DateTime, default=datetime.now)
+    last_read_at = db.Column(db.DateTime)
+
+    def to_dict(self):
+        return {
+            'id': self.id,
+            'group_id': self.group_id,
+            'user_id': self.user_id,
+            'role': self.role.value if hasattr(self.role, 'value') else self.role,
+            'nickname': self.nickname,
+            'is_muted': self.is_muted,
+            'is_active': self.is_active,
+            'joined_at': self.joined_at.isoformat() if self.joined_at else None,
+            'last_read_at': self.last_read_at.isoformat() if self.last_read_at else None
+        }
+
+class ChatMessage(db.Model):
+    """群聊消息模型"""
+    __tablename__ = 'chat_messages'
+
+    id = db.Column(db.Integer, primary_key=True)
+    group_id = db.Column(db.Integer, db.ForeignKey('chat_groups.id'), nullable=False)
+    sender_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
+    receiver_id = db.Column(db.Integer, db.ForeignKey('users.id')) # 私聊备用
+    message_type = db.Column(db.Enum(MessageType), default=MessageType.text)
+    content = db.Column(db.Text, nullable=False)
+    file_url = db.Column(db.String(255))
+    file_name = db.Column(db.String(255))
+    file_size = db.Column(db.Integer)
+    reply_to_id = db.Column(db.Integer, db.ForeignKey('chat_messages.id'))
+    is_deleted = db.Column(db.Boolean, default=False)
+    is_edited = db.Column(db.Boolean, default=False)
+    edited_at = db.Column(db.DateTime)
+    created_at = db.Column(db.DateTime, default=datetime.now)
+
+    def to_dict(self):
+        return {
+            'id': self.id,
+            'group_id': self.group_id,
+            'sender_id': self.sender_id,
+            'receiver_id': self.receiver_id,
+            'message_type': self.message_type.value if hasattr(self.message_type, 'value') else self.message_type,
+            'content': self.content,
+            'file_url': self.file_url,
+            'file_name': self.file_name,
+            'file_size': self.file_size,
+            'reply_to_id': self.reply_to_id,
+            'is_deleted': self.is_deleted,
+            'is_edited': self.is_edited,
+            'edited_at': self.edited_at.isoformat() if self.edited_at else None,
+            'created_at': self.created_at.isoformat() if self.created_at else None
+        }
+
+class ChatMessageRead(db.Model):
+    """消息阅读状态模型"""
+    __tablename__ = 'chat_message_reads'
+
+    id = db.Column(db.Integer, primary_key=True)
+    message_id = db.Column(db.Integer, db.ForeignKey('chat_messages.id'), nullable=False)
+    user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
+    read_at = db.Column(db.DateTime, default=datetime.now)
+    
+    # 联合唯一索引，确保用户对同一条消息只有一个阅读记录
+    __table_args__ = (
+        db.UniqueConstraint('message_id', 'user_id', name='uq_message_user_read'),
+    )
+
+class UserChatSetting(db.Model):
+    """用户聊天设置"""
+    __tablename__ = 'user_chat_settings'
+    
+    id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
+    setting_key = db.Column(db.String(50), nullable=False)
+    setting_value = db.Column(db.Text)
+    created_at = db.Column(db.DateTime, default=datetime.now)
+    updated_at = db.Column(db.DateTime, default=datetime.now, onupdate=datetime.now)
