@@ -137,6 +137,20 @@ def create_chat_group():
         )
         db.session.add(owner_member)
 
+        if data.get('group_type') == GroupType.system:
+            all_users = db.session.query(User.id).all()
+            user_id = int(user_id)
+            for (uid,) in all_users:
+                if uid == user_id:      # 跳过创建者
+                    continue
+
+                db.session.add(ChatGroupMember(
+                    group_id=new_group.id,
+                    user_id=uid,
+                    role=MemberRole.member,
+                    is_active=True,
+                    joined_at=datetime.now()
+                ))
         db.session.commit()
 
         return jsonify({
