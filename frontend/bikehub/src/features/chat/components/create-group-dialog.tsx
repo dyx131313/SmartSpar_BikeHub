@@ -131,12 +131,13 @@ const CreateGroupDialog: React.FC<CreateGroupDialogProps> = React.memo(({
 
       // 创建群聊
       const response = await groupChatAPI.createGroup(formData);
-
+      
       // 添加成员
       if (selectedUsers.length > 0) {
         await groupChatAPI.addGroupMembers(response.group.id, selectedUsers.map(u => u.id));
       }
-
+      const memberCount = selectedUsers.length + 1; // 包括创建者自己
+      response.group.member_count = memberCount;
       onSuccess(response.group);
       handleClose();
     } catch (error) {

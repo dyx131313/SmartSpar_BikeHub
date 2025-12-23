@@ -101,7 +101,7 @@ function AvatarDialog({ isOpen, onOpenChange, onAvatarChange }: AvatarDialogProp
         <DialogHeader>
           <DialogTitle>设置头像</DialogTitle>
           <DialogDescription>
-            上传一张 JPG、PNG 格式的图片作为头像。图片大小不能超过 5MB。
+            上传一张 JPG、PNG 格式的图片作为头像。图片大小不能超过 2MB。
           </DialogDescription>
         </DialogHeader>
         <div className="flex flex-col items-center gap-4 py-4">
