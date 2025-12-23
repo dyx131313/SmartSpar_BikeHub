@@ -749,8 +749,8 @@ def upload_avatar():
         file_size = file.tell()
         file.seek(0)
 
-        if file_size > 5 * 1024 * 1024:  # 5MB
-            return jsonify({"error": "文件大小不能超过5MB"}), 400
+        if file_size > 2 * 1024 * 1024:  # 2MB
+            return jsonify({"error": "文件大小不能超过2MB"}), 400
 
         # 创建头像目录
         avatar_dir = os.path.join(current_app.config['UPLOAD_FOLDER'], 'avatars')
