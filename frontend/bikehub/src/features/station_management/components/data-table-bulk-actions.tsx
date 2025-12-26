@@ -144,7 +144,7 @@ export function DataTableBulkActions<TData>({
           </DropdownMenuContent>
         </DropdownMenu>
 
-        <Tooltip>
+        {/* <Tooltip>
           <TooltipTrigger asChild>
             <Button
               variant='outline'
@@ -161,7 +161,7 @@ export function DataTableBulkActions<TData>({
           <TooltipContent>
             <p>导出站点</p>
           </TooltipContent>
-        </Tooltip>
+        </Tooltip> */}
 
         <Tooltip>
           <TooltipTrigger asChild>

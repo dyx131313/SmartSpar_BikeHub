@@ -75,6 +75,13 @@ if [ -d "$FRONTEND_DIR" ]; then
 fi
 
 echo "6) 创建 systemd 单元（/etc/systemd/system/bikehub.service）"
+[ -d /var/log/bikehub ] || mkdir -p /var/log/bikehub
+chown -R www-data:www-data /var/log/bikehub || true
+chmod 750 /var/log/bikehub || true
+touch /var/log/bikehub/app.log /var/log/bikehub/backup.log || true
+chown www-data:www-data /var/log/bikehub/*.log || true
+
+echo "6) 创建 systemd 单元（/etc/systemd/system/bikehub.service）"
 cat > /etc/systemd/system/bikehub.service <<'SERVICE'
 [Unit]
 Description=SmartSpar BikeHub Gunicorn
@@ -88,6 +95,8 @@ ExecStart=/root/SmartSpar_BikeHub/backend/.venv/bin/gunicorn --workers 4 --bind 
 Restart=on-failure
 Environment=FLASK_ENV=production
 Environment=PYTHONUNBUFFERED=1
+Environment=LOG_FILE=/var/log/bikehub/app.log
+EnvironmentFile=/root/SmartSpar_BikeHub/backend/.env
 
 [Install]
 WantedBy=multi-user.target

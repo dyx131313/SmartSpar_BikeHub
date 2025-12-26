@@ -12,9 +12,11 @@ dotenv_path = os.path.join(backend_root, '.env')
 if os.path.exists(dotenv_path):
     load_dotenv(dotenv_path)
 
-# 1. 强制开发环境，避开 ProductionConfig 检查
-os.environ['FLASK_ENV'] = 'development'
-os.environ['FLASK_CONFIG'] = 'development'
+# 1. 如果未指定 FLASK_ENV，则默认使用开发环境（脚本不应强制覆盖已有环境）
+if 'FLASK_ENV' not in os.environ:
+    os.environ['FLASK_ENV'] = 'development'
+if 'FLASK_CONFIG' not in os.environ:
+    os.environ['FLASK_CONFIG'] = 'development'
 
 # 2. 再把 backend/ 加入路径
 sys.path.insert(0, backend_root)

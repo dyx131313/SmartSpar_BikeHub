@@ -1,96 +1,159 @@
-**部署指南**
+**一行快速说明**
 
-本文档总结了将 SmartSpar_BikeHub 部署到一台 Linux 服务器（使用 systemd + Nginx）的完整步骤，包含必要的命令、配置位置、常见问题与验证方法。
+本文档给出一个可复制、按步执行的部署与运维指南（适用于 Ubuntu/Debian），目标是让你能把 SmartSpar_BikeHub 部署为 systemd + nginx 托管的生产服务，并包含常见故障排查与快速修复步骤。
 
-**前提条件**:
-- **操作系统**: Ubuntu/Debian（其它发行版步骤类似）
-- **已安装软件**: `mysql` (MariaDB/MySQL), `nginx`, `python3` (3.8+), `node`/`npm` 或 `pnpm`，`certbot`（可选）
-- **仓库位置**: 假定代码位于 `/root/SmartSpar_BikeHub`
+前提
 
-**高层步骤概览**:
-- **环境准备**: 安装系统包与全局依赖（建议使用清华镜像加速 Python/Node 包）
-- **后端**: 安装 Python 依赖、运行数据库迁移、初始化用户、配置并启用 systemd + Gunicorn
-- **前端**: 使用清华 npm 镜像构建静态文件并部署到 Nginx 的静态目录
-- **反向代理与 TLS**: 配置 Nginx 代理 `/api/` 到后端并为站点配置 HTTPS（自签名或 Let’s Encrypt）
-- **运维**: 添加 `logrotate`、数据库备份脚本、监控建议
+- 假定仓库在 `/root/SmartSpar_BikeHub`。如不一致，请把下面的路径替换为你的真实路径。
+- 系统已安装：`mysql`、`nginx`、`python3`（或 conda）、`node`/`npm`（或 `pnpm`）。
 
-**详细步骤**
+快速步骤概览（顺序执行）
 
-1) 准备与系统包
+1. 系统依赖与用户（一次性）
 
- - 更新包索引并安装常用工具：
 ```bash
-sudo apt update && sudo apt install -y git curl nginx mysql-client
+sudo apt update
+sudo apt install -y git curl nginx mysql-client build-essential
 ```
 
-2) Python 依赖（使用清华 PyPI）
+2. 后端 Python 环境与依赖（使用 Conda，Python 3.13）
 
- - 建议使用独立虚拟环境；若需要全局安装可省略 venv。
+我们建议使用 conda 管理环境（仓库中其他脚本在运行时也使用 conda 环境 `SB_env`）。下面命令以 Miniconda 安装路径 `/root/miniconda3` 为例。
+
 ```bash
+# 创建并激活 conda 环境（Python 3.13）
 cd /root/SmartSpar_BikeHub/backend
-python3 -m venv .venv
-source .venv/bin/activate
+/root/miniconda3/bin/conda create -n SB_env python=3.13 -y
+source /root/miniconda3/bin/activate SB_env
+# 更新 pip 并安装依赖
 python -m pip install --upgrade pip -i https://pypi.tuna.tsinghua.edu.cn/simple
-pip install -r requirements.txt gunicorn -i https://pypi.tuna.tsinghua.edu.cn/simple
+pip install -r requirements.txt
+# 安装 gunicorn（若不在 requirements.txt 中）
+pip install gunicorn
 ```
 
-3) 数据库准备
+3. 创建数据库与用户（仅需执行一次）
 
- - 在 MySQL 中创建生产数据库与应用用户（示例）：
+把下面命令中的 `ROOT_MYSQL_PASSWORD` 与 `secure_password` 替换为实际密码：
+
 ```bash
+# 交互式方式
 mysql -u root -p
-CREATE DATABASE IF NOT EXISTS bikehub CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+CREATE DATABASE IF NOT EXISTS `bikehub` CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 CREATE USER IF NOT EXISTS 'bikehub_user'@'127.0.0.1' IDENTIFIED BY 'secure_password';
-GRANT ALL PRIVILEGES ON bikehub.* TO 'bikehub_user'@'127.0.0.1';
+CREATE USER IF NOT EXISTS 'bikehub_user'@'localhost' IDENTIFIED BY 'secure_password';
+GRANT ALL PRIVILEGES ON `bikehub`.* TO 'bikehub_user'@'127.0.0.1';
+GRANT ALL PRIVILEGES ON `bikehub`.* TO 'bikehub_user'@'localhost';
 FLUSH PRIVILEGES;
 ```
 
- - 编辑后端环境文件（示例路径：/root/SmartSpar_BikeHub/backend/.env）并填入真实值：
-  - `MYSQL_HOST`, `MYSQL_USER`, `MYSQL_PASSWORD`, `MYSQL_DB` 等
+4. 配置 `.env`（必须）
 
-4) 运行 Alembic 迁移并初始化数据
+编辑 `/root/SmartSpar_BikeHub/backend/.env`，确保 `MYSQL_*`、`SECRET_KEY`、`JWT_SECRET_KEY` 等设置正确。我们建议在 systemd 中使用 `EnvironmentFile` 加载它：
 
- - 先备份目标数据库，然后运行迁移：
-```bash
-# 备份（可选）
-mysqldump -u root -p bikehub > /root/bikehub_pre_migrate.sql
+在 `/etc/systemd/system/bikehub.service.d/override.conf` 添加：
 
-# 运行迁移
-cd /root/SmartSpar_BikeHub/backend
-source .venv/bin/activate
-FLASK_ENV=production python -m flask db upgrade
-
-# 创建缺失测试用户（仓库内脚本）
-python app/scripts/create_missing_users.py
+```ini
+[Service]
+EnvironmentFile=/root/SmartSpar_BikeHub/backend/.env
+Environment=LOG_FILE=/var/log/bikehub/app.log
 ```
 
-5) 导入演示/初始数据（可选）
+5. 日志目录与权限（必须）
 
- - 仓库内有数据导入脚本（`app/scripts/import_data_*.py` & `app/utils/data_importer.py`）用于导入 station/demand/dispatch/feedback 数据
 ```bash
+sudo mkdir -p /var/log/bikehub
+sudo chown -R www-data:www-data /var/log/bikehub
+sudo chmod 750 /var/log/bikehub
+sudo touch /var/log/bikehub/app.log /var/log/bikehub/backup.log
+sudo chown www-data:www-data /var/log/bikehub/*.log
+```
+
+6. 运行 Alembic 迁移（注意 scheduler）
+
+说明：项目含后台 `scheduler`，启动时会尝试运行预测任务，这在迁移期间可能触发 `Table '...' doesn't exist` 错误。请在执行迁移时临时禁用 scheduler：
+
+```bash
+# 激活 conda 环境
+source /root/miniconda3/bin/activate SB_env
+export DISABLE_SCHEDULER=1
+export FLASK_ENV=production
+cd /root/SmartSpar_BikeHub/backend
+python -m flask db upgrade
+# 若迁移历史有问题，可先用 ORM 创建所有表，再用 alembic 标记为已应用：
+# python -m flask init_db
+# python -m flask db stamp head
+unset DISABLE_SCHEDULER
+```
+
+7. 创建管理员（可选）
+
+```bash
+python -m flask create_admin
+```
+
+8. 导入演示/初始数据（可选）
+
+说明：脚本 `app/scripts/import_data_*.py` 尊重当前 `FLASK_ENV`（已修改为仅在未设置时才默认 `development`），因此在导入前请显式设置目标环境：
+
+```bash
+# 激活 conda 环境并禁用 scheduler
+source /root/miniconda3/bin/activate SB_env
+export FLASK_ENV=production
+export DISABLE_SCHEDULER=1
 python app/scripts/import_data_demand.py
 python app/scripts/import_data_task.py
 python app/scripts/import_data_feedbacks.py
+unset DISABLE_SCHEDULER
 ```
 
-6) 前端构建（使用清华 npm 镜像）
+9. 前端构建与部署
 
- - 进入前端目录并构建静态文件：
 ```bash
 cd /root/SmartSpar_BikeHub/frontend/bikehub
 npm ci --registry=https://registry.npmmirror.com
 npm run build
-
-# 将生成的 dist 拷贝到 Nginx 静态目录
 sudo mkdir -p /var/www/bikehub
-sudo cp -r dist/* /var/www/bikehub/
+sudo cp -r dist/* /var/www/bikehub/  # 或 cp -r build/* /var/www/bikehub/
 sudo chown -R www-data:www-data /var/www/bikehub
 ```
 
-7) Gunicorn + systemd（后端）
+10. Nginx 配置（示例）
 
- - systemd 单元示例路径：/etc/systemd/system/bikehub.service
- - 示例 `ExecStart`（请根据你的 venv/路径调整）：
+创建 `/etc/nginx/sites-available/bikehub`：
+
+```nginx
+server {
+  listen 80;
+  server_name YOUR_IP_OR_DOMAIN;
+  root /var/www/bikehub;
+  index index.html;
+
+  location / {
+    try_files $uri $uri/ /index.html;
+  }
+
+  location /api/ {
+    proxy_pass http://127.0.0.1:8000/api/;
+    include proxy_params;
+    proxy_set_header Host $host;
+  }
+}
+```
+
+启用并重载：
+
+```bash
+sudo ln -sf /etc/nginx/sites-available/bikehub /etc/nginx/sites-enabled/bikehub
+sudo nginx -t && sudo systemctl reload nginx
+```
+
+11. systemd 单元（示例，使用 conda env 的 gunicorn）
+
+注意：systemd 以非交互方式运行，不会执行 shell 的 `conda activate`。使用绝对路径指向 conda 环境中的可执行文件更可靠。
+
+把下列内容写入 `/etc/systemd/system/bikehub.service`：
+
 ```ini
 [Unit]
 Description=SmartSpar BikeHub Gunicorn
@@ -100,120 +163,83 @@ After=network.target
 User=www-data
 Group=www-data
 WorkingDirectory=/root/SmartSpar_BikeHub/backend
-ExecStart=/root/SmartSpar_BikeHub/backend/.venv/bin/gunicorn --workers 4 --bind 127.0.0.1:8000 run:app
+ExecStart=/root/miniconda3/envs/SB_env/bin/gunicorn --workers 4 --bind 127.0.0.1:8000 run:app
 Restart=on-failure
 Environment=FLASK_ENV=production
 Environment=PYTHONUNBUFFERED=1
+EnvironmentFile=/root/SmartSpar_BikeHub/backend/.env
+Environment=LOG_FILE=/var/log/bikehub/app.log
 
 [Install]
 WantedBy=multi-user.target
 ```
 
- - 启用并启动服务：
+然后启用并启动：
+
 ```bash
 sudo systemctl daemon-reload
 sudo systemctl enable --now bikehub
 sudo systemctl status bikehub
 ```
 
-8) Nginx 配置（反向代理与静态）
+PyTorch 安装（conda 推荐）
 
- - 已在仓库 `deploy/nginx/conf.d/bikehub.conf` 提供示例。可使用以下简化配置：
-```nginx
-server {
-    listen 80;
-    server_name your.domain.or.ip;
-    root /var/www/bikehub;
-    index index.html;
+如果你需要 scheduler 的 ML 功能，建议用 conda 安装 PyTorch（选择 CPU 或 CUDA 版本）：
 
-    location / {
-        try_files $uri $uri/ /index.html;
-    }
-
-    location /api/ {
-        proxy_pass http://127.0.0.1:8000/api/;
-        proxy_set_header Host $host;
-        proxy_set_header X-Real-IP $remote_addr;
-        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
-        proxy_set_header X-Forwarded-Proto $scheme;
-    }
-}
+CPU 版本示例：
+```bash
+/root/miniconda3/bin/conda install -n SB_env pytorch cpuonly -c pytorch -y
 ```
 
- - 测试并重载 Nginx：
+CUDA 示例（以 CUDA 12.1 为例，视你的 GPU/驱动而定）：
 ```bash
-sudo nginx -t && sudo systemctl reload nginx
+/root/miniconda3/bin/conda install -n SB_env pytorch pytorch-cuda=12.1 -c pytorch -c nvidia -y
 ```
 
-9) TLS（两种方式）
+12. TLS（推荐）
 
- - 临时：生成自签名证书（适用于 IP 访问或测试）
-```bash
-sudo mkdir -p /etc/ssl/bikehub
-sudo openssl req -x509 -nodes -days 365 -newkey rsa:2048 \
-  -keyout /etc/ssl/bikehub/bikehub.key -out /etc/ssl/bikehub/bikehub.crt \
-  -subj "/CN=your.ip.or.domain" -addext "subjectAltName=IP:your.ip"
-```
+生产建议使用 Let’s Encrypt：
 
- - 推荐（公开生产）：使用 Let’s Encrypt（需要域名 A 记录指向公网 IP）
 ```bash
+sudo apt install -y certbot python3-certbot-nginx
 sudo certbot --nginx -d your.domain.com
 ```
 
-10) 日志轮转与备份
+13. 日志轮转与备份（已含示例脚本）
 
- - 我们已在服务器上添加 `logrotate` 配置文件：/etc/logrotate.d/bikehub
- - 数据库每日备份脚本：/usr/local/bin/bikehub_db_backup.sh（已安装到 /etc/cron.daily/ 并会把备份存到 /var/backups/bikehub）
+检查 `/etc/logrotate.d/bikehub` 和 `/usr/local/bin/bikehub_db_backup.sh`，按需调整目标路径与凭据。
 
-11) 验证与常用排查命令
+故障排查要点
 
- - 网站访问（忽略自签名）:
+- 如果浏览器控制台或后端日志提示 `Unknown database 'bikehub'`：确认 `.env` 中 `MYSQL_DB` 和你创建的数据库一致；使用 `mysql -u root -p -e "SHOW DATABASES;"` 验证。
+- 如果 `flask db upgrade` 在某个迁移文件报错（例如缺失 `users` 表），可临时：
+  - 在安全环境下运行 `export DISABLE_SCHEDULER=1`，然后用 `python -m flask init_db` 创建表，再 `python -m flask db stamp head` 标记迁移已应用。
+- 若 API 返回 404 或前端无法显示数据：确认你运行导入脚本时的 `FLASK_ENV`（参见第 8 步）；前端请求的 API 地址应与 Nginx 的 `proxy_pass` 对应。
+
+常用调试命令
+
 ```bash
-curl -I -k https://YOUR_IP/
-curl -sS -k https://YOUR_IP/api/health
+# 查看后端服务状态
+sudo systemctl status bikehub
+sudo journalctl -u bikehub -n 200 --no-pager
+
+# 查看 nginx 状态与日志
+sudo systemctl status nginx
+sudo journalctl -u nginx -n 200 --no-pager
+
+# 检查端口监听
+sudo ss -ltnp | grep -E ':80|:443|:8000' || true
+
+# 验证 API
+curl -sS http://127.0.0.1:8000/api/stations | jq . | head -n 50
+curl -sS http://YOUR_IP_OR_DOMAIN/api/stations | jq . | head -n 50
 ```
 
- - 查看后端服务与日志：
-```bash
-systemctl status bikehub
-journalctl -u bikehub -n 200 --no-pager
-```
+附注
 
- - 数据库检查：
-```bash
-mysql -u root -p -e "USE ${MYSQL_DB}; SHOW TABLES; SELECT COUNT(*) FROM users;"
-```
+- 脚本 `app/scripts/import_data_*.py` 会读取 `/root/SmartSpar_BikeHub/backend/.env`（如果存在）。运行导入前请确保 `.env` 的 `FLASK_ENV` 指向你想要导入的环境（`production` 或 `development`）。
+- 若你希望我代为执行上述步骤（创建数据库、运行迁移、导入数据），请授权我在当前服务器上运行这些命令。
 
-12) 常见问题与建议
+---
 
-- 如果出现 `Table 'xxx.users' doesn't exist` 错误：可能是运行时连接的数据库与已迁移数据库不一致。检查 `.env`、`SQLALCHEMY_DATABASE_URI` 并确认对齐；可将已迁移数据从 `_dev` 导入到目标数据库或调整配置指向已迁移数据库。
-- 不要以 root 用户运行应用服务（建议创建 `bikehub` 或 `www-data` 运行用户并调整文件权限）。
-- 生产环境建议使用 Let’s Encrypt 并定期测试备份恢复流程。
-
-文件参考：
-- Nginx 示例: [deploy/nginx/conf.d/bikehub.conf](deploy/nginx/conf.d/bikehub.conf)
-- 后端 systemd 单元: [/etc/systemd/system/bikehub.service](/etc/systemd/system/bikehub.service)
-- 备份脚本: [/usr/local/bin/bikehub_db_backup.sh](/usr/local/bin/bikehub_db_backup.sh)
-- logrotate 配置: [/etc/logrotate.d/bikehub](/etc/logrotate.d/bikehub)
-
-----
-
-快速恢复步骤（如果服务报错）:
-
-1. 检查服务状态与日志：
-```bash
-systemctl status bikehub
-journalctl -u bikehub -n 200 --no-pager
-```
-2. 验证 `.env` 中数据库配置与 `SQLALCHEMY_DATABASE_URI` 一致：
-```bash
-grep -E "^MYSQL_" backend/.env
-python - <<'PY'
-from app import create_app
-app = create_app()
-print(app.config.get('SQLALCHEMY_DATABASE_URI'))
-PY
-```
-3. 若缺表：将已存在的 `_dev` 库导入到目标库或在正确的目标库上运行 `flask db upgrade`（务必先备份）。
-
-谢谢。将来需要我可以把本文件生成到仓库中的其他位置，或把某些步骤写成可执行脚本/Ansible playbook 来实现完全自动化部署。
+以上即为简化且可操作的部署指引；如需我将其生成成一键脚本 `deploy/deploy_one_click.sh` 的改进版或制作 Ansible playbook，我可以继续帮你实现。

@@ -141,7 +141,7 @@ def login():
 def send_bind_email_code():
     """Send verification code for binding email"""
     try:
-        current_user_id = get_jwt_identity()
+        current_user_id = int(get_jwt_identity())
         user = User.query.get(current_user_id)
 
         if not user or not user.is_active:
@@ -195,7 +195,7 @@ def debug_auth():
     try:
         from flask_jwt_extended import get_jwt, get_jwt_identity
 
-        current_user_id = get_jwt_identity()
+        current_user_id = int(get_jwt_identity())
         jwt_data = get_jwt()
 
         print(f"Current user ID: {current_user_id}")
@@ -215,7 +215,7 @@ def debug_auth():
 def verify_bind_email():
     """Verify email binding code and update user's email"""
     try:
-        current_user_id = get_jwt_identity()
+        current_user_id = int(get_jwt_identity())
         user = User.query.get(current_user_id)
 
         if not user or not user.is_active:
@@ -361,7 +361,7 @@ def forgot_password_reset():
 def logout():
     """User logout (JWT token handled on client side)"""
     try:
-        current_user_id = get_jwt_identity()
+        current_user_id = int(get_jwt_identity())
         jti = get_jwt()["jti"]  # JWT ID, could be stored in a blacklist in real deployments
 
         # Here we simply return success; the client should delete its local token.
@@ -385,7 +385,7 @@ def logout():
 def refresh():
     """刷新访问令牌"""
     try:
-        current_user_id = get_jwt_identity()
+        current_user_id = int(get_jwt_identity())
         user = User.query.get(current_user_id)
 
         if not user or not user.is_active:
@@ -410,7 +410,7 @@ def refresh():
 def get_current_user():
     """获取当前登录用户信息"""
     try:
-        current_user_id = get_jwt_identity()
+        current_user_id = int(get_jwt_identity())
         user = User.query.get(current_user_id)
 
         if not user:
@@ -427,7 +427,7 @@ def get_current_user():
 def get_users():
     """获取用户列表"""
     try:
-        current_user_id = get_jwt_identity()
+        current_user_id = int(get_jwt_identity())
         current_user = User.query.get(current_user_id)
 
         # 只有管理员可以查看所有用�?
@@ -461,7 +461,7 @@ def get_users():
 def create_user():
     """创建用户"""
     try:
-        current_user_id = get_jwt_identity()
+        current_user_id = int(get_jwt_identity())
         current_user = User.query.get(current_user_id)
 
         # 只有管理员可以创建用�?
@@ -501,7 +501,7 @@ def create_user():
 def get_user_profile():
     """获取当前用户信息"""
     try:
-        current_user_id = get_jwt_identity()
+        current_user_id = int(get_jwt_identity())
         user = User.query.get(current_user_id)
 
         if not user:
@@ -543,7 +543,7 @@ def debug_headers():
 def test_jwt():
     """测试JWT验证 - 用于调试"""
     try:
-        current_user_id = get_jwt_identity()
+        current_user_id = int(get_jwt_identity())
         from flask_jwt_extended import get_jwt
 
         jwt_data = get_jwt()
@@ -565,7 +565,7 @@ def test_jwt():
 def update_user(id):
     """更新用户信息"""
     try:
-        current_user_id = get_jwt_identity()
+        current_user_id = int(get_jwt_identity())
         current_user = User.query.get(current_user_id)
 
         # 只有管理员可以更新其他用户信�?
@@ -609,7 +609,7 @@ def update_user(id):
 def delete_user(id):
     """删除用户"""
     try:
-        current_user_id = get_jwt_identity()
+        current_user_id = int(get_jwt_identity())
         current_user = User.query.get(current_user_id)
 
         # 只有管理员可以删除用�?
@@ -686,7 +686,7 @@ def delete_user(id):
 def get_user_by_id(id):
     """根据ID获取单个用户信息"""
     try:
-        current_user_id = get_jwt_identity()
+        current_user_id = int(get_jwt_identity())
         current_user = User.query.get(current_user_id)
 
         # 只有管理员可以查看其他用户信息，或者用户查看自�?
@@ -722,29 +722,15 @@ def allowed_avatar_file(filename):
 @api_bp.route("/users/avatar", methods=["POST"])
 @jwt_required()
 def upload_avatar():
-    """上传用户头像"""
     try:
-        current_user_id = get_jwt_identity()
-        user = User.query.get(current_user_id)
-
-        if not user:
-            return jsonify({"error": "用户不存在"}), 404
-
-        # 检查是否有文件
         if 'avatar' not in request.files:
-            return jsonify({"error": "未选择文件"}), 400
-
+            return jsonify({"error": "没有文件部分"}), 400
+        
         file = request.files['avatar']
-
-        # 检查是否选择了文件
         if file.filename == '':
             return jsonify({"error": "未选择文件"}), 400
 
-        # 验证文件类型
-        if not allowed_avatar_file(file.filename):
-            return jsonify({"error": "只支持 PNG、JPG、JPEG、GIF 格式的图片"}), 400
-
-        # 验证文件大小（限制为5MB）
+        # 验证文件大小（限制为2MB）
         file.seek(0, os.SEEK_END)
         file_size = file.tell()
         file.seek(0)
@@ -752,57 +738,40 @@ def upload_avatar():
         if file_size > 2 * 1024 * 1024:  # 2MB
             return jsonify({"error": "文件大小不能超过2MB"}), 400
 
-        # 创建头像目录
-        avatar_dir = os.path.join(current_app.config['UPLOAD_FOLDER'], 'avatars')
-        os.makedirs(avatar_dir, exist_ok=True)
+        # 1. 确保目录存在
+        # 物理存储路径：backend/app/static/uploads/avatars
+        avatar_dir = os.path.abspath(os.path.join(current_app.static_folder, 'uploads', 'avatars'))
+        if not os.path.exists(avatar_dir):
+            os.makedirs(avatar_dir, mode=0o755, exist_ok=True)
 
-        # 生成文件名
-        file_ext = os.path.splitext(file.filename)[1].lower()
-        new_filename = f"{user.id}_{uuid.uuid4().hex}{file_ext}"
+        # 2. 生成文件名
+        current_user_id = int(get_jwt_identity())
+        ext = os.path.splitext(file.filename)[1]
+        new_filename = f"{current_user_id}_{uuid.uuid4().hex}{ext}"
+        
+        # 3. 保存文件
         file_path = os.path.join(avatar_dir, new_filename)
-
-        # 保存文件
         file.save(file_path)
 
-        # 删除旧头像（如果有）
-        if user.avatar_url:
-            old_filename = os.path.basename(user.avatar_url)
-            old_file_path = os.path.join(avatar_dir, old_filename)
-            if os.path.exists(old_file_path):
-                os.remove(old_file_path)
+        # 4. 生成返回给前端的 URL (必须以 /static 开头)
+        avatar_url = f"/static/uploads/avatars/{new_filename}"
 
-        # 生成访问URL
-        avatar_url = f"/uploads/avatars/{new_filename}"
-
-        # 更新用户头像
+        # 5. 更新数据库
+        user = User.query.get(current_user_id)
+        # 如果旧头像存在，建议在这里执行 os.remove(旧路径) 逻辑
         user.avatar_url = avatar_url
-        user.updated_at = datetime.utcnow()
-        db.session.commit()
-
-        # 记录操作日志
-        log_entry = UserLog(
-            user_id=user.id,
-            action='update_avatar',
-            resource_type='user',
-            resource_id=user.id,
-            description=f'用户更新头像: {new_filename}',
-            ip_address=request.remote_addr,
-            user_agent=request.headers.get('User-Agent', ''),
-            status='success'
-        )
-        db.session.add(log_entry)
         db.session.commit()
 
         return jsonify({
-            "message": "头像上传成功",
-            "data": {
-                "avatar_url": avatar_url
-            }
+            "message": "上传成功",
+            "data": {"avatar_url": avatar_url, "file_path": file_path}
         })
 
     except Exception as e:
+        # 这里会捕获所有错误并返回 JSON，防止前端解析失败
         db.session.rollback()
-        return jsonify({"error": str(e)}), 500
+        print(f"DEBUG ERROR: {str(e)}") # 在服务器后台查看具体报错
+        return jsonify({"error": f"服务器内部错误: {str(e)}"}), 500
 
 
 @api_bp.route("/users/avatar", methods=["DELETE"])

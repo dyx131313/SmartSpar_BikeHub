@@ -25,7 +25,7 @@ def create_app(config_name=None):
     if config_name is None:
         config_name = os.environ.get("FLASK_ENV", "development")
 
-    app = Flask(__name__)
+    app = Flask(__name__, static_folder='static', static_url_path='/static')
     app.config.from_object(config[config_name])
     config[config_name].init_app(app)
 
@@ -64,7 +64,9 @@ def create_app(config_name=None):
     register_cli_commands(app)
 
     # 启动后台调度器 (仅在主进程中运行)
-    if not app.debug or os.environ.get("WERKZEUG_RUN_MAIN") == "true":
+    # 可通过环境变量 DISABLE_SCHEDULER=1 禁用（例如在运行迁移或单元测试时）
+    disable_scheduler = os.environ.get("DISABLE_SCHEDULER", "0") == "1"
+    if not disable_scheduler and (not app.debug or os.environ.get("WERKZEUG_RUN_MAIN") == "true"):
         try:
             from app.services.scheduler import scheduler
 
@@ -117,6 +119,7 @@ def configure_jwt_errors(app):
     @jwt.invalid_token_loader
     def invalid_token_callback(error):
         """无效Token回调"""
+        app.logger.warning(f"JWT invalid token error: {error}")
         return {"msg": "无效的Token，请重新登录"}, 401
 
     @jwt.unauthorized_loader

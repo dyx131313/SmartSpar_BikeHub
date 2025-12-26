@@ -65,7 +65,7 @@ class JWTAuth:
             dict: 用户数据
         """
         try:
-            # 验证并解码token
+            # 优先尝试使用 aud/iss 验证（自定义生成的 token）
             payload = jwt.decode(
                 token,
                 current_app.config.get('JWT_SECRET_KEY', 'your-secret-key'),
@@ -74,12 +74,21 @@ class JWTAuth:
                 issuer='bikehub'
             )
 
-            # 检查是否过期
-            exp = payload.get('exp')
-            if exp and datetime.fromtimestamp(exp) < datetime.utcnow():
+        except (jwt.InvalidAudienceError, jwt.InvalidIssuerError, jwt.MissingRequiredClaimError) as e:
+            # 如果 token 来自 flask_jwt_extended，可能没有 aud/iss 声明，回退到仅签名校验
+            try:
+                payload = jwt.decode(
+                    token,
+                    current_app.config.get('JWT_SECRET_KEY', 'your-secret-key'),
+                    algorithms=['HS256']
+                )
+            except jwt.ExpiredSignatureError:
                 raise Exception('Token已过期')
-
-            return payload
+            except jwt.InvalidTokenError as e2:
+                raise Exception(f'无效的Token: {str(e2)}')
+            except Exception as e2:
+                logger.error(f"回退解码失败: {str(e2)}")
+                raise Exception(f"验证JWT token失败: {str(e2)}")
 
         except jwt.ExpiredSignatureError:
             raise Exception('Token已过期')
@@ -88,6 +97,26 @@ class JWTAuth:
         except Exception as e:
             logger.error(f"验证JWT token失败: {str(e)}")
             raise Exception(f"验证JWT token失败: {str(e)}")
+
+        # 检查是否过期（有些 token 的 exp 可能是 datetime 或 timestamp）
+        try:
+            exp = payload.get('exp')
+            if exp:
+                # 如果是 datetime 对象
+                if isinstance(exp, datetime):
+                    exp_dt = exp
+                else:
+                    try:
+                        exp_dt = datetime.fromtimestamp(int(exp))
+                    except Exception:
+                        exp_dt = None
+
+                if exp_dt and exp_dt < datetime.utcnow():
+                    raise Exception('Token已过期')
+        except Exception as e:
+            logger.warning(f"检查 exp 失败或 token 已过期: {e}")
+
+        return payload
 
     @staticmethod
     def refresh_token(refresh_token):

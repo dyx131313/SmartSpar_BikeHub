@@ -37,8 +37,8 @@ function AvatarDialog({ isOpen, onOpenChange, onAvatarChange }: AvatarDialogProp
       }
 
       // 验证文件大小（5MB）
-      if (file.size > 5 * 1024 * 1024) {
-        toast.error('图片大小不能超过5MB')
+      if (file.size > 2 * 1024 * 1024) {
+        toast.error('图片大小不能超过2MB')
         return
       }
 
@@ -189,16 +189,19 @@ export function AvatarUploader({ avatarUrl, fullName, onAvatarChange }: AvatarUp
         <div className="relative group cursor-pointer" onClick={() => setIsDialogOpen(true)}>
           <Avatar className="w-24 h-24 ring-4 ring-primary/20 ring-offset-2 transition-all duration-200 group-hover:ring-primary/40 group-hover:scale-105">
             {avatarUrl ? (
+              <>
+              {console.log('当前渲染的头像 URL:', buildStaticUrl(avatarUrl))}
               <AvatarImage
                 src={buildStaticUrl(avatarUrl)}
                 alt={fullName || '用户头像'}
                 className="object-cover"
                 onError={(e) => {
-                  console.error('Avatar image error:', e)
-                  e.currentTarget.style.display = 'none'
+                  console.error('图片加载失败，地址为:', e.currentTarget.src);
                 }}
+                
                 onLoad={() => console.log('Avatar image loaded successfully:', avatarUrl)}
               />
+              </>
             ) : (
               <AvatarFallback className="text-2xl bg-gradient-to-br from-primary/20 to-primary/10">
                 {getInitials(fullName)}
