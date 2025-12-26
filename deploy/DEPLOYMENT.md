@@ -30,6 +30,7 @@ python -m pip install --upgrade pip -i https://pypi.tuna.tsinghua.edu.cn/simple
 pip install -r requirements.txt
 # 安装 gunicorn（若不在 requirements.txt 中）
 pip install gunicorn
+pip install torch
 ```
 
 3. 创建数据库与用户（仅需执行一次）

@@ -3,52 +3,40 @@
     "station_id": 1,
     "predictions": [
       {
-        "timestamp": "2025-12-08T01:00:00",
-        "demand": 28
-      },
-      {
-        "timestamp": "2025-12-08T02:00:00",
-        "demand": 1
-      },
-      {
-        "timestamp": "2025-12-08T03:00:00",
-        "demand": 7
-      },
-      {
         "timestamp": "2025-12-08T04:00:00",
-        "demand": 20
+        "demand": 21
       },
       {
         "timestamp": "2025-12-08T05:00:00",
-        "demand": 32
+        "demand": 35
       },
       {
         "timestamp": "2025-12-08T06:00:00",
-        "demand": 38
+        "demand": 40
       },
       {
         "timestamp": "2025-12-08T07:00:00",
-        "demand": 38
+        "demand": 48
       },
       {
         "timestamp": "2025-12-08T08:00:00",
-        "demand": 38
+        "demand": 36
       },
       {
         "timestamp": "2025-12-08T09:00:00",
-        "demand": 36
-      },
-      {
-        "timestamp": "2025-12-08T10:00:00",
-        "demand": 36
-      },
-      {
-        "timestamp": "2025-12-08T11:00:00",
         "demand": 37
       },
       {
+        "timestamp": "2025-12-08T10:00:00",
+        "demand": 37
+      },
+      {
+        "timestamp": "2025-12-08T11:00:00",
+        "demand": 40
+      },
+      {
         "timestamp": "2025-12-08T12:00:00",
-        "demand": 32
+        "demand": 35
       },
       {
         "timestamp": "2025-12-08T13:00:00",
@@ -56,47 +44,59 @@
       },
       {
         "timestamp": "2025-12-08T14:00:00",
-        "demand": 33
+        "demand": 34
       },
       {
         "timestamp": "2025-12-08T15:00:00",
-        "demand": 33
+        "demand": 32
       },
       {
         "timestamp": "2025-12-08T16:00:00",
-        "demand": 34
+        "demand": 33
       },
       {
         "timestamp": "2025-12-08T17:00:00",
-        "demand": 34
+        "demand": 35
       },
       {
         "timestamp": "2025-12-08T18:00:00",
-        "demand": 37
+        "demand": 36
       },
       {
         "timestamp": "2025-12-08T19:00:00",
-        "demand": 37
+        "demand": 36
       },
       {
         "timestamp": "2025-12-08T20:00:00",
-        "demand": 25
+        "demand": 26
       },
       {
         "timestamp": "2025-12-08T21:00:00",
-        "demand": 24
+        "demand": 26
       },
       {
         "timestamp": "2025-12-08T22:00:00",
-        "demand": 26
+        "demand": 24
       },
       {
         "timestamp": "2025-12-08T23:00:00",
-        "demand": 26
+        "demand": 24
       },
       {
         "timestamp": "2025-12-09T00:00:00",
-        "demand": 54
+        "demand": 52
+      },
+      {
+        "timestamp": "2025-12-09T01:00:00",
+        "demand": 52
+      },
+      {
+        "timestamp": "2025-12-09T02:00:00",
+        "demand": 51
+      },
+      {
+        "timestamp": "2025-12-09T03:00:00",
+        "demand": 51
       }
     ]
   },
@@ -104,32 +104,20 @@
     "station_id": 2,
     "predictions": [
       {
-        "timestamp": "2025-12-08T01:00:00",
-        "demand": 24
-      },
-      {
-        "timestamp": "2025-12-08T02:00:00",
-        "demand": 0
-      },
-      {
-        "timestamp": "2025-12-08T03:00:00",
-        "demand": 4
-      },
-      {
         "timestamp": "2025-12-08T04:00:00",
-        "demand": 15
+        "demand": 18
       },
       {
         "timestamp": "2025-12-08T05:00:00",
-        "demand": 26
+        "demand": 30
       },
       {
         "timestamp": "2025-12-08T06:00:00",
-        "demand": 35
+        "demand": 39
       },
       {
         "timestamp": "2025-12-08T07:00:00",
-        "demand": 35
+        "demand": 45
       },
       {
         "timestamp": "2025-12-08T08:00:00",
@@ -137,19 +125,19 @@
       },
       {
         "timestamp": "2025-12-08T09:00:00",
-        "demand": 33
-      },
-      {
-        "timestamp": "2025-12-08T10:00:00",
-        "demand": 34
-      },
-      {
-        "timestamp": "2025-12-08T11:00:00",
         "demand": 35
       },
       {
+        "timestamp": "2025-12-08T10:00:00",
+        "demand": 35
+      },
+      {
+        "timestamp": "2025-12-08T11:00:00",
+        "demand": 37
+      },
+      {
         "timestamp": "2025-12-08T12:00:00",
-        "demand": 32
+        "demand": 34
       },
       {
         "timestamp": "2025-12-08T13:00:00",
@@ -157,19 +145,19 @@
       },
       {
         "timestamp": "2025-12-08T14:00:00",
-        "demand": 32
-      },
-      {
-        "timestamp": "2025-12-08T15:00:00",
-        "demand": 32
-      },
-      {
-        "timestamp": "2025-12-08T16:00:00",
         "demand": 33
       },
       {
+        "timestamp": "2025-12-08T15:00:00",
+        "demand": 31
+      },
+      {
+        "timestamp": "2025-12-08T16:00:00",
+        "demand": 31
+      },
+      {
         "timestamp": "2025-12-08T17:00:00",
-        "demand": 32
+        "demand": 33
       },
       {
         "timestamp": "2025-12-08T18:00:00",
@@ -181,11 +169,11 @@
       },
       {
         "timestamp": "2025-12-08T20:00:00",
-        "demand": 19
+        "demand": 20
       },
       {
         "timestamp": "2025-12-08T21:00:00",
-        "demand": 18
+        "demand": 20
       },
       {
         "timestamp": "2025-12-08T22:00:00",
@@ -193,11 +181,23 @@
       },
       {
         "timestamp": "2025-12-08T23:00:00",
-        "demand": 19
+        "demand": 18
       },
       {
         "timestamp": "2025-12-09T00:00:00",
-        "demand": 50
+        "demand": 48
+      },
+      {
+        "timestamp": "2025-12-09T01:00:00",
+        "demand": 48
+      },
+      {
+        "timestamp": "2025-12-09T02:00:00",
+        "demand": 47
+      },
+      {
+        "timestamp": "2025-12-09T03:00:00",
+        "demand": 47
       }
     ]
   },
@@ -205,32 +205,20 @@
     "station_id": 3,
     "predictions": [
       {
-        "timestamp": "2025-12-08T01:00:00",
-        "demand": 24
-      },
-      {
-        "timestamp": "2025-12-08T02:00:00",
-        "demand": 0
-      },
-      {
-        "timestamp": "2025-12-08T03:00:00",
-        "demand": 0
-      },
-      {
         "timestamp": "2025-12-08T04:00:00",
-        "demand": 10
+        "demand": 17
       },
       {
         "timestamp": "2025-12-08T05:00:00",
-        "demand": 21
+        "demand": 29
       },
       {
         "timestamp": "2025-12-08T06:00:00",
-        "demand": 36
+        "demand": 43
       },
       {
         "timestamp": "2025-12-08T07:00:00",
-        "demand": 36
+        "demand": 49
       },
       {
         "timestamp": "2025-12-08T08:00:00",
@@ -238,19 +226,19 @@
       },
       {
         "timestamp": "2025-12-08T09:00:00",
-        "demand": 34
-      },
-      {
-        "timestamp": "2025-12-08T10:00:00",
         "demand": 35
       },
       {
-        "timestamp": "2025-12-08T11:00:00",
+        "timestamp": "2025-12-08T10:00:00",
         "demand": 36
       },
       {
+        "timestamp": "2025-12-08T11:00:00",
+        "demand": 38
+      },
+      {
         "timestamp": "2025-12-08T12:00:00",
-        "demand": 34
+        "demand": 35
       },
       {
         "timestamp": "2025-12-08T13:00:00",
@@ -262,15 +250,15 @@
       },
       {
         "timestamp": "2025-12-08T15:00:00",
-        "demand": 34
+        "demand": 33
       },
       {
         "timestamp": "2025-12-08T16:00:00",
-        "demand": 34
+        "demand": 33
       },
       {
         "timestamp": "2025-12-08T17:00:00",
-        "demand": 34
+        "demand": 35
       },
       {
         "timestamp": "2025-12-08T18:00:00",
@@ -282,11 +270,11 @@
       },
       {
         "timestamp": "2025-12-08T20:00:00",
-        "demand": 18
+        "demand": 19
       },
       {
         "timestamp": "2025-12-08T21:00:00",
-        "demand": 17
+        "demand": 20
       },
       {
         "timestamp": "2025-12-08T22:00:00",
@@ -294,11 +282,23 @@
       },
       {
         "timestamp": "2025-12-08T23:00:00",
-        "demand": 19
+        "demand": 18
       },
       {
         "timestamp": "2025-12-09T00:00:00",
-        "demand": 40
+        "demand": 38
+      },
+      {
+        "timestamp": "2025-12-09T01:00:00",
+        "demand": 39
+      },
+      {
+        "timestamp": "2025-12-09T02:00:00",
+        "demand": 39
+      },
+      {
+        "timestamp": "2025-12-09T03:00:00",
+        "demand": 38
       }
     ]
   },
@@ -306,68 +306,56 @@
     "station_id": 4,
     "predictions": [
       {
-        "timestamp": "2025-12-08T01:00:00",
-        "demand": 25
-      },
-      {
-        "timestamp": "2025-12-08T02:00:00",
-        "demand": 0
-      },
-      {
-        "timestamp": "2025-12-08T03:00:00",
-        "demand": 0
-      },
-      {
         "timestamp": "2025-12-08T04:00:00",
-        "demand": 4
-      },
-      {
-        "timestamp": "2025-12-08T05:00:00",
-        "demand": 15
-      },
-      {
-        "timestamp": "2025-12-08T06:00:00",
-        "demand": 22
-      },
-      {
-        "timestamp": "2025-12-08T07:00:00",
-        "demand": 22
-      },
-      {
-        "timestamp": "2025-12-08T08:00:00",
-        "demand": 21
-      },
-      {
-        "timestamp": "2025-12-08T09:00:00",
-        "demand": 18
-      },
-      {
-        "timestamp": "2025-12-08T10:00:00",
-        "demand": 18
-      },
-      {
-        "timestamp": "2025-12-08T11:00:00",
-        "demand": 20
-      },
-      {
-        "timestamp": "2025-12-08T12:00:00",
         "demand": 17
       },
       {
-        "timestamp": "2025-12-08T13:00:00",
+        "timestamp": "2025-12-08T05:00:00",
+        "demand": 29
+      },
+      {
+        "timestamp": "2025-12-08T06:00:00",
+        "demand": 35
+      },
+      {
+        "timestamp": "2025-12-08T07:00:00",
+        "demand": 40
+      },
+      {
+        "timestamp": "2025-12-08T08:00:00",
+        "demand": 22
+      },
+      {
+        "timestamp": "2025-12-08T09:00:00",
+        "demand": 21
+      },
+      {
+        "timestamp": "2025-12-08T10:00:00",
+        "demand": 21
+      },
+      {
+        "timestamp": "2025-12-08T11:00:00",
+        "demand": 23
+      },
+      {
+        "timestamp": "2025-12-08T12:00:00",
         "demand": 19
+      },
+      {
+        "timestamp": "2025-12-08T13:00:00",
+        "demand": 18
       },
       {
         "timestamp": "2025-12-08T14:00:00",
-        "demand": 19
+        "demand": 20
       },
       {
         "timestamp": "2025-12-08T15:00:00",
-        "demand": 20
+        "demand": 18
       },
       {
         "timestamp": "2025-12-08T16:00:00",
-        "demand": 20
+        "demand": 18
       },
       {
         "timestamp": "2025-12-08T17:00:00",
@@ -379,15 +367,15 @@
       },
       {
         "timestamp": "2025-12-08T19:00:00",
-        "demand": 22
+        "demand": 23
       },
       {
         "timestamp": "2025-12-08T20:00:00",
-        "demand": 22
+        "demand": 23
       },
       {
         "timestamp": "2025-12-08T21:00:00",
-        "demand": 21
+        "demand": 23
       },
       {
         "timestamp": "2025-12-08T22:00:00",
@@ -399,7 +387,19 @@
       },
       {
         "timestamp": "2025-12-09T00:00:00",
-        "demand": 60
+        "demand": 58
+      },
+      {
+        "timestamp": "2025-12-09T01:00:00",
+        "demand": 58
+      },
+      {
+        "timestamp": "2025-12-09T02:00:00",
+        "demand": 59
+      },
+      {
+        "timestamp": "2025-12-09T03:00:00",
+        "demand": 58
       }
     ]
   },
@@ -407,40 +407,28 @@
     "station_id": 5,
     "predictions": [
       {
-        "timestamp": "2025-12-08T01:00:00",
-        "demand": 25
-      },
-      {
-        "timestamp": "2025-12-08T02:00:00",
-        "demand": 0
-      },
-      {
-        "timestamp": "2025-12-08T03:00:00",
-        "demand": 7
-      },
-      {
         "timestamp": "2025-12-08T04:00:00",
-        "demand": 16
+        "demand": 22
       },
       {
         "timestamp": "2025-12-08T05:00:00",
-        "demand": 24
+        "demand": 30
       },
       {
         "timestamp": "2025-12-08T06:00:00",
-        "demand": 43
+        "demand": 49
       },
       {
         "timestamp": "2025-12-08T07:00:00",
-        "demand": 42
+        "demand": 53
       },
       {
         "timestamp": "2025-12-08T08:00:00",
-        "demand": 42
+        "demand": 41
       },
       {
         "timestamp": "2025-12-08T09:00:00",
-        "demand": 40
+        "demand": 42
       },
       {
         "timestamp": "2025-12-08T10:00:00",
@@ -452,19 +440,19 @@
       },
       {
         "timestamp": "2025-12-08T12:00:00",
-        "demand": 46
+        "demand": 45
       },
       {
         "timestamp": "2025-12-08T13:00:00",
-        "demand": 47
+        "demand": 45
       },
       {
         "timestamp": "2025-12-08T14:00:00",
-        "demand": 48
+        "demand": 46
       },
       {
         "timestamp": "2025-12-08T15:00:00",
-        "demand": 48
+        "demand": 45
       },
       {
         "timestamp": "2025-12-08T16:00:00",
@@ -472,35 +460,47 @@
       },
       {
         "timestamp": "2025-12-08T17:00:00",
-        "demand": 45
+        "demand": 47
       },
       {
         "timestamp": "2025-12-08T18:00:00",
-        "demand": 44
+        "demand": 46
       },
       {
         "timestamp": "2025-12-08T19:00:00",
-        "demand": 44
+        "demand": 45
       },
       {
         "timestamp": "2025-12-08T20:00:00",
-        "demand": 35
+        "demand": 38
       },
       {
         "timestamp": "2025-12-08T21:00:00",
-        "demand": 35
+        "demand": 39
       },
       {
         "timestamp": "2025-12-08T22:00:00",
-        "demand": 36
+        "demand": 38
       },
       {
         "timestamp": "2025-12-08T23:00:00",
-        "demand": 36
+        "demand": 38
       },
       {
         "timestamp": "2025-12-09T00:00:00",
         "demand": 27
+      },
+      {
+        "timestamp": "2025-12-09T01:00:00",
+        "demand": 28
+      },
+      {
+        "timestamp": "2025-12-09T02:00:00",
+        "demand": 28
+      },
+      {
+        "timestamp": "2025-12-09T03:00:00",
+        "demand": 28
       }
     ]
   },
@@ -508,64 +508,52 @@
     "station_id": 6,
     "predictions": [
       {
-        "timestamp": "2025-12-08T01:00:00",
-        "demand": 20
-      },
-      {
-        "timestamp": "2025-12-08T02:00:00",
-        "demand": 0
-      },
-      {
-        "timestamp": "2025-12-08T03:00:00",
-        "demand": 6
-      },
-      {
         "timestamp": "2025-12-08T04:00:00",
-        "demand": 14
+        "demand": 16
       },
       {
         "timestamp": "2025-12-08T05:00:00",
-        "demand": 21
+        "demand": 25
       },
       {
         "timestamp": "2025-12-08T06:00:00",
-        "demand": 39
+        "demand": 44
       },
       {
         "timestamp": "2025-12-08T07:00:00",
-        "demand": 40
+        "demand": 49
       },
       {
         "timestamp": "2025-12-08T08:00:00",
-        "demand": 39
-      },
-      {
-        "timestamp": "2025-12-08T09:00:00",
-        "demand": 36
-      },
-      {
-        "timestamp": "2025-12-08T10:00:00",
         "demand": 38
       },
       {
+        "timestamp": "2025-12-08T09:00:00",
+        "demand": 39
+      },
+      {
+        "timestamp": "2025-12-08T10:00:00",
+        "demand": 39
+      },
+      {
         "timestamp": "2025-12-08T11:00:00",
-        "demand": 40
+        "demand": 41
       },
       {
         "timestamp": "2025-12-08T12:00:00",
-        "demand": 44
+        "demand": 42
       },
       {
         "timestamp": "2025-12-08T13:00:00",
-        "demand": 44
+        "demand": 42
       },
       {
         "timestamp": "2025-12-08T14:00:00",
-        "demand": 45
+        "demand": 44
       },
       {
         "timestamp": "2025-12-08T15:00:00",
-        "demand": 45
+        "demand": 44
       },
       {
         "timestamp": "2025-12-08T16:00:00",
@@ -573,34 +561,46 @@
       },
       {
         "timestamp": "2025-12-08T17:00:00",
-        "demand": 42
+        "demand": 46
       },
       {
         "timestamp": "2025-12-08T18:00:00",
-        "demand": 40
+        "demand": 44
       },
       {
         "timestamp": "2025-12-08T19:00:00",
-        "demand": 40
+        "demand": 42
       },
       {
         "timestamp": "2025-12-08T20:00:00",
-        "demand": 35
+        "demand": 39
       },
       {
         "timestamp": "2025-12-08T21:00:00",
-        "demand": 34
+        "demand": 38
       },
       {
         "timestamp": "2025-12-08T22:00:00",
-        "demand": 35
+        "demand": 38
       },
       {
         "timestamp": "2025-12-08T23:00:00",
-        "demand": 36
+        "demand": 37
       },
       {
         "timestamp": "2025-12-09T00:00:00",
+        "demand": 25
+      },
+      {
+        "timestamp": "2025-12-09T01:00:00",
+        "demand": 26
+      },
+      {
+        "timestamp": "2025-12-09T02:00:00",
+        "demand": 25
+      },
+      {
+        "timestamp": "2025-12-09T03:00:00",
         "demand": 25
       }
     ]
@@ -609,32 +609,20 @@
     "station_id": 7,
     "predictions": [
       {
-        "timestamp": "2025-12-08T01:00:00",
-        "demand": 23
-      },
-      {
-        "timestamp": "2025-12-08T02:00:00",
-        "demand": 0
-      },
-      {
-        "timestamp": "2025-12-08T03:00:00",
-        "demand": 2
-      },
-      {
         "timestamp": "2025-12-08T04:00:00",
-        "demand": 11
+        "demand": 20
       },
       {
         "timestamp": "2025-12-08T05:00:00",
-        "demand": 21
+        "demand": 29
       },
       {
         "timestamp": "2025-12-08T06:00:00",
-        "demand": 41
+        "demand": 49
       },
       {
         "timestamp": "2025-12-08T07:00:00",
-        "demand": 40
+        "demand": 52
       },
       {
         "timestamp": "2025-12-08T08:00:00",
@@ -642,7 +630,7 @@
       },
       {
         "timestamp": "2025-12-08T09:00:00",
-        "demand": 38
+        "demand": 40
       },
       {
         "timestamp": "2025-12-08T10:00:00",
@@ -654,31 +642,31 @@
       },
       {
         "timestamp": "2025-12-08T12:00:00",
-        "demand": 45
+        "demand": 43
       },
       {
         "timestamp": "2025-12-08T13:00:00",
-        "demand": 45
+        "demand": 43
       },
       {
         "timestamp": "2025-12-08T14:00:00",
-        "demand": 46
+        "demand": 43
       },
       {
         "timestamp": "2025-12-08T15:00:00",
-        "demand": 46
+        "demand": 42
       },
       {
         "timestamp": "2025-12-08T16:00:00",
-        "demand": 44
+        "demand": 43
       },
       {
         "timestamp": "2025-12-08T17:00:00",
-        "demand": 43
+        "demand": 45
       },
       {
         "timestamp": "2025-12-08T18:00:00",
-        "demand": 43
+        "demand": 45
       },
       {
         "timestamp": "2025-12-08T19:00:00",
@@ -686,23 +674,35 @@
       },
       {
         "timestamp": "2025-12-08T20:00:00",
-        "demand": 28
+        "demand": 31
       },
       {
         "timestamp": "2025-12-08T21:00:00",
-        "demand": 28
+        "demand": 32
       },
       {
         "timestamp": "2025-12-08T22:00:00",
-        "demand": 29
+        "demand": 32
       },
       {
         "timestamp": "2025-12-08T23:00:00",
-        "demand": 30
+        "demand": 31
       },
       {
         "timestamp": "2025-12-09T00:00:00",
         "demand": 27
+      },
+      {
+        "timestamp": "2025-12-09T01:00:00",
+        "demand": 28
+      },
+      {
+        "timestamp": "2025-12-09T02:00:00",
+        "demand": 28
+      },
+      {
+        "timestamp": "2025-12-09T03:00:00",
+        "demand": 28
       }
     ]
   },
@@ -710,52 +710,40 @@
     "station_id": 8,
     "predictions": [
       {
-        "timestamp": "2025-12-08T01:00:00",
-        "demand": 13
-      },
-      {
-        "timestamp": "2025-12-08T02:00:00",
-        "demand": 20
-      },
-      {
-        "timestamp": "2025-12-08T03:00:00",
-        "demand": 27
-      },
-      {
         "timestamp": "2025-12-08T04:00:00",
-        "demand": 32
+        "demand": 16
       },
       {
         "timestamp": "2025-12-08T05:00:00",
-        "demand": 36
+        "demand": 19
       },
       {
         "timestamp": "2025-12-08T06:00:00",
-        "demand": 37
+        "demand": 22
       },
       {
         "timestamp": "2025-12-08T07:00:00",
-        "demand": 37
+        "demand": 26
       },
       {
         "timestamp": "2025-12-08T08:00:00",
-        "demand": 39
+        "demand": 32
       },
       {
         "timestamp": "2025-12-08T09:00:00",
-        "demand": 38
+        "demand": 36
       },
       {
         "timestamp": "2025-12-08T10:00:00",
-        "demand": 39
+        "demand": 37
       },
       {
         "timestamp": "2025-12-08T11:00:00",
-        "demand": 39
+        "demand": 37
       },
       {
         "timestamp": "2025-12-08T12:00:00",
-        "demand": 40
+        "demand": 38
       },
       {
         "timestamp": "2025-12-08T13:00:00",
@@ -763,46 +751,58 @@
       },
       {
         "timestamp": "2025-12-08T14:00:00",
-        "demand": 39
+        "demand": 37
       },
       {
         "timestamp": "2025-12-08T15:00:00",
-        "demand": 39
-      },
-      {
-        "timestamp": "2025-12-08T16:00:00",
-        "demand": 38
-      },
-      {
-        "timestamp": "2025-12-08T17:00:00",
-        "demand": 37
-      },
-      {
-        "timestamp": "2025-12-08T18:00:00",
-        "demand": 37
-      },
-      {
-        "timestamp": "2025-12-08T19:00:00",
         "demand": 36
       },
       {
+        "timestamp": "2025-12-08T16:00:00",
+        "demand": 37
+      },
+      {
+        "timestamp": "2025-12-08T17:00:00",
+        "demand": 38
+      },
+      {
+        "timestamp": "2025-12-08T18:00:00",
+        "demand": 38
+      },
+      {
+        "timestamp": "2025-12-08T19:00:00",
+        "demand": 37
+      },
+      {
         "timestamp": "2025-12-08T20:00:00",
-        "demand": 20
+        "demand": 22
       },
       {
         "timestamp": "2025-12-08T21:00:00",
-        "demand": 19
+        "demand": 23
       },
       {
         "timestamp": "2025-12-08T22:00:00",
-        "demand": 20
+        "demand": 22
       },
       {
         "timestamp": "2025-12-08T23:00:00",
-        "demand": 20
+        "demand": 21
       },
       {
         "timestamp": "2025-12-09T00:00:00",
+        "demand": 16
+      },
+      {
+        "timestamp": "2025-12-09T01:00:00",
+        "demand": 17
+      },
+      {
+        "timestamp": "2025-12-09T02:00:00",
+        "demand": 16
+      },
+      {
+        "timestamp": "2025-12-09T03:00:00",
         "demand": 16
       }
     ]
@@ -811,28 +811,16 @@
     "station_id": 9,
     "predictions": [
       {
-        "timestamp": "2025-12-08T01:00:00",
-        "demand": 12
-      },
-      {
-        "timestamp": "2025-12-08T02:00:00",
-        "demand": 4
-      },
-      {
-        "timestamp": "2025-12-08T03:00:00",
-        "demand": 8
-      },
-      {
         "timestamp": "2025-12-08T04:00:00",
         "demand": 12
       },
       {
         "timestamp": "2025-12-08T05:00:00",
-        "demand": 16
+        "demand": 15
       },
       {
         "timestamp": "2025-12-08T06:00:00",
-        "demand": 15
+        "demand": 14
       },
       {
         "timestamp": "2025-12-08T07:00:00",
@@ -840,7 +828,7 @@
       },
       {
         "timestamp": "2025-12-08T08:00:00",
-        "demand": 15
+        "demand": 13
       },
       {
         "timestamp": "2025-12-08T09:00:00",
@@ -864,11 +852,11 @@
       },
       {
         "timestamp": "2025-12-08T14:00:00",
-        "demand": 17
+        "demand": 16
       },
       {
         "timestamp": "2025-12-08T15:00:00",
-        "demand": 17
+        "demand": 15
       },
       {
         "timestamp": "2025-12-08T16:00:00",
@@ -884,7 +872,7 @@
       },
       {
         "timestamp": "2025-12-08T19:00:00",
-        "demand": 17
+        "demand": 16
       },
       {
         "timestamp": "2025-12-08T20:00:00",
@@ -892,7 +880,7 @@
       },
       {
         "timestamp": "2025-12-08T21:00:00",
-        "demand": 19
+        "demand": 20
       },
       {
         "timestamp": "2025-12-08T22:00:00",
@@ -904,7 +892,19 @@
       },
       {
         "timestamp": "2025-12-09T00:00:00",
+        "demand": 14
+      },
+      {
+        "timestamp": "2025-12-09T01:00:00",
         "demand": 15
+      },
+      {
+        "timestamp": "2025-12-09T02:00:00",
+        "demand": 17
+      },
+      {
+        "timestamp": "2025-12-09T03:00:00",
+        "demand": 16
       }
     ]
   },
@@ -912,40 +912,28 @@
     "station_id": 10,
     "predictions": [
       {
-        "timestamp": "2025-12-08T01:00:00",
+        "timestamp": "2025-12-08T04:00:00",
         "demand": 18
       },
       {
-        "timestamp": "2025-12-08T02:00:00",
-        "demand": 7
-      },
-      {
-        "timestamp": "2025-12-08T03:00:00",
-        "demand": 19
-      },
-      {
-        "timestamp": "2025-12-08T04:00:00",
-        "demand": 27
-      },
-      {
         "timestamp": "2025-12-08T05:00:00",
-        "demand": 33
+        "demand": 25
       },
       {
         "timestamp": "2025-12-08T06:00:00",
-        "demand": 30
+        "demand": 24
       },
       {
         "timestamp": "2025-12-08T07:00:00",
-        "demand": 31
-      },
-      {
-        "timestamp": "2025-12-08T08:00:00",
         "demand": 29
       },
       {
+        "timestamp": "2025-12-08T08:00:00",
+        "demand": 24
+      },
+      {
         "timestamp": "2025-12-08T09:00:00",
-        "demand": 27
+        "demand": 29
       },
       {
         "timestamp": "2025-12-08T10:00:00",
@@ -957,55 +945,67 @@
       },
       {
         "timestamp": "2025-12-08T12:00:00",
-        "demand": 30
-      },
-      {
-        "timestamp": "2025-12-08T13:00:00",
-        "demand": 30
-      },
-      {
-        "timestamp": "2025-12-08T14:00:00",
-        "demand": 34
-      },
-      {
-        "timestamp": "2025-12-08T15:00:00",
-        "demand": 34
-      },
-      {
-        "timestamp": "2025-12-08T16:00:00",
-        "demand": 33
-      },
-      {
-        "timestamp": "2025-12-08T17:00:00",
-        "demand": 32
-      },
-      {
-        "timestamp": "2025-12-08T18:00:00",
-        "demand": 30
-      },
-      {
-        "timestamp": "2025-12-08T19:00:00",
         "demand": 29
       },
       {
+        "timestamp": "2025-12-08T13:00:00",
+        "demand": 29
+      },
+      {
+        "timestamp": "2025-12-08T14:00:00",
+        "demand": 33
+      },
+      {
+        "timestamp": "2025-12-08T15:00:00",
+        "demand": 32
+      },
+      {
+        "timestamp": "2025-12-08T16:00:00",
+        "demand": 32
+      },
+      {
+        "timestamp": "2025-12-08T17:00:00",
+        "demand": 34
+      },
+      {
+        "timestamp": "2025-12-08T18:00:00",
+        "demand": 33
+      },
+      {
+        "timestamp": "2025-12-08T19:00:00",
+        "demand": 30
+      },
+      {
         "timestamp": "2025-12-08T20:00:00",
-        "demand": 42
+        "demand": 45
       },
       {
         "timestamp": "2025-12-08T21:00:00",
-        "demand": 41
+        "demand": 45
       },
       {
         "timestamp": "2025-12-08T22:00:00",
-        "demand": 42
+        "demand": 44
       },
       {
         "timestamp": "2025-12-08T23:00:00",
-        "demand": 43
+        "demand": 44
       },
       {
         "timestamp": "2025-12-09T00:00:00",
         "demand": 26
+      },
+      {
+        "timestamp": "2025-12-09T01:00:00",
+        "demand": 27
+      },
+      {
+        "timestamp": "2025-12-09T02:00:00",
+        "demand": 33
+      },
+      {
+        "timestamp": "2025-12-09T03:00:00",
+        "demand": 32
       }
     ]
   },
@@ -1013,64 +1013,52 @@
     "station_id": 11,
     "predictions": [
       {
-        "timestamp": "2025-12-08T01:00:00",
-        "demand": 20
-      },
-      {
-        "timestamp": "2025-12-08T02:00:00",
-        "demand": 0
-      },
-      {
-        "timestamp": "2025-12-08T03:00:00",
-        "demand": 7
-      },
-      {
         "timestamp": "2025-12-08T04:00:00",
-        "demand": 15
+        "demand": 17
       },
       {
         "timestamp": "2025-12-08T05:00:00",
-        "demand": 20
+        "demand": 24
       },
       {
         "timestamp": "2025-12-08T06:00:00",
-        "demand": 21
-      },
-      {
-        "timestamp": "2025-12-08T07:00:00",
-        "demand": 21
-      },
-      {
-        "timestamp": "2025-12-08T08:00:00",
-        "demand": 19
-      },
-      {
-        "timestamp": "2025-12-08T09:00:00",
-        "demand": 16
-      },
-      {
-        "timestamp": "2025-12-08T10:00:00",
-        "demand": 18
-      },
-      {
-        "timestamp": "2025-12-08T11:00:00",
-        "demand": 19
-      },
-      {
-        "timestamp": "2025-12-08T12:00:00",
-        "demand": 22
-      },
-      {
-        "timestamp": "2025-12-08T13:00:00",
-        "demand": 22
-      },
-      {
-        "timestamp": "2025-12-08T14:00:00",
         "demand": 26
       },
       {
-        "timestamp": "2025-12-08T15:00:00",
+        "timestamp": "2025-12-08T07:00:00",
+        "demand": 30
+      },
+      {
+        "timestamp": "2025-12-08T08:00:00",
+        "demand": 17
+      },
+      {
+        "timestamp": "2025-12-08T09:00:00",
+        "demand": 20
+      },
+      {
+        "timestamp": "2025-12-08T10:00:00",
+        "demand": 19
+      },
+      {
+        "timestamp": "2025-12-08T11:00:00",
+        "demand": 21
+      },
+      {
+        "timestamp": "2025-12-08T12:00:00",
+        "demand": 21
+      },
+      {
+        "timestamp": "2025-12-08T13:00:00",
+        "demand": 21
+      },
+      {
+        "timestamp": "2025-12-08T14:00:00",
         "demand": 27
+      },
+      {
+        "timestamp": "2025-12-08T15:00:00",
+        "demand": 25
       },
       {
         "timestamp": "2025-12-08T16:00:00",
@@ -1078,27 +1066,27 @@
       },
       {
         "timestamp": "2025-12-08T17:00:00",
-        "demand": 25
+        "demand": 27
       },
       {
         "timestamp": "2025-12-08T18:00:00",
-        "demand": 23
+        "demand": 25
       },
       {
         "timestamp": "2025-12-08T19:00:00",
-        "demand": 22
+        "demand": 23
       },
       {
         "timestamp": "2025-12-08T20:00:00",
-        "demand": 49
+        "demand": 52
       },
       {
         "timestamp": "2025-12-08T21:00:00",
-        "demand": 49
+        "demand": 51
       },
       {
         "timestamp": "2025-12-08T22:00:00",
-        "demand": 49
+        "demand": 51
       },
       {
         "timestamp": "2025-12-08T23:00:00",
@@ -1107,6 +1095,18 @@
       {
         "timestamp": "2025-12-09T00:00:00",
         "demand": 29
+      },
+      {
+        "timestamp": "2025-12-09T01:00:00",
+        "demand": 30
+      },
+      {
+        "timestamp": "2025-12-09T02:00:00",
+        "demand": 36
+      },
+      {
+        "timestamp": "2025-12-09T03:00:00",
+        "demand": 35
       }
     ]
   },
@@ -1114,56 +1114,44 @@
     "station_id": 12,
     "predictions": [
       {
-        "timestamp": "2025-12-08T01:00:00",
-        "demand": 20
-      },
-      {
-        "timestamp": "2025-12-08T02:00:00",
-        "demand": 0
-      },
-      {
-        "timestamp": "2025-12-08T03:00:00",
-        "demand": 0
-      },
-      {
         "timestamp": "2025-12-08T04:00:00",
-        "demand": 0
+        "demand": 14
       },
       {
         "timestamp": "2025-12-08T05:00:00",
-        "demand": 2
+        "demand": 22
       },
       {
         "timestamp": "2025-12-08T06:00:00",
-        "demand": 16
+        "demand": 35
       },
       {
         "timestamp": "2025-12-08T07:00:00",
-        "demand": 16
+        "demand": 37
       },
       {
         "timestamp": "2025-12-08T08:00:00",
-        "demand": 15
-      },
-      {
-        "timestamp": "2025-12-08T09:00:00",
-        "demand": 13
-      },
-      {
-        "timestamp": "2025-12-08T10:00:00",
-        "demand": 15
-      },
-      {
-        "timestamp": "2025-12-08T11:00:00",
-        "demand": 17
-      },
-      {
-        "timestamp": "2025-12-08T12:00:00",
         "demand": 20
       },
       {
+        "timestamp": "2025-12-08T09:00:00",
+        "demand": 17
+      },
+      {
+        "timestamp": "2025-12-08T10:00:00",
+        "demand": 17
+      },
+      {
+        "timestamp": "2025-12-08T11:00:00",
+        "demand": 18
+      },
+      {
+        "timestamp": "2025-12-08T12:00:00",
+        "demand": 19
+      },
+      {
         "timestamp": "2025-12-08T13:00:00",
-        "demand": 21
+        "demand": 19
       },
       {
         "timestamp": "2025-12-08T14:00:00",
@@ -1171,7 +1159,7 @@
       },
       {
         "timestamp": "2025-12-08T15:00:00",
-        "demand": 22
+        "demand": 20
       },
       {
         "timestamp": "2025-12-08T16:00:00",
@@ -1179,23 +1167,23 @@
       },
       {
         "timestamp": "2025-12-08T17:00:00",
-        "demand": 19
+        "demand": 21
       },
       {
         "timestamp": "2025-12-08T18:00:00",
-        "demand": 19
+        "demand": 22
       },
       {
         "timestamp": "2025-12-08T19:00:00",
-        "demand": 19
+        "demand": 20
       },
       {
         "timestamp": "2025-12-08T20:00:00",
-        "demand": 14
+        "demand": 15
       },
       {
         "timestamp": "2025-12-08T21:00:00",
-        "demand": 13
+        "demand": 16
       },
       {
         "timestamp": "2025-12-08T22:00:00",
@@ -1203,10 +1191,22 @@
       },
       {
         "timestamp": "2025-12-08T23:00:00",
-        "demand": 15
+        "demand": 16
       },
       {
         "timestamp": "2025-12-09T00:00:00",
+        "demand": 14
+      },
+      {
+        "timestamp": "2025-12-09T01:00:00",
+        "demand": 15
+      },
+      {
+        "timestamp": "2025-12-09T02:00:00",
+        "demand": 15
+      },
+      {
+        "timestamp": "2025-12-09T03:00:00",
         "demand": 15
       }
     ]
@@ -1215,141 +1215,28 @@
     "station_id": 13,
     "predictions": [
       {
-        "timestamp": "2025-12-08T01:00:00",
-        "demand": 22
-      },
-      {
-        "timestamp": "2025-12-08T02:00:00",
-        "demand": 0
-      },
-      {
-        "timestamp": "2025-12-08T03:00:00",
-        "demand": 0
-      },
-      {
         "timestamp": "2025-12-08T04:00:00",
-        "demand": 0
-      },
-      {
-        "timestamp": "2025-12-08T05:00:00",
-        "demand": 7
-      },
-      {
-        "timestamp": "2025-12-08T06:00:00",
-        "demand": 27
-      },
-      {
-        "timestamp": "2025-12-08T07:00:00",
-        "demand": 27
-      },
-      {
-        "timestamp": "2025-12-08T08:00:00",
-        "demand": 27
-      },
-      {
-        "timestamp": "2025-12-08T09:00:00",
-        "demand": 25
-      },
-      {
-        "timestamp": "2025-12-08T10:00:00",
-        "demand": 27
-      },
-      {
-        "timestamp": "2025-12-08T11:00:00",
-        "demand": 28
-      },
-      {
-        "timestamp": "2025-12-08T12:00:00",
-        "demand": 33
-      },
-      {
-        "timestamp": "2025-12-08T13:00:00",
-        "demand": 34
-      },
-      {
-        "timestamp": "2025-12-08T14:00:00",
-        "demand": 33
-      },
-      {
-        "timestamp": "2025-12-08T15:00:00",
-        "demand": 34
-      },
-      {
-        "timestamp": "2025-12-08T16:00:00",
-        "demand": 32
-      },
-      {
-        "timestamp": "2025-12-08T17:00:00",
-        "demand": 31
-      },
-      {
-        "timestamp": "2025-12-08T18:00:00",
-        "demand": 31
-      },
-      {
-        "timestamp": "2025-12-08T19:00:00",
-        "demand": 31
-      },
-      {
-        "timestamp": "2025-12-08T20:00:00",
         "demand": 17
       },
       {
-        "timestamp": "2025-12-08T21:00:00",
-        "demand": 17
-      },
-      {
-        "timestamp": "2025-12-08T22:00:00",
-        "demand": 18
-      },
-      {
-        "timestamp": "2025-12-08T23:00:00",
-        "demand": 18
-      },
-      {
-        "timestamp": "2025-12-09T00:00:00",
-        "demand": 16
-      }
-    ]
-  },
-  {
-    "station_id": 14,
-    "predictions": [
-      {
-        "timestamp": "2025-12-08T01:00:00",
-        "demand": 22
-      },
-      {
-        "timestamp": "2025-12-08T02:00:00",
-        "demand": 0
-      },
-      {
-        "timestamp": "2025-12-08T03:00:00",
-        "demand": 0
-      },
-      {
-        "timestamp": "2025-12-08T04:00:00",
-        "demand": 0
-      },
-      {
         "timestamp": "2025-12-08T05:00:00",
-        "demand": 5
-      },
-      {
-        "timestamp": "2025-12-08T06:00:00",
-        "demand": 27
-      },
-      {
-        "timestamp": "2025-12-08T07:00:00",
-        "demand": 27
-      },
-      {
-        "timestamp": "2025-12-08T08:00:00",
-        "demand": 27
-      },
-      {
-        "timestamp": "2025-12-08T09:00:00",
         "demand": 24
+      },
+      {
+        "timestamp": "2025-12-08T06:00:00",
+        "demand": 43
+      },
+      {
+        "timestamp": "2025-12-08T07:00:00",
+        "demand": 44
+      },
+      {
+        "timestamp": "2025-12-08T08:00:00",
+        "demand": 30
+      },
+      {
+        "timestamp": "2025-12-08T09:00:00",
+        "demand": 27
       },
       {
         "timestamp": "2025-12-08T10:00:00",
@@ -1361,88 +1248,88 @@
       },
       {
         "timestamp": "2025-12-08T12:00:00",
-        "demand": 33
+        "demand": 31
       },
       {
         "timestamp": "2025-12-08T13:00:00",
-        "demand": 34
-      },
-      {
-        "timestamp": "2025-12-08T14:00:00",
-        "demand": 34
-      },
-      {
-        "timestamp": "2025-12-08T15:00:00",
-        "demand": 34
-      },
-      {
-        "timestamp": "2025-12-08T16:00:00",
         "demand": 32
       },
       {
-        "timestamp": "2025-12-08T17:00:00",
+        "timestamp": "2025-12-08T14:00:00",
+        "demand": 32
+      },
+      {
+        "timestamp": "2025-12-08T15:00:00",
         "demand": 31
+      },
+      {
+        "timestamp": "2025-12-08T16:00:00",
+        "demand": 31
+      },
+      {
+        "timestamp": "2025-12-08T17:00:00",
+        "demand": 33
       },
       {
         "timestamp": "2025-12-08T18:00:00",
-        "demand": 31
+        "demand": 33
       },
       {
         "timestamp": "2025-12-08T19:00:00",
-        "demand": 31
+        "demand": 32
       },
       {
         "timestamp": "2025-12-08T20:00:00",
-        "demand": 15
-      },
-      {
-        "timestamp": "2025-12-08T21:00:00",
-        "demand": 15
-      },
-      {
-        "timestamp": "2025-12-08T22:00:00",
-        "demand": 17
-      },
-      {
-        "timestamp": "2025-12-08T23:00:00",
         "demand": 18
       },
       {
+        "timestamp": "2025-12-08T21:00:00",
+        "demand": 19
+      },
+      {
+        "timestamp": "2025-12-08T22:00:00",
+        "demand": 19
+      },
+      {
+        "timestamp": "2025-12-08T23:00:00",
+        "demand": 19
+      },
+      {
         "timestamp": "2025-12-09T00:00:00",
+        "demand": 16
+      },
+      {
+        "timestamp": "2025-12-09T01:00:00",
         "demand": 17
+      },
+      {
+        "timestamp": "2025-12-09T02:00:00",
+        "demand": 15
+      },
+      {
+        "timestamp": "2025-12-09T03:00:00",
+        "demand": 14
       }
     ]
   },
   {
-    "station_id": 15,
+    "station_id": 14,
     "predictions": [
       {
-        "timestamp": "2025-12-08T01:00:00",
-        "demand": 24
-      },
-      {
-        "timestamp": "2025-12-08T02:00:00",
-        "demand": 0
-      },
-      {
-        "timestamp": "2025-12-08T03:00:00",
-        "demand": 0
-      },
-      {
         "timestamp": "2025-12-08T04:00:00",
-        "demand": 0
+        "demand": 15
       },
       {
         "timestamp": "2025-12-08T05:00:00",
-        "demand": 6
+        "demand": 26
       },
       {
         "timestamp": "2025-12-08T06:00:00",
-        "demand": 31
+        "demand": 47
       },
       {
         "timestamp": "2025-12-08T07:00:00",
-        "demand": 31
+        "demand": 49
       },
       {
         "timestamp": "2025-12-08T08:00:00",
@@ -1454,51 +1341,51 @@
       },
       {
         "timestamp": "2025-12-08T10:00:00",
-        "demand": 31
+        "demand": 28
       },
       {
         "timestamp": "2025-12-08T11:00:00",
-        "demand": 33
+        "demand": 30
       },
       {
         "timestamp": "2025-12-08T12:00:00",
-        "demand": 39
+        "demand": 31
       },
       {
         "timestamp": "2025-12-08T13:00:00",
-        "demand": 40
+        "demand": 32
       },
       {
         "timestamp": "2025-12-08T14:00:00",
-        "demand": 39
+        "demand": 32
       },
       {
         "timestamp": "2025-12-08T15:00:00",
-        "demand": 40
+        "demand": 31
       },
       {
         "timestamp": "2025-12-08T16:00:00",
-        "demand": 38
+        "demand": 32
       },
       {
         "timestamp": "2025-12-08T17:00:00",
-        "demand": 36
+        "demand": 33
       },
       {
         "timestamp": "2025-12-08T18:00:00",
-        "demand": 36
+        "demand": 34
       },
       {
         "timestamp": "2025-12-08T19:00:00",
-        "demand": 36
+        "demand": 32
       },
       {
         "timestamp": "2025-12-08T20:00:00",
-        "demand": 17
+        "demand": 18
       },
       {
         "timestamp": "2025-12-08T21:00:00",
-        "demand": 16
+        "demand": 18
       },
       {
         "timestamp": "2025-12-08T22:00:00",
@@ -1510,7 +1397,120 @@
       },
       {
         "timestamp": "2025-12-09T00:00:00",
+        "demand": 17
+      },
+      {
+        "timestamp": "2025-12-09T01:00:00",
+        "demand": 18
+      },
+      {
+        "timestamp": "2025-12-09T02:00:00",
+        "demand": 17
+      },
+      {
+        "timestamp": "2025-12-09T03:00:00",
+        "demand": 16
+      }
+    ]
+  },
+  {
+    "station_id": 15,
+    "predictions": [
+      {
+        "timestamp": "2025-12-08T04:00:00",
+        "demand": 17
+      },
+      {
+        "timestamp": "2025-12-08T05:00:00",
+        "demand": 27
+      },
+      {
+        "timestamp": "2025-12-08T06:00:00",
+        "demand": 52
+      },
+      {
+        "timestamp": "2025-12-08T07:00:00",
+        "demand": 54
+      },
+      {
+        "timestamp": "2025-12-08T08:00:00",
+        "demand": 36
+      },
+      {
+        "timestamp": "2025-12-08T09:00:00",
+        "demand": 32
+      },
+      {
+        "timestamp": "2025-12-08T10:00:00",
+        "demand": 32
+      },
+      {
+        "timestamp": "2025-12-08T11:00:00",
+        "demand": 34
+      },
+      {
+        "timestamp": "2025-12-08T12:00:00",
+        "demand": 37
+      },
+      {
+        "timestamp": "2025-12-08T13:00:00",
+        "demand": 37
+      },
+      {
+        "timestamp": "2025-12-08T14:00:00",
+        "demand": 37
+      },
+      {
+        "timestamp": "2025-12-08T15:00:00",
+        "demand": 36
+      },
+      {
+        "timestamp": "2025-12-08T16:00:00",
+        "demand": 37
+      },
+      {
+        "timestamp": "2025-12-08T17:00:00",
+        "demand": 39
+      },
+      {
+        "timestamp": "2025-12-08T18:00:00",
+        "demand": 39
+      },
+      {
+        "timestamp": "2025-12-08T19:00:00",
+        "demand": 37
+      },
+      {
+        "timestamp": "2025-12-08T20:00:00",
         "demand": 19
+      },
+      {
+        "timestamp": "2025-12-08T21:00:00",
+        "demand": 20
+      },
+      {
+        "timestamp": "2025-12-08T22:00:00",
+        "demand": 20
+      },
+      {
+        "timestamp": "2025-12-08T23:00:00",
+        "demand": 20
+      },
+      {
+        "timestamp": "2025-12-09T00:00:00",
+        "demand": 19
+      },
+      {
+        "timestamp": "2025-12-09T01:00:00",
+        "demand": 20
+      },
+      {
+        "timestamp": "2025-12-09T02:00:00",
+        "demand": 17
+      },
+      {
+        "timestamp": "2025-12-09T03:00:00",
+        "demand": 17
       }
     ]
   },
@@ -1518,56 +1518,44 @@
     "station_id": 16,
     "predictions": [
       {
-        "timestamp": "2025-12-08T01:00:00",
-        "demand": 9
-      },
-      {
-        "timestamp": "2025-12-08T02:00:00",
-        "demand": 0
-      },
-      {
-        "timestamp": "2025-12-08T03:00:00",
-        "demand": 0
-      },
-      {
         "timestamp": "2025-12-08T04:00:00",
-        "demand": 4
+        "demand": 7
       },
       {
         "timestamp": "2025-12-08T05:00:00",
-        "demand": 9
+        "demand": 12
       },
       {
         "timestamp": "2025-12-08T06:00:00",
-        "demand": 21
+        "demand": 24
       },
       {
         "timestamp": "2025-12-08T07:00:00",
-        "demand": 22
+        "demand": 26
       },
       {
         "timestamp": "2025-12-08T08:00:00",
-        "demand": 21
-      },
-      {
-        "timestamp": "2025-12-08T09:00:00",
         "demand": 20
       },
       {
+        "timestamp": "2025-12-08T09:00:00",
+        "demand": 21
+      },
+      {
         "timestamp": "2025-12-08T10:00:00",
-        "demand": 22
+        "demand": 21
       },
       {
         "timestamp": "2025-12-08T11:00:00",
-        "demand": 23
+        "demand": 22
       },
       {
         "timestamp": "2025-12-08T12:00:00",
-        "demand": 24
+        "demand": 23
       },
       {
         "timestamp": "2025-12-08T13:00:00",
-        "demand": 24
+        "demand": 23
       },
       {
         "timestamp": "2025-12-08T14:00:00",
@@ -1575,43 +1563,55 @@
       },
       {
         "timestamp": "2025-12-08T15:00:00",
-        "demand": 25
-      },
-      {
-        "timestamp": "2025-12-08T16:00:00",
-        "demand": 24
-      },
-      {
-        "timestamp": "2025-12-08T17:00:00",
         "demand": 23
       },
       {
+        "timestamp": "2025-12-08T16:00:00",
+        "demand": 23
+      },
+      {
+        "timestamp": "2025-12-08T17:00:00",
+        "demand": 24
+      },
+      {
         "timestamp": "2025-12-08T18:00:00",
-        "demand": 22
+        "demand": 24
       },
       {
         "timestamp": "2025-12-08T19:00:00",
-        "demand": 22
+        "demand": 23
       },
       {
         "timestamp": "2025-12-08T20:00:00",
-        "demand": 14
+        "demand": 16
       },
       {
         "timestamp": "2025-12-08T21:00:00",
-        "demand": 14
+        "demand": 16
       },
       {
         "timestamp": "2025-12-08T22:00:00",
-        "demand": 15
+        "demand": 16
       },
       {
         "timestamp": "2025-12-08T23:00:00",
-        "demand": 15
+        "demand": 16
       },
       {
         "timestamp": "2025-12-09T00:00:00",
+        "demand": 12
+      },
+      {
+        "timestamp": "2025-12-09T01:00:00",
         "demand": 13
+      },
+      {
+        "timestamp": "2025-12-09T02:00:00",
+        "demand": 12
+      },
+      {
+        "timestamp": "2025-12-09T03:00:00",
+        "demand": 12
       }
     ]
   },
@@ -1619,18 +1619,6 @@
     "station_id": 17,
     "predictions": [
       {
-        "timestamp": "2025-12-08T01:00:00",
-        "demand": 9
-      },
-      {
-        "timestamp": "2025-12-08T02:00:00",
-        "demand": 1
-      },
-      {
-        "timestamp": "2025-12-08T03:00:00",
-        "demand": 5
-      },
-      {
         "timestamp": "2025-12-08T04:00:00",
         "demand": 9
       },
@@ -1644,11 +1632,11 @@
       },
       {
         "timestamp": "2025-12-08T07:00:00",
-        "demand": 20
+        "demand": 21
       },
       {
         "timestamp": "2025-12-08T08:00:00",
-        "demand": 20
+        "demand": 18
       },
       {
         "timestamp": "2025-12-08T09:00:00",
@@ -1660,11 +1648,11 @@
       },
       {
         "timestamp": "2025-12-08T11:00:00",
-        "demand": 21
+        "demand": 20
       },
       {
         "timestamp": "2025-12-08T12:00:00",
-        "demand": 23
+        "demand": 21
       },
       {
         "timestamp": "2025-12-08T13:00:00",
@@ -1672,23 +1660,23 @@
       },
       {
         "timestamp": "2025-12-08T14:00:00",
-        "demand": 23
-      },
-      {
-        "timestamp": "2025-12-08T15:00:00",
-        "demand": 23
-      },
-      {
-        "timestamp": "2025-12-08T16:00:00",
         "demand": 22
       },
       {
-        "timestamp": "2025-12-08T17:00:00",
+        "timestamp": "2025-12-08T15:00:00",
+        "demand": 22
+      },
+      {
+        "timestamp": "2025-12-08T16:00:00",
         "demand": 21
       },
       {
+        "timestamp": "2025-12-08T17:00:00",
+        "demand": 22
+      },
+      {
         "timestamp": "2025-12-08T18:00:00",
-        "demand": 21
+        "demand": 22
       },
       {
         "timestamp": "2025-12-08T19:00:00",
@@ -1696,23 +1684,35 @@
       },
       {
         "timestamp": "2025-12-08T20:00:00",
-        "demand": 17
+        "demand": 18
       },
       {
         "timestamp": "2025-12-08T21:00:00",
-        "demand": 17
+        "demand": 19
       },
       {
         "timestamp": "2025-12-08T22:00:00",
-        "demand": 17
+        "demand": 19
       },
       {
         "timestamp": "2025-12-08T23:00:00",
-        "demand": 17
+        "demand": 18
       },
       {
         "timestamp": "2025-12-09T00:00:00",
         "demand": 12
+      },
+      {
+        "timestamp": "2025-12-09T01:00:00",
+        "demand": 13
+      },
+      {
+        "timestamp": "2025-12-09T02:00:00",
+        "demand": 13
+      },
+      {
+        "timestamp": "2025-12-09T03:00:00",
+        "demand": 13
       }
     ]
   },
@@ -1720,40 +1720,28 @@
     "station_id": 18,
     "predictions": [
       {
-        "timestamp": "2025-12-08T01:00:00",
-        "demand": 12
-      },
-      {
-        "timestamp": "2025-12-08T02:00:00",
-        "demand": 0
-      },
-      {
-        "timestamp": "2025-12-08T03:00:00",
-        "demand": 1
-      },
-      {
         "timestamp": "2025-12-08T04:00:00",
-        "demand": 6
+        "demand": 10
       },
       {
         "timestamp": "2025-12-08T05:00:00",
-        "demand": 11
+        "demand": 15
       },
       {
         "timestamp": "2025-12-08T06:00:00",
-        "demand": 17
+        "demand": 22
       },
       {
         "timestamp": "2025-12-08T07:00:00",
-        "demand": 18
+        "demand": 24
       },
       {
         "timestamp": "2025-12-08T08:00:00",
-        "demand": 18
+        "demand": 17
       },
       {
         "timestamp": "2025-12-08T09:00:00",
-        "demand": 16
+        "demand": 17
       },
       {
         "timestamp": "2025-12-08T10:00:00",
@@ -1765,7 +1753,7 @@
       },
       {
         "timestamp": "2025-12-08T12:00:00",
-        "demand": 20
+        "demand": 19
       },
       {
         "timestamp": "2025-12-08T13:00:00",
@@ -1777,7 +1765,7 @@
       },
       {
         "timestamp": "2025-12-08T15:00:00",
-        "demand": 22
+        "demand": 20
       },
       {
         "timestamp": "2025-12-08T16:00:00",
@@ -1785,27 +1773,27 @@
       },
       {
         "timestamp": "2025-12-08T17:00:00",
-        "demand": 20
+        "demand": 21
       },
       {
         "timestamp": "2025-12-08T18:00:00",
-        "demand": 19
+        "demand": 21
       },
       {
         "timestamp": "2025-12-08T19:00:00",
-        "demand": 19
+        "demand": 20
       },
       {
         "timestamp": "2025-12-08T20:00:00",
-        "demand": 18
+        "demand": 19
       },
       {
         "timestamp": "2025-12-08T21:00:00",
-        "demand": 17
+        "demand": 19
       },
       {
         "timestamp": "2025-12-08T22:00:00",
-        "demand": 18
+        "demand": 19
       },
       {
         "timestamp": "2025-12-08T23:00:00",
@@ -1814,6 +1802,18 @@
       {
         "timestamp": "2025-12-09T00:00:00",
         "demand": 13
+      },
+      {
+        "timestamp": "2025-12-09T01:00:00",
+        "demand": 14
+      },
+      {
+        "timestamp": "2025-12-09T02:00:00",
+        "demand": 14
+      },
+      {
+        "timestamp": "2025-12-09T03:00:00",
+        "demand": 14
       }
     ]
   },
@@ -1821,44 +1821,32 @@
     "station_id": 19,
     "predictions": [
       {
-        "timestamp": "2025-12-08T01:00:00",
-        "demand": 10
-      },
-      {
-        "timestamp": "2025-12-08T02:00:00",
-        "demand": 0
-      },
-      {
-        "timestamp": "2025-12-08T03:00:00",
-        "demand": 2
-      },
-      {
         "timestamp": "2025-12-08T04:00:00",
-        "demand": 6
+        "demand": 9
       },
       {
         "timestamp": "2025-12-08T05:00:00",
-        "demand": 10
+        "demand": 12
       },
       {
         "timestamp": "2025-12-08T06:00:00",
-        "demand": 18
+        "demand": 21
       },
       {
         "timestamp": "2025-12-08T07:00:00",
-        "demand": 19
+        "demand": 22
       },
       {
         "timestamp": "2025-12-08T08:00:00",
-        "demand": 18
-      },
-      {
-        "timestamp": "2025-12-08T09:00:00",
         "demand": 17
       },
       {
+        "timestamp": "2025-12-08T09:00:00",
+        "demand": 18
+      },
+      {
         "timestamp": "2025-12-08T10:00:00",
-        "demand": 19
+        "demand": 18
       },
       {
         "timestamp": "2025-12-08T11:00:00",
@@ -1866,7 +1854,7 @@
       },
       {
         "timestamp": "2025-12-08T12:00:00",
-        "demand": 22
+        "demand": 20
       },
       {
         "timestamp": "2025-12-08T13:00:00",
@@ -1878,7 +1866,7 @@
       },
       {
         "timestamp": "2025-12-08T15:00:00",
-        "demand": 22
+        "demand": 21
       },
       {
         "timestamp": "2025-12-08T16:00:00",
@@ -1886,27 +1874,27 @@
       },
       {
         "timestamp": "2025-12-08T17:00:00",
-        "demand": 21
+        "demand": 22
       },
       {
         "timestamp": "2025-12-08T18:00:00",
-        "demand": 21
+        "demand": 22
       },
       {
         "timestamp": "2025-12-08T19:00:00",
-        "demand": 20
+        "demand": 21
       },
       {
         "timestamp": "2025-12-08T20:00:00",
-        "demand": 18
+        "demand": 19
       },
       {
         "timestamp": "2025-12-08T21:00:00",
-        "demand": 18
+        "demand": 20
       },
       {
         "timestamp": "2025-12-08T22:00:00",
-        "demand": 18
+        "demand": 19
       },
       {
         "timestamp": "2025-12-08T23:00:00",
@@ -1914,6 +1902,18 @@
       },
       {
         "timestamp": "2025-12-09T00:00:00",
+        "demand": 14
+      },
+      {
+        "timestamp": "2025-12-09T01:00:00",
+        "demand": 14
+      },
+      {
+        "timestamp": "2025-12-09T02:00:00",
+        "demand": 15
+      },
+      {
+        "timestamp": "2025-12-09T03:00:00",
         "demand": 14
       }
     ]
@@ -1922,56 +1922,44 @@
     "station_id": 20,
     "predictions": [
       {
-        "timestamp": "2025-12-08T01:00:00",
-        "demand": 25
-      },
-      {
-        "timestamp": "2025-12-08T02:00:00",
-        "demand": 0
-      },
-      {
-        "timestamp": "2025-12-08T03:00:00",
-        "demand": 0
-      },
-      {
         "timestamp": "2025-12-08T04:00:00",
-        "demand": 6
+        "demand": 21
       },
       {
         "timestamp": "2025-12-08T05:00:00",
-        "demand": 14
+        "demand": 29
       },
       {
         "timestamp": "2025-12-08T06:00:00",
-        "demand": 27
+        "demand": 41
       },
       {
         "timestamp": "2025-12-08T07:00:00",
-        "demand": 27
+        "demand": 43
       },
       {
         "timestamp": "2025-12-08T08:00:00",
-        "demand": 26
-      },
-      {
-        "timestamp": "2025-12-08T09:00:00",
-        "demand": 23
-      },
-      {
-        "timestamp": "2025-12-08T10:00:00",
-        "demand": 25
-      },
-      {
-        "timestamp": "2025-12-08T11:00:00",
         "demand": 27
       },
       {
+        "timestamp": "2025-12-08T09:00:00",
+        "demand": 27
+      },
+      {
+        "timestamp": "2025-12-08T10:00:00",
+        "demand": 27
+      },
+      {
+        "timestamp": "2025-12-08T11:00:00",
+        "demand": 28
+      },
+      {
         "timestamp": "2025-12-08T12:00:00",
-        "demand": 31
+        "demand": 30
       },
       {
         "timestamp": "2025-12-08T13:00:00",
-        "demand": 31
+        "demand": 30
       },
       {
         "timestamp": "2025-12-08T14:00:00",
@@ -1979,7 +1967,7 @@
       },
       {
         "timestamp": "2025-12-08T15:00:00",
-        "demand": 34
+        "demand": 31
       },
       {
         "timestamp": "2025-12-08T16:00:00",
@@ -1987,11 +1975,11 @@
       },
       {
         "timestamp": "2025-12-08T17:00:00",
-        "demand": 31
+        "demand": 33
       },
       {
         "timestamp": "2025-12-08T18:00:00",
-        "demand": 31
+        "demand": 33
       },
       {
         "timestamp": "2025-12-08T19:00:00",
@@ -1999,23 +1987,35 @@
       },
       {
         "timestamp": "2025-12-08T20:00:00",
-        "demand": 37
+        "demand": 39
       },
       {
         "timestamp": "2025-12-08T21:00:00",
-        "demand": 36
+        "demand": 39
       },
       {
         "timestamp": "2025-12-08T22:00:00",
-        "demand": 38
+        "demand": 39
       },
       {
         "timestamp": "2025-12-08T23:00:00",
-        "demand": 38
+        "demand": 39
       },
       {
         "timestamp": "2025-12-09T00:00:00",
         "demand": 29
+      },
+      {
+        "timestamp": "2025-12-09T01:00:00",
+        "demand": 29
+      },
+      {
+        "timestamp": "2025-12-09T02:00:00",
+        "demand": 31
+      },
+      {
+        "timestamp": "2025-12-09T03:00:00",
+        "demand": 30
       }
     ]
   },
@@ -2023,68 +2023,56 @@
     "station_id": 21,
     "predictions": [
       {
-        "timestamp": "2025-12-08T01:00:00",
-        "demand": 23
-      },
-      {
-        "timestamp": "2025-12-08T02:00:00",
-        "demand": 0
-      },
-      {
-        "timestamp": "2025-12-08T03:00:00",
-        "demand": 0
-      },
-      {
         "timestamp": "2025-12-08T04:00:00",
-        "demand": 0
-      },
-      {
-        "timestamp": "2025-12-08T05:00:00",
-        "demand": 10
-      },
-      {
-        "timestamp": "2025-12-08T06:00:00",
-        "demand": 18
-      },
-      {
-        "timestamp": "2025-12-08T07:00:00",
-        "demand": 18
-      },
-      {
-        "timestamp": "2025-12-08T08:00:00",
-        "demand": 16
-      },
-      {
-        "timestamp": "2025-12-08T09:00:00",
-        "demand": 14
-      },
-      {
-        "timestamp": "2025-12-08T10:00:00",
-        "demand": 14
-      },
-      {
-        "timestamp": "2025-12-08T11:00:00",
-        "demand": 16
-      },
-      {
-        "timestamp": "2025-12-08T12:00:00",
         "demand": 15
       },
       {
-        "timestamp": "2025-12-08T13:00:00",
+        "timestamp": "2025-12-08T05:00:00",
+        "demand": 26
+      },
+      {
+        "timestamp": "2025-12-08T06:00:00",
+        "demand": 32
+      },
+      {
+        "timestamp": "2025-12-08T07:00:00",
+        "demand": 36
+      },
+      {
+        "timestamp": "2025-12-08T08:00:00",
+        "demand": 18
+      },
+      {
+        "timestamp": "2025-12-08T09:00:00",
+        "demand": 17
+      },
+      {
+        "timestamp": "2025-12-08T10:00:00",
+        "demand": 17
+      },
+      {
+        "timestamp": "2025-12-08T11:00:00",
+        "demand": 19
+      },
+      {
+        "timestamp": "2025-12-08T12:00:00",
         "demand": 16
+      },
+      {
+        "timestamp": "2025-12-08T13:00:00",
+        "demand": 15
       },
       {
         "timestamp": "2025-12-08T14:00:00",
-        "demand": 16
+        "demand": 17
       },
       {
         "timestamp": "2025-12-08T15:00:00",
-        "demand": 18
+        "demand": 15
       },
       {
         "timestamp": "2025-12-08T16:00:00",
-        "demand": 18
+        "demand": 15
       },
       {
         "timestamp": "2025-12-08T17:00:00",
@@ -2100,11 +2088,11 @@
       },
       {
         "timestamp": "2025-12-08T20:00:00",
-        "demand": 20
+        "demand": 22
       },
       {
         "timestamp": "2025-12-08T21:00:00",
-        "demand": 19
+        "demand": 22
       },
       {
         "timestamp": "2025-12-08T22:00:00",
@@ -2116,7 +2104,19 @@
       },
       {
         "timestamp": "2025-12-09T00:00:00",
-        "demand": 54
+        "demand": 52
+      },
+      {
+        "timestamp": "2025-12-09T01:00:00",
+        "demand": 53
+      },
+      {
+        "timestamp": "2025-12-09T02:00:00",
+        "demand": 53
+      },
+      {
+        "timestamp": "2025-12-09T03:00:00",
+        "demand": 52
       }
     ]
   },
@@ -2124,64 +2124,52 @@
     "station_id": 22,
     "predictions": [
       {
-        "timestamp": "2025-12-08T01:00:00",
-        "demand": 21
-      },
-      {
-        "timestamp": "2025-12-08T02:00:00",
-        "demand": 0
-      },
-      {
-        "timestamp": "2025-12-08T03:00:00",
-        "demand": 0
-      },
-      {
         "timestamp": "2025-12-08T04:00:00",
-        "demand": 0
+        "demand": 15
       },
       {
         "timestamp": "2025-12-08T05:00:00",
-        "demand": 6
+        "demand": 24
       },
       {
         "timestamp": "2025-12-08T06:00:00",
-        "demand": 26
+        "demand": 44
       },
       {
         "timestamp": "2025-12-08T07:00:00",
-        "demand": 26
+        "demand": 46
       },
       {
         "timestamp": "2025-12-08T08:00:00",
-        "demand": 26
+        "demand": 30
       },
       {
         "timestamp": "2025-12-08T09:00:00",
-        "demand": 23
+        "demand": 27
       },
       {
         "timestamp": "2025-12-08T10:00:00",
-        "demand": 26
+        "demand": 27
       },
       {
         "timestamp": "2025-12-08T11:00:00",
-        "demand": 28
+        "demand": 29
       },
       {
         "timestamp": "2025-12-08T12:00:00",
-        "demand": 31
+        "demand": 29
       },
       {
         "timestamp": "2025-12-08T13:00:00",
-        "demand": 32
+        "demand": 30
       },
       {
         "timestamp": "2025-12-08T14:00:00",
-        "demand": 32
+        "demand": 30
       },
       {
         "timestamp": "2025-12-08T15:00:00",
-        "demand": 32
+        "demand": 29
       },
       {
         "timestamp": "2025-12-08T16:00:00",
@@ -2189,35 +2177,47 @@
       },
       {
         "timestamp": "2025-12-08T17:00:00",
-        "demand": 29
+        "demand": 32
       },
       {
         "timestamp": "2025-12-08T18:00:00",
-        "demand": 29
+        "demand": 32
       },
       {
         "timestamp": "2025-12-08T19:00:00",
-        "demand": 29
+        "demand": 30
       },
       {
         "timestamp": "2025-12-08T20:00:00",
-        "demand": 13
+        "demand": 15
       },
       {
         "timestamp": "2025-12-08T21:00:00",
-        "demand": 13
+        "demand": 16
       },
       {
         "timestamp": "2025-12-08T22:00:00",
-        "demand": 15
+        "demand": 16
       },
       {
         "timestamp": "2025-12-08T23:00:00",
-        "demand": 15
+        "demand": 17
       },
       {
         "timestamp": "2025-12-09T00:00:00",
         "demand": 15
+      },
+      {
+        "timestamp": "2025-12-09T01:00:00",
+        "demand": 16
+      },
+      {
+        "timestamp": "2025-12-09T02:00:00",
+        "demand": 15
+      },
+      {
+        "timestamp": "2025-12-09T03:00:00",
+        "demand": 14
       }
     ]
   },
@@ -2225,40 +2225,28 @@
     "station_id": 23,
     "predictions": [
       {
-        "timestamp": "2025-12-08T01:00:00",
-        "demand": 24
-      },
-      {
-        "timestamp": "2025-12-08T02:00:00",
-        "demand": 0
-      },
-      {
-        "timestamp": "2025-12-08T03:00:00",
-        "demand": 0
-      },
-      {
         "timestamp": "2025-12-08T04:00:00",
-        "demand": 0
+        "demand": 19
       },
       {
         "timestamp": "2025-12-08T05:00:00",
-        "demand": 8
+        "demand": 28
       },
       {
         "timestamp": "2025-12-08T06:00:00",
-        "demand": 38
+        "demand": 57
       },
       {
         "timestamp": "2025-12-08T07:00:00",
-        "demand": 37
+        "demand": 58
       },
       {
         "timestamp": "2025-12-08T08:00:00",
-        "demand": 38
+        "demand": 41
       },
       {
         "timestamp": "2025-12-08T09:00:00",
-        "demand": 35
+        "demand": 38
       },
       {
         "timestamp": "2025-12-08T10:00:00",
@@ -2266,23 +2254,23 @@
       },
       {
         "timestamp": "2025-12-08T11:00:00",
-        "demand": 39
+        "demand": 40
       },
       {
         "timestamp": "2025-12-08T12:00:00",
-        "demand": 47
+        "demand": 44
       },
       {
         "timestamp": "2025-12-08T13:00:00",
-        "demand": 47
+        "demand": 45
       },
       {
         "timestamp": "2025-12-08T14:00:00",
-        "demand": 46
+        "demand": 44
       },
       {
         "timestamp": "2025-12-08T15:00:00",
-        "demand": 46
+        "demand": 43
       },
       {
         "timestamp": "2025-12-08T16:00:00",
@@ -2290,11 +2278,11 @@
       },
       {
         "timestamp": "2025-12-08T17:00:00",
-        "demand": 43
+        "demand": 45
       },
       {
         "timestamp": "2025-12-08T18:00:00",
-        "demand": 43
+        "demand": 46
       },
       {
         "timestamp": "2025-12-08T19:00:00",
@@ -2302,23 +2290,35 @@
       },
       {
         "timestamp": "2025-12-08T20:00:00",
-        "demand": 22
+        "demand": 24
       },
       {
         "timestamp": "2025-12-08T21:00:00",
-        "demand": 22
+        "demand": 25
       },
       {
         "timestamp": "2025-12-08T22:00:00",
-        "demand": 23
+        "demand": 25
       },
       {
         "timestamp": "2025-12-08T23:00:00",
-        "demand": 23
+        "demand": 25
       },
       {
         "timestamp": "2025-12-09T00:00:00",
         "demand": 22
+      },
+      {
+        "timestamp": "2025-12-09T01:00:00",
+        "demand": 23
+      },
+      {
+        "timestamp": "2025-12-09T02:00:00",
+        "demand": 19
+      },
+      {
+        "timestamp": "2025-12-09T03:00:00",
+        "demand": 19
       }
     ]
   },
@@ -2326,36 +2326,24 @@
     "station_id": 24,
     "predictions": [
       {
-        "timestamp": "2025-12-08T01:00:00",
-        "demand": 19
-      },
-      {
-        "timestamp": "2025-12-08T02:00:00",
-        "demand": 12
-      },
-      {
-        "timestamp": "2025-12-08T03:00:00",
-        "demand": 26
-      },
-      {
         "timestamp": "2025-12-08T04:00:00",
-        "demand": 34
+        "demand": 21
       },
       {
         "timestamp": "2025-12-08T05:00:00",
-        "demand": 37
+        "demand": 26
       },
       {
         "timestamp": "2025-12-08T06:00:00",
-        "demand": 41
+        "demand": 31
       },
       {
         "timestamp": "2025-12-08T07:00:00",
-        "demand": 41
+        "demand": 36
       },
       {
         "timestamp": "2025-12-08T08:00:00",
-        "demand": 39
+        "demand": 32
       },
       {
         "timestamp": "2025-12-08T09:00:00",
@@ -2363,7 +2351,7 @@
       },
       {
         "timestamp": "2025-12-08T10:00:00",
-        "demand": 39
+        "demand": 38
       },
       {
         "timestamp": "2025-12-08T11:00:00",
@@ -2371,7 +2359,7 @@
       },
       {
         "timestamp": "2025-12-08T12:00:00",
-        "demand": 41
+        "demand": 40
       },
       {
         "timestamp": "2025-12-08T13:00:00",
@@ -2379,11 +2367,11 @@
       },
       {
         "timestamp": "2025-12-08T14:00:00",
-        "demand": 44
+        "demand": 43
       },
       {
         "timestamp": "2025-12-08T15:00:00",
-        "demand": 43
+        "demand": 42
       },
       {
         "timestamp": "2025-12-08T16:00:00",
@@ -2391,35 +2379,47 @@
       },
       {
         "timestamp": "2025-12-08T17:00:00",
-        "demand": 41
+        "demand": 44
       },
       {
         "timestamp": "2025-12-08T18:00:00",
-        "demand": 39
+        "demand": 42
       },
       {
         "timestamp": "2025-12-08T19:00:00",
-        "demand": 38
+        "demand": 39
       },
       {
         "timestamp": "2025-12-08T20:00:00",
-        "demand": 50
+        "demand": 54
       },
       {
         "timestamp": "2025-12-08T21:00:00",
-        "demand": 49
+        "demand": 53
       },
       {
         "timestamp": "2025-12-08T22:00:00",
-        "demand": 49
+        "demand": 53
       },
       {
         "timestamp": "2025-12-08T23:00:00",
-        "demand": 50
+        "demand": 52
       },
       {
         "timestamp": "2025-12-09T00:00:00",
-        "demand": 26
+        "demand": 27
+      },
+      {
+        "timestamp": "2025-12-09T01:00:00",
+        "demand": 27
+      },
+      {
+        "timestamp": "2025-12-09T02:00:00",
+        "demand": 32
+      },
+      {
+        "timestamp": "2025-12-09T03:00:00",
+        "demand": 31
       }
     ]
   },
@@ -2427,44 +2427,32 @@
     "station_id": 25,
     "predictions": [
       {
-        "timestamp": "2025-12-08T01:00:00",
-        "demand": 22
-      },
-      {
-        "timestamp": "2025-12-08T02:00:00",
-        "demand": 0
-      },
-      {
-        "timestamp": "2025-12-08T03:00:00",
-        "demand": 0
-      },
-      {
         "timestamp": "2025-12-08T04:00:00",
-        "demand": 0
+        "demand": 18
       },
       {
         "timestamp": "2025-12-08T05:00:00",
-        "demand": 7
+        "demand": 26
       },
       {
         "timestamp": "2025-12-08T06:00:00",
-        "demand": 43
+        "demand": 61
       },
       {
         "timestamp": "2025-12-08T07:00:00",
-        "demand": 42
+        "demand": 61
       },
       {
         "timestamp": "2025-12-08T08:00:00",
-        "demand": 44
+        "demand": 47
       },
       {
         "timestamp": "2025-12-08T09:00:00",
-        "demand": 41
+        "demand": 44
       },
       {
         "timestamp": "2025-12-08T10:00:00",
-        "demand": 44
+        "demand": 43
       },
       {
         "timestamp": "2025-12-08T11:00:00",
@@ -2472,31 +2460,31 @@
       },
       {
         "timestamp": "2025-12-08T12:00:00",
-        "demand": 52
+        "demand": 50
       },
       {
         "timestamp": "2025-12-08T13:00:00",
-        "demand": 53
+        "demand": 51
       },
       {
         "timestamp": "2025-12-08T14:00:00",
-        "demand": 51
+        "demand": 48
       },
       {
         "timestamp": "2025-12-08T15:00:00",
-        "demand": 51
+        "demand": 47
       },
       {
         "timestamp": "2025-12-08T16:00:00",
-        "demand": 49
+        "demand": 48
       },
       {
         "timestamp": "2025-12-08T17:00:00",
-        "demand": 48
+        "demand": 50
       },
       {
         "timestamp": "2025-12-08T18:00:00",
-        "demand": 48
+        "demand": 50
       },
       {
         "timestamp": "2025-12-08T19:00:00",
@@ -2504,23 +2492,35 @@
       },
       {
         "timestamp": "2025-12-08T20:00:00",
-        "demand": 19
+        "demand": 21
       },
       {
         "timestamp": "2025-12-08T21:00:00",
-        "demand": 20
+        "demand": 23
       },
       {
         "timestamp": "2025-12-08T22:00:00",
-        "demand": 21
+        "demand": 23
       },
       {
         "timestamp": "2025-12-08T23:00:00",
-        "demand": 21
+        "demand": 23
       },
       {
         "timestamp": "2025-12-09T00:00:00",
         "demand": 19
+      },
+      {
+        "timestamp": "2025-12-09T01:00:00",
+        "demand": 20
+      },
+      {
+        "timestamp": "2025-12-09T02:00:00",
+        "demand": 16
+      },
+      {
+        "timestamp": "2025-12-09T03:00:00",
+        "demand": 15
       }
     ]
   },
@@ -2528,44 +2528,32 @@
     "station_id": 26,
     "predictions": [
       {
-        "timestamp": "2025-12-08T01:00:00",
-        "demand": 16
-      },
-      {
-        "timestamp": "2025-12-08T02:00:00",
-        "demand": 10
-      },
-      {
-        "timestamp": "2025-12-08T03:00:00",
-        "demand": 21
-      },
-      {
         "timestamp": "2025-12-08T04:00:00",
-        "demand": 28
+        "demand": 17
       },
       {
         "timestamp": "2025-12-08T05:00:00",
-        "demand": 31
+        "demand": 22
       },
       {
         "timestamp": "2025-12-08T06:00:00",
-        "demand": 33
+        "demand": 24
       },
       {
         "timestamp": "2025-12-08T07:00:00",
-        "demand": 33
+        "demand": 29
       },
       {
         "timestamp": "2025-12-08T08:00:00",
-        "demand": 32
+        "demand": 26
       },
       {
         "timestamp": "2025-12-08T09:00:00",
-        "demand": 30
+        "demand": 31
       },
       {
         "timestamp": "2025-12-08T10:00:00",
-        "demand": 32
+        "demand": 31
       },
       {
         "timestamp": "2025-12-08T11:00:00",
@@ -2573,7 +2561,7 @@
       },
       {
         "timestamp": "2025-12-08T12:00:00",
-        "demand": 34
+        "demand": 33
       },
       {
         "timestamp": "2025-12-08T13:00:00",
@@ -2581,47 +2569,59 @@
       },
       {
         "timestamp": "2025-12-08T14:00:00",
-        "demand": 36
-      },
-      {
-        "timestamp": "2025-12-08T15:00:00",
-        "demand": 36
-      },
-      {
-        "timestamp": "2025-12-08T16:00:00",
         "demand": 35
       },
       {
-        "timestamp": "2025-12-08T17:00:00",
+        "timestamp": "2025-12-08T15:00:00",
         "demand": 34
       },
       {
+        "timestamp": "2025-12-08T16:00:00",
+        "demand": 34
+      },
+      {
+        "timestamp": "2025-12-08T17:00:00",
+        "demand": 36
+      },
+      {
         "timestamp": "2025-12-08T18:00:00",
-        "demand": 33
+        "demand": 35
       },
       {
         "timestamp": "2025-12-08T19:00:00",
-        "demand": 32
+        "demand": 33
       },
       {
         "timestamp": "2025-12-08T20:00:00",
-        "demand": 42
+        "demand": 45
       },
       {
         "timestamp": "2025-12-08T21:00:00",
-        "demand": 41
+        "demand": 45
       },
       {
         "timestamp": "2025-12-08T22:00:00",
-        "demand": 42
+        "demand": 44
       },
       {
         "timestamp": "2025-12-08T23:00:00",
-        "demand": 42
+        "demand": 43
       },
       {
         "timestamp": "2025-12-09T00:00:00",
         "demand": 27
+      },
+      {
+        "timestamp": "2025-12-09T01:00:00",
+        "demand": 27
+      },
+      {
+        "timestamp": "2025-12-09T02:00:00",
+        "demand": 30
+      },
+      {
+        "timestamp": "2025-12-09T03:00:00",
+        "demand": 30
       }
     ]
   },
@@ -2629,52 +2629,40 @@
     "station_id": 27,
     "predictions": [
       {
-        "timestamp": "2025-12-08T01:00:00",
-        "demand": 16
-      },
-      {
-        "timestamp": "2025-12-08T02:00:00",
-        "demand": 0
-      },
-      {
-        "timestamp": "2025-12-08T03:00:00",
-        "demand": 6
-      },
-      {
         "timestamp": "2025-12-08T04:00:00",
-        "demand": 12
+        "demand": 15
       },
       {
         "timestamp": "2025-12-08T05:00:00",
-        "demand": 15
+        "demand": 19
       },
       {
         "timestamp": "2025-12-08T06:00:00",
-        "demand": 17
+        "demand": 20
       },
       {
         "timestamp": "2025-12-08T07:00:00",
-        "demand": 17
+        "demand": 21
       },
       {
         "timestamp": "2025-12-08T08:00:00",
-        "demand": 15
+        "demand": 12
       },
       {
         "timestamp": "2025-12-08T09:00:00",
-        "demand": 13
+        "demand": 15
       },
       {
         "timestamp": "2025-12-08T10:00:00",
-        "demand": 14
+        "demand": 15
       },
       {
         "timestamp": "2025-12-08T11:00:00",
-        "demand": 14
+        "demand": 15
       },
       {
         "timestamp": "2025-12-08T12:00:00",
-        "demand": 15
+        "demand": 16
       },
       {
         "timestamp": "2025-12-08T13:00:00",
@@ -2682,19 +2670,19 @@
       },
       {
         "timestamp": "2025-12-08T14:00:00",
-        "demand": 19
+        "demand": 20
       },
       {
         "timestamp": "2025-12-08T15:00:00",
-        "demand": 20
+        "demand": 19
       },
       {
         "timestamp": "2025-12-08T16:00:00",
-        "demand": 20
+        "demand": 19
       },
       {
         "timestamp": "2025-12-08T17:00:00",
-        "demand": 19
+        "demand": 20
       },
       {
         "timestamp": "2025-12-08T18:00:00",
@@ -2702,27 +2690,39 @@
       },
       {
         "timestamp": "2025-12-08T19:00:00",
-        "demand": 18
+        "demand": 17
       },
       {
         "timestamp": "2025-12-08T20:00:00",
-        "demand": 49
+        "demand": 50
       },
       {
         "timestamp": "2025-12-08T21:00:00",
-        "demand": 49
+        "demand": 51
       },
       {
         "timestamp": "2025-12-08T22:00:00",
-        "demand": 49
+        "demand": 50
       },
       {
         "timestamp": "2025-12-08T23:00:00",
-        "demand": 50
+        "demand": 49
       },
       {
         "timestamp": "2025-12-09T00:00:00",
         "demand": 28
+      },
+      {
+        "timestamp": "2025-12-09T01:00:00",
+        "demand": 29
+      },
+      {
+        "timestamp": "2025-12-09T02:00:00",
+        "demand": 36
+      },
+      {
+        "timestamp": "2025-12-09T03:00:00",
+        "demand": 35
       }
     ]
   },
@@ -2730,44 +2730,32 @@
     "station_id": 28,
     "predictions": [
       {
-        "timestamp": "2025-12-08T01:00:00",
-        "demand": 21
-      },
-      {
-        "timestamp": "2025-12-08T02:00:00",
-        "demand": 0
-      },
-      {
-        "timestamp": "2025-12-08T03:00:00",
-        "demand": 0
-      },
-      {
         "timestamp": "2025-12-08T04:00:00",
-        "demand": 0
+        "demand": 16
       },
       {
         "timestamp": "2025-12-08T05:00:00",
-        "demand": 3
+        "demand": 23
       },
       {
         "timestamp": "2025-12-08T06:00:00",
-        "demand": 17
+        "demand": 35
       },
       {
         "timestamp": "2025-12-08T07:00:00",
-        "demand": 17
+        "demand": 36
       },
       {
         "timestamp": "2025-12-08T08:00:00",
-        "demand": 16
+        "demand": 20
       },
       {
         "timestamp": "2025-12-08T09:00:00",
-        "demand": 14
+        "demand": 17
       },
       {
         "timestamp": "2025-12-08T10:00:00",
-        "demand": 16
+        "demand": 17
       },
       {
         "timestamp": "2025-12-08T11:00:00",
@@ -2775,19 +2763,19 @@
       },
       {
         "timestamp": "2025-12-08T12:00:00",
-        "demand": 21
+        "demand": 19
       },
       {
         "timestamp": "2025-12-08T13:00:00",
-        "demand": 21
+        "demand": 20
       },
       {
         "timestamp": "2025-12-08T14:00:00",
-        "demand": 22
+        "demand": 21
       },
       {
         "timestamp": "2025-12-08T15:00:00",
-        "demand": 22
+        "demand": 20
       },
       {
         "timestamp": "2025-12-08T16:00:00",
@@ -2795,11 +2783,11 @@
       },
       {
         "timestamp": "2025-12-08T17:00:00",
-        "demand": 20
+        "demand": 22
       },
       {
         "timestamp": "2025-12-08T18:00:00",
-        "demand": 20
+        "demand": 22
       },
       {
         "timestamp": "2025-12-08T19:00:00",
@@ -2807,15 +2795,15 @@
       },
       {
         "timestamp": "2025-12-08T20:00:00",
-        "demand": 15
+        "demand": 16
       },
       {
         "timestamp": "2025-12-08T21:00:00",
-        "demand": 15
+        "demand": 17
       },
       {
         "timestamp": "2025-12-08T22:00:00",
-        "demand": 16
+        "demand": 17
       },
       {
         "timestamp": "2025-12-08T23:00:00",
@@ -2823,6 +2811,18 @@
       },
       {
         "timestamp": "2025-12-09T00:00:00",
+        "demand": 13
+      },
+      {
+        "timestamp": "2025-12-09T01:00:00",
+        "demand": 14
+      },
+      {
+        "timestamp": "2025-12-09T02:00:00",
+        "demand": 14
+      },
+      {
+        "timestamp": "2025-12-09T03:00:00",
         "demand": 13
       }
     ]
@@ -2831,52 +2831,40 @@
     "station_id": 29,
     "predictions": [
       {
-        "timestamp": "2025-12-08T01:00:00",
-        "demand": 25
-      },
-      {
-        "timestamp": "2025-12-08T02:00:00",
-        "demand": 5
-      },
-      {
-        "timestamp": "2025-12-08T03:00:00",
-        "demand": 10
-      },
-      {
         "timestamp": "2025-12-08T04:00:00",
-        "demand": 20
+        "demand": 19
       },
       {
         "timestamp": "2025-12-08T05:00:00",
-        "demand": 30
+        "demand": 31
       },
       {
         "timestamp": "2025-12-08T06:00:00",
-        "demand": 40
-      },
-      {
-        "timestamp": "2025-12-08T07:00:00",
-        "demand": 40
-      },
-      {
-        "timestamp": "2025-12-08T08:00:00",
         "demand": 41
       },
       {
+        "timestamp": "2025-12-08T07:00:00",
+        "demand": 47
+      },
+      {
+        "timestamp": "2025-12-08T08:00:00",
+        "demand": 39
+      },
+      {
         "timestamp": "2025-12-08T09:00:00",
-        "demand": 39
-      },
-      {
-        "timestamp": "2025-12-08T10:00:00",
-        "demand": 39
-      },
-      {
-        "timestamp": "2025-12-08T11:00:00",
         "demand": 40
       },
       {
+        "timestamp": "2025-12-08T10:00:00",
+        "demand": 40
+      },
+      {
+        "timestamp": "2025-12-08T11:00:00",
+        "demand": 42
+      },
+      {
         "timestamp": "2025-12-08T12:00:00",
-        "demand": 36
+        "demand": 38
       },
       {
         "timestamp": "2025-12-08T13:00:00",
@@ -2884,47 +2872,59 @@
       },
       {
         "timestamp": "2025-12-08T14:00:00",
-        "demand": 36
-      },
-      {
-        "timestamp": "2025-12-08T15:00:00",
-        "demand": 36
-      },
-      {
-        "timestamp": "2025-12-08T16:00:00",
         "demand": 37
       },
       {
-        "timestamp": "2025-12-08T17:00:00",
+        "timestamp": "2025-12-08T15:00:00",
+        "demand": 35
+      },
+      {
+        "timestamp": "2025-12-08T16:00:00",
         "demand": 36
       },
       {
+        "timestamp": "2025-12-08T17:00:00",
+        "demand": 38
+      },
+      {
         "timestamp": "2025-12-08T18:00:00",
-        "demand": 39
+        "demand": 38
       },
       {
         "timestamp": "2025-12-08T19:00:00",
-        "demand": 39
+        "demand": 38
       },
       {
         "timestamp": "2025-12-08T20:00:00",
-        "demand": 19
-      },
-      {
-        "timestamp": "2025-12-08T21:00:00",
-        "demand": 19
-      },
-      {
-        "timestamp": "2025-12-08T22:00:00",
-        "demand": 21
-      },
-      {
-        "timestamp": "2025-12-08T23:00:00",
         "demand": 20
       },
       {
+        "timestamp": "2025-12-08T21:00:00",
+        "demand": 20
+      },
+      {
+        "timestamp": "2025-12-08T22:00:00",
+        "demand": 19
+      },
+      {
+        "timestamp": "2025-12-08T23:00:00",
+        "demand": 19
+      },
+      {
         "timestamp": "2025-12-09T00:00:00",
-        "demand": 40
+        "demand": 37
+      },
+      {
+        "timestamp": "2025-12-09T01:00:00",
+        "demand": 38
+      },
+      {
+        "timestamp": "2025-12-09T02:00:00",
+        "demand": 36
+      },
+      {
+        "timestamp": "2025-12-09T03:00:00",
+        "demand": 36
       }
     ]
   },
@@ -2932,32 +2932,20 @@
     "station_id": 30,
     "predictions": [
       {
-        "timestamp": "2025-12-08T01:00:00",
-        "demand": 12
-      },
-      {
-        "timestamp": "2025-12-08T02:00:00",
-        "demand": 0
-      },
-      {
-        "timestamp": "2025-12-08T03:00:00",
-        "demand": 0
-      },
-      {
         "timestamp": "2025-12-08T04:00:00",
-        "demand": 6
+        "demand": 10
       },
       {
         "timestamp": "2025-12-08T05:00:00",
-        "demand": 11
+        "demand": 15
       },
       {
         "timestamp": "2025-12-08T06:00:00",
-        "demand": 22
+        "demand": 27
       },
       {
         "timestamp": "2025-12-08T07:00:00",
-        "demand": 23
+        "demand": 28
       },
       {
         "timestamp": "2025-12-08T08:00:00",
@@ -2965,11 +2953,11 @@
       },
       {
         "timestamp": "2025-12-08T09:00:00",
-        "demand": 21
+        "demand": 22
       },
       {
         "timestamp": "2025-12-08T10:00:00",
-        "demand": 23
+        "demand": 22
       },
       {
         "timestamp": "2025-12-08T11:00:00",
@@ -2977,11 +2965,11 @@
       },
       {
         "timestamp": "2025-12-08T12:00:00",
-        "demand": 25
+        "demand": 24
       },
       {
         "timestamp": "2025-12-08T13:00:00",
-        "demand": 25
+        "demand": 24
       },
       {
         "timestamp": "2025-12-08T14:00:00",
@@ -2989,42 +2977,54 @@
       },
       {
         "timestamp": "2025-12-08T15:00:00",
-        "demand": 26
-      },
-      {
-        "timestamp": "2025-12-08T16:00:00",
-        "demand": 25
-      },
-      {
-        "timestamp": "2025-12-08T17:00:00",
         "demand": 24
       },
       {
+        "timestamp": "2025-12-08T16:00:00",
+        "demand": 24
+      },
+      {
+        "timestamp": "2025-12-08T17:00:00",
+        "demand": 25
+      },
+      {
         "timestamp": "2025-12-08T18:00:00",
-        "demand": 23
+        "demand": 25
       },
       {
         "timestamp": "2025-12-08T19:00:00",
-        "demand": 23
+        "demand": 24
       },
       {
         "timestamp": "2025-12-08T20:00:00",
-        "demand": 17
+        "demand": 19
       },
       {
         "timestamp": "2025-12-08T21:00:00",
-        "demand": 17
+        "demand": 19
       },
       {
         "timestamp": "2025-12-08T22:00:00",
-        "demand": 18
+        "demand": 19
       },
       {
         "timestamp": "2025-12-08T23:00:00",
-        "demand": 18
+        "demand": 19
       },
       {
         "timestamp": "2025-12-09T00:00:00",
+        "demand": 14
+      },
+      {
+        "timestamp": "2025-12-09T01:00:00",
+        "demand": 14
+      },
+      {
+        "timestamp": "2025-12-09T02:00:00",
+        "demand": 15
+      },
+      {
+        "timestamp": "2025-12-09T03:00:00",
         "demand": 14
       }
     ]
@@ -3033,20 +3033,8 @@
     "station_id": 31,
     "predictions": [
       {
-        "timestamp": "2025-12-08T01:00:00",
-        "demand": 22
-      },
-      {
-        "timestamp": "2025-12-08T02:00:00",
-        "demand": 3
-      },
-      {
-        "timestamp": "2025-12-08T03:00:00",
-        "demand": 7
-      },
-      {
         "timestamp": "2025-12-08T04:00:00",
-        "demand": 18
+        "demand": 17
       },
       {
         "timestamp": "2025-12-08T05:00:00",
@@ -3054,15 +3042,15 @@
       },
       {
         "timestamp": "2025-12-08T06:00:00",
-        "demand": 42
+        "demand": 41
       },
       {
         "timestamp": "2025-12-08T07:00:00",
-        "demand": 42
+        "demand": 47
       },
       {
         "timestamp": "2025-12-08T08:00:00",
-        "demand": 42
+        "demand": 40
       },
       {
         "timestamp": "2025-12-08T09:00:00",
@@ -3074,15 +3062,15 @@
       },
       {
         "timestamp": "2025-12-08T11:00:00",
-        "demand": 41
+        "demand": 43
       },
       {
         "timestamp": "2025-12-08T12:00:00",
-        "demand": 39
+        "demand": 41
       },
       {
         "timestamp": "2025-12-08T13:00:00",
-        "demand": 40
+        "demand": 41
       },
       {
         "timestamp": "2025-12-08T14:00:00",
@@ -3090,11 +3078,11 @@
       },
       {
         "timestamp": "2025-12-08T15:00:00",
-        "demand": 39
+        "demand": 37
       },
       {
         "timestamp": "2025-12-08T16:00:00",
-        "demand": 39
+        "demand": 37
       },
       {
         "timestamp": "2025-12-08T17:00:00",
@@ -3102,11 +3090,11 @@
       },
       {
         "timestamp": "2025-12-08T18:00:00",
-        "demand": 42
+        "demand": 41
       },
       {
         "timestamp": "2025-12-08T19:00:00",
-        "demand": 42
+        "demand": 41
       },
       {
         "timestamp": "2025-12-08T20:00:00",
@@ -3114,19 +3102,31 @@
       },
       {
         "timestamp": "2025-12-08T21:00:00",
-        "demand": 19
-      },
-      {
-        "timestamp": "2025-12-08T22:00:00",
         "demand": 21
       },
       {
-        "timestamp": "2025-12-08T23:00:00",
+        "timestamp": "2025-12-08T22:00:00",
         "demand": 20
       },
       {
+        "timestamp": "2025-12-08T23:00:00",
+        "demand": 19
+      },
+      {
         "timestamp": "2025-12-09T00:00:00",
-        "demand": 49
+        "demand": 47
+      },
+      {
+        "timestamp": "2025-12-09T01:00:00",
+        "demand": 47
+      },
+      {
+        "timestamp": "2025-12-09T02:00:00",
+        "demand": 44
+      },
+      {
+        "timestamp": "2025-12-09T03:00:00",
+        "demand": 44
       }
     ]
   },
@@ -3134,64 +3134,52 @@
     "station_id": 32,
     "predictions": [
       {
-        "timestamp": "2025-12-08T01:00:00",
-        "demand": 26
-      },
-      {
-        "timestamp": "2025-12-08T02:00:00",
-        "demand": 0
-      },
-      {
-        "timestamp": "2025-12-08T03:00:00",
-        "demand": 0
-      },
-      {
         "timestamp": "2025-12-08T04:00:00",
-        "demand": 0
+        "demand": 19
       },
       {
         "timestamp": "2025-12-08T05:00:00",
-        "demand": 6
+        "demand": 30
       },
       {
         "timestamp": "2025-12-08T06:00:00",
-        "demand": 31
+        "demand": 54
       },
       {
         "timestamp": "2025-12-08T07:00:00",
-        "demand": 31
+        "demand": 56
       },
       {
         "timestamp": "2025-12-08T08:00:00",
-        "demand": 30
+        "demand": 35
       },
       {
         "timestamp": "2025-12-08T09:00:00",
-        "demand": 27
-      },
-      {
-        "timestamp": "2025-12-08T10:00:00",
-        "demand": 30
-      },
-      {
-        "timestamp": "2025-12-08T11:00:00",
         "demand": 32
       },
       {
+        "timestamp": "2025-12-08T10:00:00",
+        "demand": 31
+      },
+      {
+        "timestamp": "2025-12-08T11:00:00",
+        "demand": 33
+      },
+      {
         "timestamp": "2025-12-08T12:00:00",
-        "demand": 36
+        "demand": 34
       },
       {
         "timestamp": "2025-12-08T13:00:00",
-        "demand": 37
+        "demand": 34
       },
       {
         "timestamp": "2025-12-08T14:00:00",
-        "demand": 37
+        "demand": 35
       },
       {
         "timestamp": "2025-12-08T15:00:00",
-        "demand": 38
+        "demand": 34
       },
       {
         "timestamp": "2025-12-08T16:00:00",
@@ -3199,35 +3187,47 @@
       },
       {
         "timestamp": "2025-12-08T17:00:00",
-        "demand": 34
+        "demand": 37
       },
       {
         "timestamp": "2025-12-08T18:00:00",
-        "demand": 33
+        "demand": 37
       },
       {
         "timestamp": "2025-12-08T19:00:00",
-        "demand": 33
+        "demand": 35
       },
       {
         "timestamp": "2025-12-08T20:00:00",
-        "demand": 17
+        "demand": 20
       },
       {
         "timestamp": "2025-12-08T21:00:00",
-        "demand": 17
+        "demand": 21
       },
       {
         "timestamp": "2025-12-08T22:00:00",
-        "demand": 19
+        "demand": 21
       },
       {
         "timestamp": "2025-12-08T23:00:00",
-        "demand": 19
+        "demand": 21
       },
       {
         "timestamp": "2025-12-09T00:00:00",
         "demand": 17
+      },
+      {
+        "timestamp": "2025-12-09T01:00:00",
+        "demand": 18
+      },
+      {
+        "timestamp": "2025-12-09T02:00:00",
+        "demand": 19
+      },
+      {
+        "timestamp": "2025-12-09T03:00:00",
+        "demand": 18
       }
     ]
   },
@@ -3235,36 +3235,24 @@
     "station_id": 33,
     "predictions": [
       {
-        "timestamp": "2025-12-08T01:00:00",
-        "demand": 11
-      },
-      {
-        "timestamp": "2025-12-08T02:00:00",
-        "demand": 0
-      },
-      {
-        "timestamp": "2025-12-08T03:00:00",
-        "demand": 2
-      },
-      {
         "timestamp": "2025-12-08T04:00:00",
-        "demand": 6
+        "demand": 10
       },
       {
         "timestamp": "2025-12-08T05:00:00",
-        "demand": 11
+        "demand": 14
       },
       {
         "timestamp": "2025-12-08T06:00:00",
-        "demand": 20
+        "demand": 23
       },
       {
         "timestamp": "2025-12-08T07:00:00",
-        "demand": 21
+        "demand": 25
       },
       {
         "timestamp": "2025-12-08T08:00:00",
-        "demand": 21
+        "demand": 20
       },
       {
         "timestamp": "2025-12-08T09:00:00",
@@ -3276,11 +3264,11 @@
       },
       {
         "timestamp": "2025-12-08T11:00:00",
-        "demand": 22
+        "demand": 21
       },
       {
         "timestamp": "2025-12-08T12:00:00",
-        "demand": 24
+        "demand": 22
       },
       {
         "timestamp": "2025-12-08T13:00:00",
@@ -3288,11 +3276,11 @@
       },
       {
         "timestamp": "2025-12-08T14:00:00",
-        "demand": 24
+        "demand": 23
       },
       {
         "timestamp": "2025-12-08T15:00:00",
-        "demand": 24
+        "demand": 22
       },
       {
         "timestamp": "2025-12-08T16:00:00",
@@ -3300,34 +3288,46 @@
       },
       {
         "timestamp": "2025-12-08T17:00:00",
-        "demand": 22
+        "demand": 24
       },
       {
         "timestamp": "2025-12-08T18:00:00",
-        "demand": 22
+        "demand": 24
       },
       {
         "timestamp": "2025-12-08T19:00:00",
-        "demand": 22
+        "demand": 23
       },
       {
         "timestamp": "2025-12-08T20:00:00",
-        "demand": 16
+        "demand": 17
       },
       {
         "timestamp": "2025-12-08T21:00:00",
-        "demand": 16
+        "demand": 18
       },
       {
         "timestamp": "2025-12-08T22:00:00",
-        "demand": 17
+        "demand": 18
       },
       {
         "timestamp": "2025-12-08T23:00:00",
-        "demand": 17
+        "demand": 18
       },
       {
         "timestamp": "2025-12-09T00:00:00",
+        "demand": 13
+      },
+      {
+        "timestamp": "2025-12-09T01:00:00",
+        "demand": 13
+      },
+      {
+        "timestamp": "2025-12-09T02:00:00",
+        "demand": 14
+      },
+      {
+        "timestamp": "2025-12-09T03:00:00",
         "demand": 13
       }
     ]
@@ -3336,32 +3336,20 @@
     "station_id": 34,
     "predictions": [
       {
-        "timestamp": "2025-12-08T01:00:00",
-        "demand": 27
-      },
-      {
-        "timestamp": "2025-12-08T02:00:00",
-        "demand": 0
-      },
-      {
-        "timestamp": "2025-12-08T03:00:00",
-        "demand": 1
-      },
-      {
         "timestamp": "2025-12-08T04:00:00",
-        "demand": 12
+        "demand": 21
       },
       {
         "timestamp": "2025-12-08T05:00:00",
-        "demand": 23
+        "demand": 33
       },
       {
         "timestamp": "2025-12-08T06:00:00",
-        "demand": 44
+        "demand": 54
       },
       {
         "timestamp": "2025-12-08T07:00:00",
-        "demand": 44
+        "demand": 59
       },
       {
         "timestamp": "2025-12-08T08:00:00",
@@ -3369,31 +3357,31 @@
       },
       {
         "timestamp": "2025-12-08T09:00:00",
-        "demand": 40
-      },
-      {
-        "timestamp": "2025-12-08T10:00:00",
-        "demand": 42
-      },
-      {
-        "timestamp": "2025-12-08T11:00:00",
         "demand": 44
       },
       {
+        "timestamp": "2025-12-08T10:00:00",
+        "demand": 43
+      },
+      {
+        "timestamp": "2025-12-08T11:00:00",
+        "demand": 45
+      },
+      {
         "timestamp": "2025-12-08T12:00:00",
-        "demand": 47
+        "demand": 45
       },
       {
         "timestamp": "2025-12-08T13:00:00",
-        "demand": 48
+        "demand": 46
       },
       {
         "timestamp": "2025-12-08T14:00:00",
-        "demand": 49
+        "demand": 48
       },
       {
         "timestamp": "2025-12-08T15:00:00",
-        "demand": 49
+        "demand": 46
       },
       {
         "timestamp": "2025-12-08T16:00:00",
@@ -3401,35 +3389,47 @@
       },
       {
         "timestamp": "2025-12-08T17:00:00",
-        "demand": 46
+        "demand": 50
       },
       {
         "timestamp": "2025-12-08T18:00:00",
-        "demand": 44
+        "demand": 48
       },
       {
         "timestamp": "2025-12-08T19:00:00",
-        "demand": 44
+        "demand": 46
       },
       {
         "timestamp": "2025-12-08T20:00:00",
-        "demand": 37
+        "demand": 41
       },
       {
         "timestamp": "2025-12-08T21:00:00",
-        "demand": 37
+        "demand": 41
       },
       {
         "timestamp": "2025-12-08T22:00:00",
-        "demand": 38
+        "demand": 41
       },
       {
         "timestamp": "2025-12-08T23:00:00",
-        "demand": 39
+        "demand": 40
       },
       {
         "timestamp": "2025-12-09T00:00:00",
         "demand": 27
+      },
+      {
+        "timestamp": "2025-12-09T01:00:00",
+        "demand": 28
+      },
+      {
+        "timestamp": "2025-12-09T02:00:00",
+        "demand": 29
+      },
+      {
+        "timestamp": "2025-12-09T03:00:00",
+        "demand": 28
       }
     ]
   },
@@ -3437,18 +3437,6 @@
     "station_id": 35,
     "predictions": [
       {
-        "timestamp": "2025-12-08T01:00:00",
-        "demand": 8
-      },
-      {
-        "timestamp": "2025-12-08T02:00:00",
-        "demand": 2
-      },
-      {
-        "timestamp": "2025-12-08T03:00:00",
-        "demand": 5
-      },
-      {
         "timestamp": "2025-12-08T04:00:00",
         "demand": 8
       },
@@ -3466,7 +3454,7 @@
       },
       {
         "timestamp": "2025-12-08T08:00:00",
-        "demand": 19
+        "demand": 17
       },
       {
         "timestamp": "2025-12-08T09:00:00",
@@ -3474,15 +3462,15 @@
       },
       {
         "timestamp": "2025-12-08T10:00:00",
-        "demand": 20
+        "demand": 19
       },
       {
         "timestamp": "2025-12-08T11:00:00",
-        "demand": 20
+        "demand": 19
       },
       {
         "timestamp": "2025-12-08T12:00:00",
-        "demand": 22
+        "demand": 21
       },
       {
         "timestamp": "2025-12-08T13:00:00",
@@ -3490,47 +3478,59 @@
       },
       {
         "timestamp": "2025-12-08T14:00:00",
-        "demand": 22
-      },
-      {
-        "timestamp": "2025-12-08T15:00:00",
-        "demand": 22
-      },
-      {
-        "timestamp": "2025-12-08T16:00:00",
         "demand": 21
       },
       {
-        "timestamp": "2025-12-08T17:00:00",
+        "timestamp": "2025-12-08T15:00:00",
         "demand": 20
+      },
+      {
+        "timestamp": "2025-12-08T16:00:00",
+        "demand": 20
+      },
+      {
+        "timestamp": "2025-12-08T17:00:00",
+        "demand": 21
       },
       {
         "timestamp": "2025-12-08T18:00:00",
-        "demand": 20
+        "demand": 22
       },
       {
         "timestamp": "2025-12-08T19:00:00",
-        "demand": 20
+        "demand": 21
       },
       {
         "timestamp": "2025-12-08T20:00:00",
-        "demand": 10
+        "demand": 11
       },
       {
         "timestamp": "2025-12-08T21:00:00",
-        "demand": 10
+        "demand": 12
       },
       {
         "timestamp": "2025-12-08T22:00:00",
-        "demand": 11
+        "demand": 12
       },
       {
         "timestamp": "2025-12-08T23:00:00",
-        "demand": 11
+        "demand": 12
       },
       {
         "timestamp": "2025-12-09T00:00:00",
         "demand": 9
+      },
+      {
+        "timestamp": "2025-12-09T01:00:00",
+        "demand": 10
+      },
+      {
+        "timestamp": "2025-12-09T02:00:00",
+        "demand": 9
+      },
+      {
+        "timestamp": "2025-12-09T03:00:00",
+        "demand": 8
       }
     ]
   },
@@ -3538,20 +3538,8 @@
     "station_id": 36,
     "predictions": [
       {
-        "timestamp": "2025-12-08T01:00:00",
-        "demand": 9
-      },
-      {
-        "timestamp": "2025-12-08T02:00:00",
-        "demand": 0
-      },
-      {
-        "timestamp": "2025-12-08T03:00:00",
-        "demand": 4
-      },
-      {
         "timestamp": "2025-12-08T04:00:00",
-        "demand": 8
+        "demand": 9
       },
       {
         "timestamp": "2025-12-08T05:00:00",
@@ -3559,15 +3547,15 @@
       },
       {
         "timestamp": "2025-12-08T06:00:00",
-        "demand": 23
-      },
-      {
-        "timestamp": "2025-12-08T07:00:00",
         "demand": 24
       },
       {
+        "timestamp": "2025-12-08T07:00:00",
+        "demand": 25
+      },
+      {
         "timestamp": "2025-12-08T08:00:00",
-        "demand": 23
+        "demand": 21
       },
       {
         "timestamp": "2025-12-08T09:00:00",
@@ -3575,7 +3563,7 @@
       },
       {
         "timestamp": "2025-12-08T10:00:00",
-        "demand": 24
+        "demand": 23
       },
       {
         "timestamp": "2025-12-08T11:00:00",
@@ -3583,7 +3571,7 @@
       },
       {
         "timestamp": "2025-12-08T12:00:00",
-        "demand": 27
+        "demand": 25
       },
       {
         "timestamp": "2025-12-08T13:00:00",
@@ -3595,42 +3583,54 @@
       },
       {
         "timestamp": "2025-12-08T15:00:00",
-        "demand": 27
+        "demand": 25
       },
       {
         "timestamp": "2025-12-08T16:00:00",
-        "demand": 26
+        "demand": 25
       },
       {
         "timestamp": "2025-12-08T17:00:00",
-        "demand": 25
+        "demand": 26
       },
       {
         "timestamp": "2025-12-08T18:00:00",
-        "demand": 25
+        "demand": 26
       },
       {
         "timestamp": "2025-12-08T19:00:00",
-        "demand": 24
+        "demand": 25
       },
       {
         "timestamp": "2025-12-08T20:00:00",
-        "demand": 17
+        "demand": 18
       },
       {
         "timestamp": "2025-12-08T21:00:00",
-        "demand": 17
+        "demand": 19
       },
       {
         "timestamp": "2025-12-08T22:00:00",
-        "demand": 17
+        "demand": 19
       },
       {
         "timestamp": "2025-12-08T23:00:00",
-        "demand": 17
+        "demand": 18
       },
       {
         "timestamp": "2025-12-09T00:00:00",
+        "demand": 12
+      },
+      {
+        "timestamp": "2025-12-09T01:00:00",
+        "demand": 13
+      },
+      {
+        "timestamp": "2025-12-09T02:00:00",
+        "demand": 12
+      },
+      {
+        "timestamp": "2025-12-09T03:00:00",
         "demand": 12
       }
     ]
@@ -3639,36 +3639,24 @@
     "station_id": 37,
     "predictions": [
       {
-        "timestamp": "2025-12-08T01:00:00",
+        "timestamp": "2025-12-08T04:00:00",
         "demand": 10
       },
       {
-        "timestamp": "2025-12-08T02:00:00",
-        "demand": 0
-      },
-      {
-        "timestamp": "2025-12-08T03:00:00",
-        "demand": 3
-      },
-      {
-        "timestamp": "2025-12-08T04:00:00",
-        "demand": 8
-      },
-      {
         "timestamp": "2025-12-08T05:00:00",
-        "demand": 12
+        "demand": 13
       },
       {
         "timestamp": "2025-12-08T06:00:00",
-        "demand": 23
+        "demand": 25
       },
       {
         "timestamp": "2025-12-08T07:00:00",
-        "demand": 24
+        "demand": 26
       },
       {
         "timestamp": "2025-12-08T08:00:00",
-        "demand": 24
+        "demand": 22
       },
       {
         "timestamp": "2025-12-08T09:00:00",
@@ -3676,7 +3664,7 @@
       },
       {
         "timestamp": "2025-12-08T10:00:00",
-        "demand": 24
+        "demand": 23
       },
       {
         "timestamp": "2025-12-08T11:00:00",
@@ -3684,31 +3672,31 @@
       },
       {
         "timestamp": "2025-12-08T12:00:00",
-        "demand": 26
-      },
-      {
-        "timestamp": "2025-12-08T13:00:00",
-        "demand": 26
-      },
-      {
-        "timestamp": "2025-12-08T14:00:00",
-        "demand": 26
-      },
-      {
-        "timestamp": "2025-12-08T15:00:00",
-        "demand": 26
-      },
-      {
-        "timestamp": "2025-12-08T16:00:00",
         "demand": 25
       },
       {
-        "timestamp": "2025-12-08T17:00:00",
+        "timestamp": "2025-12-08T13:00:00",
+        "demand": 25
+      },
+      {
+        "timestamp": "2025-12-08T14:00:00",
+        "demand": 25
+      },
+      {
+        "timestamp": "2025-12-08T15:00:00",
         "demand": 24
       },
       {
-        "timestamp": "2025-12-08T18:00:00",
+        "timestamp": "2025-12-08T16:00:00",
         "demand": 24
+      },
+      {
+        "timestamp": "2025-12-08T17:00:00",
+        "demand": 25
+      },
+      {
+        "timestamp": "2025-12-08T18:00:00",
+        "demand": 26
       },
       {
         "timestamp": "2025-12-08T19:00:00",
@@ -3716,23 +3704,35 @@
       },
       {
         "timestamp": "2025-12-08T20:00:00",
-        "demand": 15
+        "demand": 17
       },
       {
         "timestamp": "2025-12-08T21:00:00",
-        "demand": 15
+        "demand": 18
       },
       {
         "timestamp": "2025-12-08T22:00:00",
-        "demand": 16
+        "demand": 17
       },
       {
         "timestamp": "2025-12-08T23:00:00",
-        "demand": 16
+        "demand": 17
       },
       {
         "timestamp": "2025-12-09T00:00:00",
         "demand": 13
+      },
+      {
+        "timestamp": "2025-12-09T01:00:00",
+        "demand": 14
+      },
+      {
+        "timestamp": "2025-12-09T02:00:00",
+        "demand": 15
+      },
+      {
+        "timestamp": "2025-12-09T03:00:00",
+        "demand": 14
       }
     ]
   },
@@ -3740,48 +3740,36 @@
     "station_id": 38,
     "predictions": [
       {
-        "timestamp": "2025-12-08T01:00:00",
-        "demand": 18
-      },
-      {
-        "timestamp": "2025-12-08T02:00:00",
-        "demand": 0
-      },
-      {
-        "timestamp": "2025-12-08T03:00:00",
-        "demand": 0
-      },
-      {
         "timestamp": "2025-12-08T04:00:00",
-        "demand": 0
-      },
-      {
-        "timestamp": "2025-12-08T05:00:00",
-        "demand": 7
-      },
-      {
-        "timestamp": "2025-12-08T06:00:00",
-        "demand": 16
-      },
-      {
-        "timestamp": "2025-12-08T07:00:00",
-        "demand": 16
-      },
-      {
-        "timestamp": "2025-12-08T08:00:00",
-        "demand": 14
-      },
-      {
-        "timestamp": "2025-12-08T09:00:00",
         "demand": 12
       },
       {
+        "timestamp": "2025-12-08T05:00:00",
+        "demand": 21
+      },
+      {
+        "timestamp": "2025-12-08T06:00:00",
+        "demand": 29
+      },
+      {
+        "timestamp": "2025-12-08T07:00:00",
+        "demand": 32
+      },
+      {
+        "timestamp": "2025-12-08T08:00:00",
+        "demand": 16
+      },
+      {
+        "timestamp": "2025-12-08T09:00:00",
+        "demand": 15
+      },
+      {
         "timestamp": "2025-12-08T10:00:00",
-        "demand": 13
+        "demand": 15
       },
       {
         "timestamp": "2025-12-08T11:00:00",
-        "demand": 15
+        "demand": 17
       },
       {
         "timestamp": "2025-12-08T12:00:00",
@@ -3789,7 +3777,7 @@
       },
       {
         "timestamp": "2025-12-08T13:00:00",
-        "demand": 18
+        "demand": 16
       },
       {
         "timestamp": "2025-12-08T14:00:00",
@@ -3797,35 +3785,35 @@
       },
       {
         "timestamp": "2025-12-08T15:00:00",
-        "demand": 21
-      },
-      {
-        "timestamp": "2025-12-08T16:00:00",
-        "demand": 20
-      },
-      {
-        "timestamp": "2025-12-08T17:00:00",
-        "demand": 19
-      },
-      {
-        "timestamp": "2025-12-08T18:00:00",
-        "demand": 19
-      },
-      {
-        "timestamp": "2025-12-08T19:00:00",
         "demand": 18
       },
       {
+        "timestamp": "2025-12-08T16:00:00",
+        "demand": 19
+      },
+      {
+        "timestamp": "2025-12-08T17:00:00",
+        "demand": 20
+      },
+      {
+        "timestamp": "2025-12-08T18:00:00",
+        "demand": 20
+      },
+      {
+        "timestamp": "2025-12-08T19:00:00",
+        "demand": 19
+      },
+      {
         "timestamp": "2025-12-08T20:00:00",
-        "demand": 30
+        "demand": 32
       },
       {
         "timestamp": "2025-12-08T21:00:00",
-        "demand": 30
+        "demand": 33
       },
       {
         "timestamp": "2025-12-08T22:00:00",
-        "demand": 31
+        "demand": 32
       },
       {
         "timestamp": "2025-12-08T23:00:00",
@@ -3834,6 +3822,18 @@
       {
         "timestamp": "2025-12-09T00:00:00",
         "demand": 27
+      },
+      {
+        "timestamp": "2025-12-09T01:00:00",
+        "demand": 28
+      },
+      {
+        "timestamp": "2025-12-09T02:00:00",
+        "demand": 30
+      },
+      {
+        "timestamp": "2025-12-09T03:00:00",
+        "demand": 29
       }
     ]
   },
@@ -3841,17 +3841,308 @@
     "station_id": 39,
     "predictions": [
       {
-        "timestamp": "2025-12-08T01:00:00",
+        "timestamp": "2025-12-08T04:00:00",
+        "demand": 11
+      },
+      {
+        "timestamp": "2025-12-08T05:00:00",
+        "demand": 16
+      },
+      {
+        "timestamp": "2025-12-08T06:00:00",
+        "demand": 23
+      },
+      {
+        "timestamp": "2025-12-08T07:00:00",
+        "demand": 25
+      },
+      {
+        "timestamp": "2025-12-08T08:00:00",
+        "demand": 17
+      },
+      {
+        "timestamp": "2025-12-08T09:00:00",
+        "demand": 18
+      },
+      {
+        "timestamp": "2025-12-08T10:00:00",
+        "demand": 18
+      },
+      {
+        "timestamp": "2025-12-08T11:00:00",
+        "demand": 19
+      },
+      {
+        "timestamp": "2025-12-08T12:00:00",
+        "demand": 19
+      },
+      {
+        "timestamp": "2025-12-08T13:00:00",
+        "demand": 20
+      },
+      {
+        "timestamp": "2025-12-08T14:00:00",
+        "demand": 21
+      },
+      {
+        "timestamp": "2025-12-08T15:00:00",
+        "demand": 20
+      },
+      {
+        "timestamp": "2025-12-08T16:00:00",
+        "demand": 21
+      },
+      {
+        "timestamp": "2025-12-08T17:00:00",
+        "demand": 22
+      },
+      {
+        "timestamp": "2025-12-08T18:00:00",
+        "demand": 21
+      },
+      {
+        "timestamp": "2025-12-08T19:00:00",
+        "demand": 20
+      },
+      {
+        "timestamp": "2025-12-08T20:00:00",
+        "demand": 20
+      },
+      {
+        "timestamp": "2025-12-08T21:00:00",
+        "demand": 20
+      },
+      {
+        "timestamp": "2025-12-08T22:00:00",
+        "demand": 20
+      },
+      {
+        "timestamp": "2025-12-08T23:00:00",
+        "demand": 20
+      },
+      {
+        "timestamp": "2025-12-09T00:00:00",
         "demand": 13
       },
       {
-        "timestamp": "2025-12-08T02:00:00",
-        "demand": 0
+        "timestamp": "2025-12-09T01:00:00",
+        "demand": 13
       },
       {
-        "timestamp": "2025-12-08T03:00:00",
-        "demand": 1
+        "timestamp": "2025-12-09T02:00:00",
+        "demand": 15
       },
+      {
+        "timestamp": "2025-12-09T03:00:00",
+        "demand": 14
+      }
+    ]
+  },
+  {
+    "station_id": 40,
+    "predictions": [
+      {
+        "timestamp": "2025-12-08T04:00:00",
+        "demand": 8
+      },
+      {
+        "timestamp": "2025-12-08T05:00:00",
+        "demand": 13
+      },
+      {
+        "timestamp": "2025-12-08T06:00:00",
+        "demand": 25
+      },
+      {
+        "timestamp": "2025-12-08T07:00:00",
+        "demand": 27
+      },
+      {
+        "timestamp": "2025-12-08T08:00:00",
+        "demand": 21
+      },
+      {
+        "timestamp": "2025-12-08T09:00:00",
+        "demand": 21
+      },
+      {
+        "timestamp": "2025-12-08T10:00:00",
+        "demand": 22
+      },
+      {
+        "timestamp": "2025-12-08T11:00:00",
+        "demand": 23
+      },
+      {
+        "timestamp": "2025-12-08T12:00:00",
+        "demand": 24
+      },
+      {
+        "timestamp": "2025-12-08T13:00:00",
+        "demand": 25
+      },
+      {
+        "timestamp": "2025-12-08T14:00:00",
+        "demand": 25
+      },
+      {
+        "timestamp": "2025-12-08T15:00:00",
+        "demand": 24
+      },
+      {
+        "timestamp": "2025-12-08T16:00:00",
+        "demand": 24
+      },
+      {
+        "timestamp": "2025-12-08T17:00:00",
+        "demand": 25
+      },
+      {
+        "timestamp": "2025-12-08T18:00:00",
+        "demand": 25
+      },
+      {
+        "timestamp": "2025-12-08T19:00:00",
+        "demand": 24
+      },
+      {
+        "timestamp": "2025-12-08T20:00:00",
+        "demand": 22
+      },
+      {
+        "timestamp": "2025-12-08T21:00:00",
+        "demand": 23
+      },
+      {
+        "timestamp": "2025-12-08T22:00:00",
+        "demand": 23
+      },
+      {
+        "timestamp": "2025-12-08T23:00:00",
+        "demand": 22
+      },
+      {
+        "timestamp": "2025-12-09T00:00:00",
+        "demand": 13
+      },
+      {
+        "timestamp": "2025-12-09T01:00:00",
+        "demand": 14
+      },
+      {
+        "timestamp": "2025-12-09T02:00:00",
+        "demand": 15
+      },
+      {
+        "timestamp": "2025-12-09T03:00:00",
+        "demand": 14
+      }
+    ]
+  },
+  {
+    "station_id": 41,
+    "predictions": [
+      {
+        "timestamp": "2025-12-08T04:00:00",
+        "demand": 19
+      },
+      {
+        "timestamp": "2025-12-08T05:00:00",
+        "demand": 25
+      },
+      {
+        "timestamp": "2025-12-08T06:00:00",
+        "demand": 25
+      },
+      {
+        "timestamp": "2025-12-08T07:00:00",
+        "demand": 29
+      },
+      {
+        "timestamp": "2025-12-08T08:00:00",
+        "demand": 23
+      },
+      {
+        "timestamp": "2025-12-08T09:00:00",
+        "demand": 27
+      },
+      {
+        "timestamp": "2025-12-08T10:00:00",
+        "demand": 27
+      },
+      {
+        "timestamp": "2025-12-08T11:00:00",
+        "demand": 28
+      },
+      {
+        "timestamp": "2025-12-08T12:00:00",
+        "demand": 29
+      },
+      {
+        "timestamp": "2025-12-08T13:00:00",
+        "demand": 29
+      },
+      {
+        "timestamp": "2025-12-08T14:00:00",
+        "demand": 32
+      },
+      {
+        "timestamp": "2025-12-08T15:00:00",
+        "demand": 31
+      },
+      {
+        "timestamp": "2025-12-08T16:00:00",
+        "demand": 31
+      },
+      {
+        "timestamp": "2025-12-08T17:00:00",
+        "demand": 32
+      },
+      {
+        "timestamp": "2025-12-08T18:00:00",
+        "demand": 31
+      },
+      {
+        "timestamp": "2025-12-08T19:00:00",
+        "demand": 30
+      },
+      {
+        "timestamp": "2025-12-08T20:00:00",
+        "demand": 46
+      },
+      {
+        "timestamp": "2025-12-08T21:00:00",
+        "demand": 46
+      },
+      {
+        "timestamp": "2025-12-08T22:00:00",
+        "demand": 46
+      },
+      {
+        "timestamp": "2025-12-08T23:00:00",
+        "demand": 45
+      },
+      {
+        "timestamp": "2025-12-09T00:00:00",
+        "demand": 29
+      },
+      {
+        "timestamp": "2025-12-09T01:00:00",
+        "demand": 29
+      },
+      {
+        "timestamp": "2025-12-09T02:00:00",
+        "demand": 34
+      },
+      {
+        "timestamp": "2025-12-09T03:00:00",
+        "demand": 33
+      }
+    ]
+  },
+  {
+    "station_id": 42,
+    "predictions": [
       {
         "timestamp": "2025-12-08T04:00:00",
         "demand": 6
@@ -3862,318 +4153,15 @@
       },
       {
         "timestamp": "2025-12-08T06:00:00",
-        "demand": 18
+        "demand": 21
       },
       {
         "timestamp": "2025-12-08T07:00:00",
-        "demand": 19
-      },
-      {
-        "timestamp": "2025-12-08T08:00:00",
-        "demand": 18
-      },
-      {
-        "timestamp": "2025-12-08T09:00:00",
-        "demand": 16
-      },
-      {
-        "timestamp": "2025-12-08T10:00:00",
-        "demand": 18
-      },
-      {
-        "timestamp": "2025-12-08T11:00:00",
-        "demand": 19
-      },
-      {
-        "timestamp": "2025-12-08T12:00:00",
-        "demand": 21
-      },
-      {
-        "timestamp": "2025-12-08T13:00:00",
-        "demand": 21
-      },
-      {
-        "timestamp": "2025-12-08T14:00:00",
-        "demand": 22
-      },
-      {
-        "timestamp": "2025-12-08T15:00:00",
-        "demand": 22
-      },
-      {
-        "timestamp": "2025-12-08T16:00:00",
-        "demand": 21
-      },
-      {
-        "timestamp": "2025-12-08T17:00:00",
-        "demand": 20
-      },
-      {
-        "timestamp": "2025-12-08T18:00:00",
-        "demand": 19
-      },
-      {
-        "timestamp": "2025-12-08T19:00:00",
-        "demand": 19
-      },
-      {
-        "timestamp": "2025-12-08T20:00:00",
-        "demand": 18
-      },
-      {
-        "timestamp": "2025-12-08T21:00:00",
-        "demand": 18
-      },
-      {
-        "timestamp": "2025-12-08T22:00:00",
-        "demand": 19
-      },
-      {
-        "timestamp": "2025-12-08T23:00:00",
-        "demand": 19
-      },
-      {
-        "timestamp": "2025-12-09T00:00:00",
-        "demand": 13
-      }
-    ]
-  },
-  {
-    "station_id": 40,
-    "predictions": [
-      {
-        "timestamp": "2025-12-08T01:00:00",
-        "demand": 10
-      },
-      {
-        "timestamp": "2025-12-08T02:00:00",
-        "demand": 0
-      },
-      {
-        "timestamp": "2025-12-08T03:00:00",
-        "demand": 0
-      },
-      {
-        "timestamp": "2025-12-08T04:00:00",
-        "demand": 5
-      },
-      {
-        "timestamp": "2025-12-08T05:00:00",
-        "demand": 9
-      },
-      {
-        "timestamp": "2025-12-08T06:00:00",
-        "demand": 22
-      },
-      {
-        "timestamp": "2025-12-08T07:00:00",
-        "demand": 22
-      },
-      {
-        "timestamp": "2025-12-08T08:00:00",
-        "demand": 22
-      },
-      {
-        "timestamp": "2025-12-08T09:00:00",
-        "demand": 21
-      },
-      {
-        "timestamp": "2025-12-08T10:00:00",
-        "demand": 22
-      },
-      {
-        "timestamp": "2025-12-08T11:00:00",
         "demand": 23
       },
       {
-        "timestamp": "2025-12-08T12:00:00",
-        "demand": 25
-      },
-      {
-        "timestamp": "2025-12-08T13:00:00",
-        "demand": 25
-      },
-      {
-        "timestamp": "2025-12-08T14:00:00",
-        "demand": 26
-      },
-      {
-        "timestamp": "2025-12-08T15:00:00",
-        "demand": 26
-      },
-      {
-        "timestamp": "2025-12-08T16:00:00",
-        "demand": 25
-      },
-      {
-        "timestamp": "2025-12-08T17:00:00",
-        "demand": 24
-      },
-      {
-        "timestamp": "2025-12-08T18:00:00",
-        "demand": 24
-      },
-      {
-        "timestamp": "2025-12-08T19:00:00",
-        "demand": 24
-      },
-      {
-        "timestamp": "2025-12-08T20:00:00",
-        "demand": 21
-      },
-      {
-        "timestamp": "2025-12-08T21:00:00",
-        "demand": 20
-      },
-      {
-        "timestamp": "2025-12-08T22:00:00",
-        "demand": 21
-      },
-      {
-        "timestamp": "2025-12-08T23:00:00",
-        "demand": 21
-      },
-      {
-        "timestamp": "2025-12-09T00:00:00",
-        "demand": 13
-      }
-    ]
-  },
-  {
-    "station_id": 41,
-    "predictions": [
-      {
-        "timestamp": "2025-12-08T01:00:00",
-        "demand": 19
-      },
-      {
-        "timestamp": "2025-12-08T02:00:00",
-        "demand": 7
-      },
-      {
-        "timestamp": "2025-12-08T03:00:00",
-        "demand": 17
-      },
-      {
-        "timestamp": "2025-12-08T04:00:00",
-        "demand": 24
-      },
-      {
-        "timestamp": "2025-12-08T05:00:00",
-        "demand": 29
-      },
-      {
-        "timestamp": "2025-12-08T06:00:00",
-        "demand": 29
-      },
-      {
-        "timestamp": "2025-12-08T07:00:00",
-        "demand": 29
-      },
-      {
         "timestamp": "2025-12-08T08:00:00",
-        "demand": 28
-      },
-      {
-        "timestamp": "2025-12-08T09:00:00",
-        "demand": 26
-      },
-      {
-        "timestamp": "2025-12-08T10:00:00",
-        "demand": 27
-      },
-      {
-        "timestamp": "2025-12-08T11:00:00",
-        "demand": 28
-      },
-      {
-        "timestamp": "2025-12-08T12:00:00",
-        "demand": 29
-      },
-      {
-        "timestamp": "2025-12-08T13:00:00",
-        "demand": 29
-      },
-      {
-        "timestamp": "2025-12-08T14:00:00",
-        "demand": 32
-      },
-      {
-        "timestamp": "2025-12-08T15:00:00",
-        "demand": 33
-      },
-      {
-        "timestamp": "2025-12-08T16:00:00",
-        "demand": 32
-      },
-      {
-        "timestamp": "2025-12-08T17:00:00",
-        "demand": 31
-      },
-      {
-        "timestamp": "2025-12-08T18:00:00",
-        "demand": 30
-      },
-      {
-        "timestamp": "2025-12-08T19:00:00",
-        "demand": 29
-      },
-      {
-        "timestamp": "2025-12-08T20:00:00",
-        "demand": 44
-      },
-      {
-        "timestamp": "2025-12-08T21:00:00",
-        "demand": 43
-      },
-      {
-        "timestamp": "2025-12-08T22:00:00",
-        "demand": 44
-      },
-      {
-        "timestamp": "2025-12-08T23:00:00",
-        "demand": 45
-      },
-      {
-        "timestamp": "2025-12-09T00:00:00",
-        "demand": 29
-      }
-    ]
-  },
-  {
-    "station_id": 42,
-    "predictions": [
-      {
-        "timestamp": "2025-12-08T01:00:00",
-        "demand": 9
-      },
-      {
-        "timestamp": "2025-12-08T02:00:00",
-        "demand": 0
-      },
-      {
-        "timestamp": "2025-12-08T03:00:00",
-        "demand": 0
-      },
-      {
-        "timestamp": "2025-12-08T04:00:00",
-        "demand": 2
-      },
-      {
-        "timestamp": "2025-12-08T05:00:00",
-        "demand": 7
-      },
-      {
-        "timestamp": "2025-12-08T06:00:00",
-        "demand": 17
-      },
-      {
-        "timestamp": "2025-12-08T07:00:00",
-        "demand": 17
-      },
-      {
-        "timestamp": "2025-12-08T08:00:00",
-        "demand": 17
+        "demand": 16
       },
       {
         "timestamp": "2025-12-08T09:00:00",
@@ -4189,7 +4177,7 @@
       },
       {
         "timestamp": "2025-12-08T12:00:00",
-        "demand": 20
+        "demand": 19
       },
       {
         "timestamp": "2025-12-08T13:00:00",
@@ -4197,47 +4185,59 @@
       },
       {
         "timestamp": "2025-12-08T14:00:00",
-        "demand": 21
-      },
-      {
-        "timestamp": "2025-12-08T15:00:00",
-        "demand": 21
-      },
-      {
-        "timestamp": "2025-12-08T16:00:00",
         "demand": 20
       },
       {
-        "timestamp": "2025-12-08T17:00:00",
+        "timestamp": "2025-12-08T15:00:00",
         "demand": 19
+      },
+      {
+        "timestamp": "2025-12-08T16:00:00",
+        "demand": 19
+      },
+      {
+        "timestamp": "2025-12-08T17:00:00",
+        "demand": 20
       },
       {
         "timestamp": "2025-12-08T18:00:00",
-        "demand": 19
+        "demand": 21
       },
       {
         "timestamp": "2025-12-08T19:00:00",
-        "demand": 19
+        "demand": 20
       },
       {
         "timestamp": "2025-12-08T20:00:00",
-        "demand": 14
+        "demand": 15
       },
       {
         "timestamp": "2025-12-08T21:00:00",
-        "demand": 14
+        "demand": 16
       },
       {
         "timestamp": "2025-12-08T22:00:00",
-        "demand": 15
+        "demand": 16
       },
       {
         "timestamp": "2025-12-08T23:00:00",
-        "demand": 15
+        "demand": 16
       },
       {
         "timestamp": "2025-12-09T00:00:00",
         "demand": 13
+      },
+      {
+        "timestamp": "2025-12-09T01:00:00",
+        "demand": 13
+      },
+      {
+        "timestamp": "2025-12-09T02:00:00",
+        "demand": 13
+      },
+      {
+        "timestamp": "2025-12-09T03:00:00",
+        "demand": 12
       }
     ]
   },
@@ -4245,36 +4245,24 @@
     "station_id": 43,
     "predictions": [
       {
-        "timestamp": "2025-12-08T01:00:00",
+        "timestamp": "2025-12-08T04:00:00",
         "demand": 16
       },
       {
-        "timestamp": "2025-12-08T02:00:00",
-        "demand": 10
-      },
-      {
-        "timestamp": "2025-12-08T03:00:00",
-        "demand": 19
-      },
-      {
-        "timestamp": "2025-12-08T04:00:00",
-        "demand": 26
-      },
-      {
         "timestamp": "2025-12-08T05:00:00",
-        "demand": 30
+        "demand": 21
       },
       {
         "timestamp": "2025-12-08T06:00:00",
-        "demand": 29
+        "demand": 21
       },
       {
         "timestamp": "2025-12-08T07:00:00",
-        "demand": 29
+        "demand": 25
       },
       {
         "timestamp": "2025-12-08T08:00:00",
-        "demand": 28
+        "demand": 23
       },
       {
         "timestamp": "2025-12-08T09:00:00",
@@ -4290,7 +4278,7 @@
       },
       {
         "timestamp": "2025-12-08T12:00:00",
-        "demand": 29
+        "demand": 28
       },
       {
         "timestamp": "2025-12-08T13:00:00",
@@ -4302,43 +4290,55 @@
       },
       {
         "timestamp": "2025-12-08T15:00:00",
-        "demand": 31
+        "demand": 30
       },
       {
         "timestamp": "2025-12-08T16:00:00",
-        "demand": 31
+        "demand": 30
       },
       {
         "timestamp": "2025-12-08T17:00:00",
-        "demand": 30
+        "demand": 31
       },
       {
         "timestamp": "2025-12-08T18:00:00",
-        "demand": 30
+        "demand": 31
       },
       {
         "timestamp": "2025-12-08T19:00:00",
-        "demand": 28
+        "demand": 29
       },
       {
         "timestamp": "2025-12-08T20:00:00",
-        "demand": 37
+        "demand": 39
       },
       {
         "timestamp": "2025-12-08T21:00:00",
-        "demand": 36
+        "demand": 39
       },
       {
         "timestamp": "2025-12-08T22:00:00",
-        "demand": 37
+        "demand": 38
       },
       {
         "timestamp": "2025-12-08T23:00:00",
-        "demand": 37
+        "demand": 38
       },
       {
         "timestamp": "2025-12-09T00:00:00",
         "demand": 26
+      },
+      {
+        "timestamp": "2025-12-09T01:00:00",
+        "demand": 26
+      },
+      {
+        "timestamp": "2025-12-09T02:00:00",
+        "demand": 29
+      },
+      {
+        "timestamp": "2025-12-09T03:00:00",
+        "demand": 29
       }
     ]
   },
@@ -4346,40 +4346,28 @@
     "station_id": 44,
     "predictions": [
       {
-        "timestamp": "2025-12-08T01:00:00",
-        "demand": 20
-      },
-      {
-        "timestamp": "2025-12-08T02:00:00",
-        "demand": 5
-      },
-      {
-        "timestamp": "2025-12-08T03:00:00",
-        "demand": 17
-      },
-      {
         "timestamp": "2025-12-08T04:00:00",
-        "demand": 26
+        "demand": 19
       },
       {
         "timestamp": "2025-12-08T05:00:00",
-        "demand": 31
+        "demand": 27
       },
       {
         "timestamp": "2025-12-08T06:00:00",
-        "demand": 35
+        "demand": 31
       },
       {
         "timestamp": "2025-12-08T07:00:00",
-        "demand": 35
+        "demand": 36
       },
       {
         "timestamp": "2025-12-08T08:00:00",
-        "demand": 34
+        "demand": 29
       },
       {
         "timestamp": "2025-12-08T09:00:00",
-        "demand": 32
+        "demand": 33
       },
       {
         "timestamp": "2025-12-08T10:00:00",
@@ -4391,7 +4379,7 @@
       },
       {
         "timestamp": "2025-12-08T12:00:00",
-        "demand": 35
+        "demand": 34
       },
       {
         "timestamp": "2025-12-08T13:00:00",
@@ -4403,7 +4391,7 @@
       },
       {
         "timestamp": "2025-12-08T15:00:00",
-        "demand": 38
+        "demand": 37
       },
       {
         "timestamp": "2025-12-08T16:00:00",
@@ -4411,35 +4399,47 @@
       },
       {
         "timestamp": "2025-12-08T17:00:00",
-        "demand": 36
+        "demand": 39
       },
       {
         "timestamp": "2025-12-08T18:00:00",
-        "demand": 35
+        "demand": 37
       },
       {
         "timestamp": "2025-12-08T19:00:00",
-        "demand": 33
+        "demand": 34
       },
       {
         "timestamp": "2025-12-08T20:00:00",
-        "demand": 46
+        "demand": 50
       },
       {
         "timestamp": "2025-12-08T21:00:00",
-        "demand": 46
+        "demand": 49
       },
       {
         "timestamp": "2025-12-08T22:00:00",
-        "demand": 46
+        "demand": 49
       },
       {
         "timestamp": "2025-12-08T23:00:00",
-        "demand": 47
+        "demand": 48
       },
       {
         "timestamp": "2025-12-09T00:00:00",
         "demand": 26
+      },
+      {
+        "timestamp": "2025-12-09T01:00:00",
+        "demand": 26
+      },
+      {
+        "timestamp": "2025-12-09T02:00:00",
+        "demand": 33
+      },
+      {
+        "timestamp": "2025-12-09T03:00:00",
+        "demand": 33
       }
     ]
   },
@@ -4447,40 +4447,28 @@
     "station_id": 45,
     "predictions": [
       {
-        "timestamp": "2025-12-08T01:00:00",
-        "demand": 15
-      },
-      {
-        "timestamp": "2025-12-08T02:00:00",
-        "demand": 0
-      },
-      {
-        "timestamp": "2025-12-08T03:00:00",
-        "demand": 0
-      },
-      {
         "timestamp": "2025-12-08T04:00:00",
-        "demand": 2
+        "demand": 12
       },
       {
         "timestamp": "2025-12-08T05:00:00",
-        "demand": 8
+        "demand": 17
       },
       {
         "timestamp": "2025-12-08T06:00:00",
-        "demand": 28
+        "demand": 37
       },
       {
         "timestamp": "2025-12-08T07:00:00",
-        "demand": 28
+        "demand": 38
       },
       {
         "timestamp": "2025-12-08T08:00:00",
-        "demand": 28
+        "demand": 30
       },
       {
         "timestamp": "2025-12-08T09:00:00",
-        "demand": 27
+        "demand": 28
       },
       {
         "timestamp": "2025-12-08T10:00:00",
@@ -4492,19 +4480,19 @@
       },
       {
         "timestamp": "2025-12-08T12:00:00",
-        "demand": 36
+        "demand": 33
       },
       {
         "timestamp": "2025-12-08T13:00:00",
-        "demand": 35
+        "demand": 34
       },
       {
         "timestamp": "2025-12-08T14:00:00",
-        "demand": 34
+        "demand": 33
       },
       {
         "timestamp": "2025-12-08T15:00:00",
-        "demand": 34
+        "demand": 32
       },
       {
         "timestamp": "2025-12-08T16:00:00",
@@ -4512,35 +4500,47 @@
       },
       {
         "timestamp": "2025-12-08T17:00:00",
-        "demand": 32
+        "demand": 34
       },
       {
         "timestamp": "2025-12-08T18:00:00",
-        "demand": 32
+        "demand": 34
       },
       {
         "timestamp": "2025-12-08T19:00:00",
-        "demand": 32
+        "demand": 33
       },
       {
         "timestamp": "2025-12-08T20:00:00",
-        "demand": 12
+        "demand": 13
       },
       {
         "timestamp": "2025-12-08T21:00:00",
-        "demand": 12
+        "demand": 14
       },
       {
         "timestamp": "2025-12-08T22:00:00",
-        "demand": 12
+        "demand": 14
       },
       {
         "timestamp": "2025-12-08T23:00:00",
-        "demand": 13
+        "demand": 14
       },
       {
         "timestamp": "2025-12-09T00:00:00",
         "demand": 13
+      },
+      {
+        "timestamp": "2025-12-09T01:00:00",
+        "demand": 14
+      },
+      {
+        "timestamp": "2025-12-09T02:00:00",
+        "demand": 10
+      },
+      {
+        "timestamp": "2025-12-09T03:00:00",
+        "demand": 9
       }
     ]
   },
@@ -4548,32 +4548,20 @@
     "station_id": 46,
     "predictions": [
       {
-        "timestamp": "2025-12-08T01:00:00",
-        "demand": 27
-      },
-      {
-        "timestamp": "2025-12-08T02:00:00",
-        "demand": 0
-      },
-      {
-        "timestamp": "2025-12-08T03:00:00",
-        "demand": 1
-      },
-      {
         "timestamp": "2025-12-08T04:00:00",
-        "demand": 13
+        "demand": 18
       },
       {
         "timestamp": "2025-12-08T05:00:00",
-        "demand": 25
+        "demand": 33
       },
       {
         "timestamp": "2025-12-08T06:00:00",
-        "demand": 36
+        "demand": 44
       },
       {
         "timestamp": "2025-12-08T07:00:00",
-        "demand": 37
+        "demand": 51
       },
       {
         "timestamp": "2025-12-08T08:00:00",
@@ -4581,19 +4569,19 @@
       },
       {
         "timestamp": "2025-12-08T09:00:00",
-        "demand": 34
-      },
-      {
-        "timestamp": "2025-12-08T10:00:00",
-        "demand": 34
-      },
-      {
-        "timestamp": "2025-12-08T11:00:00",
         "demand": 36
       },
       {
+        "timestamp": "2025-12-08T10:00:00",
+        "demand": 36
+      },
+      {
+        "timestamp": "2025-12-08T11:00:00",
+        "demand": 39
+      },
+      {
         "timestamp": "2025-12-08T12:00:00",
-        "demand": 32
+        "demand": 34
       },
       {
         "timestamp": "2025-12-08T13:00:00",
@@ -4601,47 +4589,59 @@
       },
       {
         "timestamp": "2025-12-08T14:00:00",
-        "demand": 33
+        "demand": 34
       },
       {
         "timestamp": "2025-12-08T15:00:00",
-        "demand": 34
+        "demand": 33
       },
       {
         "timestamp": "2025-12-08T16:00:00",
-        "demand": 34
+        "demand": 33
       },
       {
         "timestamp": "2025-12-08T17:00:00",
-        "demand": 34
+        "demand": 35
       },
       {
         "timestamp": "2025-12-08T18:00:00",
-        "demand": 36
+        "demand": 37
       },
       {
         "timestamp": "2025-12-08T19:00:00",
-        "demand": 36
+        "demand": 37
       },
       {
         "timestamp": "2025-12-08T20:00:00",
-        "demand": 24
+        "demand": 26
       },
       {
         "timestamp": "2025-12-08T21:00:00",
-        "demand": 23
+        "demand": 25
       },
       {
         "timestamp": "2025-12-08T22:00:00",
-        "demand": 25
+        "demand": 24
       },
       {
         "timestamp": "2025-12-08T23:00:00",
-        "demand": 25
+        "demand": 24
       },
       {
         "timestamp": "2025-12-09T00:00:00",
-        "demand": 56
+        "demand": 54
+      },
+      {
+        "timestamp": "2025-12-09T01:00:00",
+        "demand": 54
+      },
+      {
+        "timestamp": "2025-12-09T02:00:00",
+        "demand": 53
+      },
+      {
+        "timestamp": "2025-12-09T03:00:00",
+        "demand": 52
       }
     ]
   },
@@ -4649,72 +4649,60 @@
     "station_id": 47,
     "predictions": [
       {
-        "timestamp": "2025-12-08T01:00:00",
-        "demand": 27
-      },
-      {
-        "timestamp": "2025-12-08T02:00:00",
-        "demand": 0
-      },
-      {
-        "timestamp": "2025-12-08T03:00:00",
-        "demand": 0
-      },
-      {
         "timestamp": "2025-12-08T04:00:00",
-        "demand": 12
+        "demand": 19
       },
       {
         "timestamp": "2025-12-08T05:00:00",
-        "demand": 24
+        "demand": 33
       },
       {
         "timestamp": "2025-12-08T06:00:00",
-        "demand": 33
+        "demand": 42
       },
       {
         "timestamp": "2025-12-08T07:00:00",
-        "demand": 34
+        "demand": 49
       },
       {
         "timestamp": "2025-12-08T08:00:00",
-        "demand": 33
+        "demand": 34
       },
       {
         "timestamp": "2025-12-08T09:00:00",
-        "demand": 31
-      },
-      {
-        "timestamp": "2025-12-08T10:00:00",
-        "demand": 31
-      },
-      {
-        "timestamp": "2025-12-08T11:00:00",
         "demand": 33
       },
       {
+        "timestamp": "2025-12-08T10:00:00",
+        "demand": 33
+      },
+      {
+        "timestamp": "2025-12-08T11:00:00",
+        "demand": 36
+      },
+      {
         "timestamp": "2025-12-08T12:00:00",
-        "demand": 29
+        "demand": 31
       },
       {
         "timestamp": "2025-12-08T13:00:00",
-        "demand": 31
-      },
-      {
-        "timestamp": "2025-12-08T14:00:00",
         "demand": 30
       },
       {
-        "timestamp": "2025-12-08T15:00:00",
+        "timestamp": "2025-12-08T14:00:00",
         "demand": 31
+      },
+      {
+        "timestamp": "2025-12-08T15:00:00",
+        "demand": 29
       },
       {
         "timestamp": "2025-12-08T16:00:00",
-        "demand": 31
+        "demand": 30
       },
       {
         "timestamp": "2025-12-08T17:00:00",
-        "demand": 31
+        "demand": 32
       },
       {
         "timestamp": "2025-12-08T18:00:00",
@@ -4726,23 +4714,35 @@
       },
       {
         "timestamp": "2025-12-08T20:00:00",
-        "demand": 22
-      },
-      {
-        "timestamp": "2025-12-08T21:00:00",
-        "demand": 22
-      },
-      {
-        "timestamp": "2025-12-08T22:00:00",
-        "demand": 23
-      },
-      {
-        "timestamp": "2025-12-08T23:00:00",
         "demand": 24
       },
       {
+        "timestamp": "2025-12-08T21:00:00",
+        "demand": 24
+      },
+      {
+        "timestamp": "2025-12-08T22:00:00",
+        "demand": 22
+      },
+      {
+        "timestamp": "2025-12-08T23:00:00",
+        "demand": 22
+      },
+      {
         "timestamp": "2025-12-09T00:00:00",
-        "demand": 51
+        "demand": 48
+      },
+      {
+        "timestamp": "2025-12-09T01:00:00",
+        "demand": 49
+      },
+      {
+        "timestamp": "2025-12-09T02:00:00",
+        "demand": 48
+      },
+      {
+        "timestamp": "2025-12-09T03:00:00",
+        "demand": 48
       }
     ]
   },
@@ -4750,64 +4750,52 @@
     "station_id": 48,
     "predictions": [
       {
-        "timestamp": "2025-12-08T01:00:00",
-        "demand": 23
-      },
-      {
-        "timestamp": "2025-12-08T02:00:00",
-        "demand": 0
-      },
-      {
-        "timestamp": "2025-12-08T03:00:00",
-        "demand": 0
-      },
-      {
         "timestamp": "2025-12-08T04:00:00",
-        "demand": 0
+        "demand": 16
       },
       {
         "timestamp": "2025-12-08T05:00:00",
-        "demand": 3
+        "demand": 25
       },
       {
         "timestamp": "2025-12-08T06:00:00",
-        "demand": 18
+        "demand": 39
       },
       {
         "timestamp": "2025-12-08T07:00:00",
-        "demand": 19
+        "demand": 40
       },
       {
         "timestamp": "2025-12-08T08:00:00",
-        "demand": 18
+        "demand": 22
       },
       {
         "timestamp": "2025-12-08T09:00:00",
-        "demand": 15
+        "demand": 19
       },
       {
         "timestamp": "2025-12-08T10:00:00",
-        "demand": 17
+        "demand": 19
       },
       {
         "timestamp": "2025-12-08T11:00:00",
-        "demand": 20
+        "demand": 21
       },
       {
         "timestamp": "2025-12-08T12:00:00",
-        "demand": 23
+        "demand": 21
       },
       {
         "timestamp": "2025-12-08T13:00:00",
-        "demand": 24
+        "demand": 22
       },
       {
         "timestamp": "2025-12-08T14:00:00",
-        "demand": 24
+        "demand": 23
       },
       {
         "timestamp": "2025-12-08T15:00:00",
-        "demand": 25
+        "demand": 22
       },
       {
         "timestamp": "2025-12-08T16:00:00",
@@ -4815,34 +4803,46 @@
       },
       {
         "timestamp": "2025-12-08T17:00:00",
-        "demand": 21
+        "demand": 24
       },
       {
         "timestamp": "2025-12-08T18:00:00",
-        "demand": 21
+        "demand": 24
       },
       {
         "timestamp": "2025-12-08T19:00:00",
-        "demand": 21
+        "demand": 22
       },
       {
         "timestamp": "2025-12-08T20:00:00",
-        "demand": 13
+        "demand": 15
       },
       {
         "timestamp": "2025-12-08T21:00:00",
-        "demand": 13
+        "demand": 16
       },
       {
         "timestamp": "2025-12-08T22:00:00",
-        "demand": 15
+        "demand": 16
       },
       {
         "timestamp": "2025-12-08T23:00:00",
-        "demand": 15
+        "demand": 16
       },
       {
         "timestamp": "2025-12-09T00:00:00",
+        "demand": 14
+      },
+      {
+        "timestamp": "2025-12-09T01:00:00",
+        "demand": 15
+      },
+      {
+        "timestamp": "2025-12-09T02:00:00",
+        "demand": 15
+      },
+      {
+        "timestamp": "2025-12-09T03:00:00",
         "demand": 14
       }
     ]
@@ -4851,64 +4851,52 @@
     "station_id": 49,
     "predictions": [
       {
-        "timestamp": "2025-12-08T01:00:00",
-        "demand": 22
-      },
-      {
-        "timestamp": "2025-12-08T02:00:00",
-        "demand": 0
-      },
-      {
-        "timestamp": "2025-12-08T03:00:00",
-        "demand": 0
-      },
-      {
         "timestamp": "2025-12-08T04:00:00",
-        "demand": 0
+        "demand": 16
       },
       {
         "timestamp": "2025-12-08T05:00:00",
-        "demand": 6
+        "demand": 26
       },
       {
         "timestamp": "2025-12-08T06:00:00",
-        "demand": 32
+        "demand": 52
       },
       {
         "timestamp": "2025-12-08T07:00:00",
-        "demand": 32
+        "demand": 54
       },
       {
         "timestamp": "2025-12-08T08:00:00",
-        "demand": 32
+        "demand": 36
       },
       {
         "timestamp": "2025-12-08T09:00:00",
-        "demand": 29
+        "demand": 33
       },
       {
         "timestamp": "2025-12-08T10:00:00",
-        "demand": 32
+        "demand": 33
       },
       {
         "timestamp": "2025-12-08T11:00:00",
-        "demand": 34
+        "demand": 35
       },
       {
         "timestamp": "2025-12-08T12:00:00",
-        "demand": 37
+        "demand": 34
       },
       {
         "timestamp": "2025-12-08T13:00:00",
-        "demand": 38
+        "demand": 35
       },
       {
         "timestamp": "2025-12-08T14:00:00",
-        "demand": 37
+        "demand": 36
       },
       {
         "timestamp": "2025-12-08T15:00:00",
-        "demand": 38
+        "demand": 35
       },
       {
         "timestamp": "2025-12-08T16:00:00",
@@ -4916,35 +4904,47 @@
       },
       {
         "timestamp": "2025-12-08T17:00:00",
-        "demand": 35
+        "demand": 37
       },
       {
         "timestamp": "2025-12-08T18:00:00",
-        "demand": 33
+        "demand": 37
       },
       {
         "timestamp": "2025-12-08T19:00:00",
-        "demand": 34
+        "demand": 35
       },
       {
         "timestamp": "2025-12-08T20:00:00",
-        "demand": 17
+        "demand": 19
       },
       {
         "timestamp": "2025-12-08T21:00:00",
-        "demand": 16
+        "demand": 20
       },
       {
         "timestamp": "2025-12-08T22:00:00",
-        "demand": 18
+        "demand": 20
       },
       {
         "timestamp": "2025-12-08T23:00:00",
-        "demand": 19
+        "demand": 20
       },
       {
         "timestamp": "2025-12-09T00:00:00",
         "demand": 16
+      },
+      {
+        "timestamp": "2025-12-09T01:00:00",
+        "demand": 17
+      },
+      {
+        "timestamp": "2025-12-09T02:00:00",
+        "demand": 18
+      },
+      {
+        "timestamp": "2025-12-09T03:00:00",
+        "demand": 17
       }
     ]
   },
@@ -4952,52 +4952,40 @@
     "station_id": 50,
     "predictions": [
       {
-        "timestamp": "2025-12-08T01:00:00",
-        "demand": 23
-      },
-      {
-        "timestamp": "2025-12-08T02:00:00",
-        "demand": 0
-      },
-      {
-        "timestamp": "2025-12-08T03:00:00",
-        "demand": 6
-      },
-      {
         "timestamp": "2025-12-08T04:00:00",
         "demand": 17
       },
       {
         "timestamp": "2025-12-08T05:00:00",
-        "demand": 27
+        "demand": 29
       },
       {
         "timestamp": "2025-12-08T06:00:00",
-        "demand": 41
+        "demand": 42
       },
       {
         "timestamp": "2025-12-08T07:00:00",
-        "demand": 41
+        "demand": 49
       },
       {
         "timestamp": "2025-12-08T08:00:00",
-        "demand": 41
+        "demand": 39
       },
       {
         "timestamp": "2025-12-08T09:00:00",
-        "demand": 39
-      },
-      {
-        "timestamp": "2025-12-08T10:00:00",
-        "demand": 39
-      },
-      {
-        "timestamp": "2025-12-08T11:00:00",
         "demand": 40
       },
       {
+        "timestamp": "2025-12-08T10:00:00",
+        "demand": 40
+      },
+      {
+        "timestamp": "2025-12-08T11:00:00",
+        "demand": 42
+      },
+      {
         "timestamp": "2025-12-08T12:00:00",
-        "demand": 36
+        "demand": 39
       },
       {
         "timestamp": "2025-12-08T13:00:00",
@@ -5005,23 +4993,23 @@
       },
       {
         "timestamp": "2025-12-08T14:00:00",
-        "demand": 37
-      },
-      {
-        "timestamp": "2025-12-08T15:00:00",
-        "demand": 37
-      },
-      {
-        "timestamp": "2025-12-08T16:00:00",
         "demand": 38
       },
       {
+        "timestamp": "2025-12-08T15:00:00",
+        "demand": 36
+      },
+      {
+        "timestamp": "2025-12-08T16:00:00",
+        "demand": 36
+      },
+      {
         "timestamp": "2025-12-08T17:00:00",
-        "demand": 37
+        "demand": 38
       },
       {
         "timestamp": "2025-12-08T18:00:00",
-        "demand": 40
+        "demand": 39
       },
       {
         "timestamp": "2025-12-08T19:00:00",
@@ -5029,23 +5017,35 @@
       },
       {
         "timestamp": "2025-12-08T20:00:00",
-        "demand": 26
-      },
-      {
-        "timestamp": "2025-12-08T21:00:00",
-        "demand": 25
-      },
-      {
-        "timestamp": "2025-12-08T22:00:00",
         "demand": 27
       },
       {
-        "timestamp": "2025-12-08T23:00:00",
+        "timestamp": "2025-12-08T21:00:00",
+        "demand": 27
+      },
+      {
+        "timestamp": "2025-12-08T22:00:00",
         "demand": 26
       },
       {
+        "timestamp": "2025-12-08T23:00:00",
+        "demand": 25
+      },
+      {
         "timestamp": "2025-12-09T00:00:00",
-        "demand": 51
+        "demand": 49
+      },
+      {
+        "timestamp": "2025-12-09T01:00:00",
+        "demand": 49
+      },
+      {
+        "timestamp": "2025-12-09T02:00:00",
+        "demand": 47
+      },
+      {
+        "timestamp": "2025-12-09T03:00:00",
+        "demand": 46
       }
     ]
   },
@@ -5053,72 +5053,60 @@
     "station_id": 51,
     "predictions": [
       {
-        "timestamp": "2025-12-08T01:00:00",
-        "demand": 14
-      },
-      {
-        "timestamp": "2025-12-08T02:00:00",
-        "demand": 20
-      },
-      {
-        "timestamp": "2025-12-08T03:00:00",
-        "demand": 29
-      },
-      {
         "timestamp": "2025-12-08T04:00:00",
-        "demand": 35
+        "demand": 18
       },
       {
         "timestamp": "2025-12-08T05:00:00",
-        "demand": 38
+        "demand": 21
       },
       {
         "timestamp": "2025-12-08T06:00:00",
-        "demand": 34
+        "demand": 18
       },
       {
         "timestamp": "2025-12-08T07:00:00",
-        "demand": 34
+        "demand": 22
       },
       {
         "timestamp": "2025-12-08T08:00:00",
-        "demand": 34
+        "demand": 27
       },
       {
         "timestamp": "2025-12-08T09:00:00",
-        "demand": 33
+        "demand": 32
       },
       {
         "timestamp": "2025-12-08T10:00:00",
-        "demand": 35
+        "demand": 32
       },
       {
         "timestamp": "2025-12-08T11:00:00",
-        "demand": 34
+        "demand": 33
       },
       {
         "timestamp": "2025-12-08T12:00:00",
-        "demand": 35
+        "demand": 33
       },
       {
         "timestamp": "2025-12-08T13:00:00",
-        "demand": 35
-      },
-      {
-        "timestamp": "2025-12-08T14:00:00",
-        "demand": 35
-      },
-      {
-        "timestamp": "2025-12-08T15:00:00",
-        "demand": 35
-      },
-      {
-        "timestamp": "2025-12-08T16:00:00",
         "demand": 34
       },
       {
-        "timestamp": "2025-12-08T17:00:00",
+        "timestamp": "2025-12-08T14:00:00",
         "demand": 33
+      },
+      {
+        "timestamp": "2025-12-08T15:00:00",
+        "demand": 32
+      },
+      {
+        "timestamp": "2025-12-08T16:00:00",
+        "demand": 33
+      },
+      {
+        "timestamp": "2025-12-08T17:00:00",
+        "demand": 34
       },
       {
         "timestamp": "2025-12-08T18:00:00",
@@ -5126,27 +5114,39 @@
       },
       {
         "timestamp": "2025-12-08T19:00:00",
-        "demand": 32
+        "demand": 33
       },
       {
         "timestamp": "2025-12-08T20:00:00",
-        "demand": 24
+        "demand": 26
       },
       {
         "timestamp": "2025-12-08T21:00:00",
-        "demand": 24
+        "demand": 27
       },
       {
         "timestamp": "2025-12-08T22:00:00",
-        "demand": 24
+        "demand": 27
       },
       {
         "timestamp": "2025-12-08T23:00:00",
-        "demand": 25
+        "demand": 26
       },
       {
         "timestamp": "2025-12-09T00:00:00",
+        "demand": 19
+      },
+      {
+        "timestamp": "2025-12-09T01:00:00",
         "demand": 20
+      },
+      {
+        "timestamp": "2025-12-09T02:00:00",
+        "demand": 21
+      },
+      {
+        "timestamp": "2025-12-09T03:00:00",
+        "demand": 21
       }
     ]
   },
@@ -5154,36 +5154,24 @@
     "station_id": 52,
     "predictions": [
       {
-        "timestamp": "2025-12-08T01:00:00",
-        "demand": 18
-      },
-      {
-        "timestamp": "2025-12-08T02:00:00",
-        "demand": 7
-      },
-      {
-        "timestamp": "2025-12-08T03:00:00",
-        "demand": 10
-      },
-      {
         "timestamp": "2025-12-08T04:00:00",
-        "demand": 19
+        "demand": 14
       },
       {
         "timestamp": "2025-12-08T05:00:00",
-        "demand": 26
+        "demand": 23
       },
       {
         "timestamp": "2025-12-08T06:00:00",
-        "demand": 33
+        "demand": 30
       },
       {
         "timestamp": "2025-12-08T07:00:00",
-        "demand": 34
+        "demand": 36
       },
       {
         "timestamp": "2025-12-08T08:00:00",
-        "demand": 34
+        "demand": 32
       },
       {
         "timestamp": "2025-12-08T09:00:00",
@@ -5195,11 +5183,11 @@
       },
       {
         "timestamp": "2025-12-08T11:00:00",
-        "demand": 34
+        "demand": 35
       },
       {
         "timestamp": "2025-12-08T12:00:00",
-        "demand": 31
+        "demand": 33
       },
       {
         "timestamp": "2025-12-08T13:00:00",
@@ -5207,11 +5195,11 @@
       },
       {
         "timestamp": "2025-12-08T14:00:00",
-        "demand": 31
+        "demand": 32
       },
       {
         "timestamp": "2025-12-08T15:00:00",
-        "demand": 31
+        "demand": 30
       },
       {
         "timestamp": "2025-12-08T16:00:00",
@@ -5219,11 +5207,11 @@
       },
       {
         "timestamp": "2025-12-08T17:00:00",
-        "demand": 31
+        "demand": 32
       },
       {
         "timestamp": "2025-12-08T18:00:00",
-        "demand": 33
+        "demand": 32
       },
       {
         "timestamp": "2025-12-08T19:00:00",
@@ -5239,15 +5227,27 @@
       },
       {
         "timestamp": "2025-12-08T22:00:00",
-        "demand": 18
+        "demand": 17
       },
       {
         "timestamp": "2025-12-08T23:00:00",
-        "demand": 18
+        "demand": 16
       },
       {
         "timestamp": "2025-12-09T00:00:00",
-        "demand": 31
+        "demand": 29
+      },
+      {
+        "timestamp": "2025-12-09T01:00:00",
+        "demand": 30
+      },
+      {
+        "timestamp": "2025-12-09T02:00:00",
+        "demand": 26
+      },
+      {
+        "timestamp": "2025-12-09T03:00:00",
+        "demand": 26
       }
     ]
   },
@@ -5255,32 +5255,20 @@
     "station_id": 53,
     "predictions": [
       {
-        "timestamp": "2025-12-08T01:00:00",
-        "demand": 26
-      },
-      {
-        "timestamp": "2025-12-08T02:00:00",
-        "demand": 0
-      },
-      {
-        "timestamp": "2025-12-08T03:00:00",
-        "demand": 3
-      },
-      {
         "timestamp": "2025-12-08T04:00:00",
-        "demand": 16
+        "demand": 18
       },
       {
         "timestamp": "2025-12-08T05:00:00",
-        "demand": 29
+        "demand": 33
       },
       {
         "timestamp": "2025-12-08T06:00:00",
-        "demand": 38
+        "demand": 42
       },
       {
         "timestamp": "2025-12-08T07:00:00",
-        "demand": 38
+        "demand": 50
       },
       {
         "timestamp": "2025-12-08T08:00:00",
@@ -5288,19 +5276,19 @@
       },
       {
         "timestamp": "2025-12-08T09:00:00",
-        "demand": 36
+        "demand": 38
       },
       {
         "timestamp": "2025-12-08T10:00:00",
-        "demand": 37
+        "demand": 38
       },
       {
         "timestamp": "2025-12-08T11:00:00",
-        "demand": 39
+        "demand": 41
       },
       {
         "timestamp": "2025-12-08T12:00:00",
-        "demand": 35
+        "demand": 36
       },
       {
         "timestamp": "2025-12-08T13:00:00",
@@ -5312,7 +5300,7 @@
       },
       {
         "timestamp": "2025-12-08T15:00:00",
-        "demand": 36
+        "demand": 35
       },
       {
         "timestamp": "2025-12-08T16:00:00",
@@ -5320,7 +5308,7 @@
       },
       {
         "timestamp": "2025-12-08T17:00:00",
-        "demand": 35
+        "demand": 37
       },
       {
         "timestamp": "2025-12-08T18:00:00",
@@ -5332,23 +5320,35 @@
       },
       {
         "timestamp": "2025-12-08T20:00:00",
-        "demand": 18
+        "demand": 20
       },
       {
         "timestamp": "2025-12-08T21:00:00",
-        "demand": 18
+        "demand": 20
       },
       {
         "timestamp": "2025-12-08T22:00:00",
-        "demand": 20
+        "demand": 18
       },
       {
         "timestamp": "2025-12-08T23:00:00",
-        "demand": 20
+        "demand": 18
       },
       {
         "timestamp": "2025-12-09T00:00:00",
-        "demand": 39
+        "demand": 36
+      },
+      {
+        "timestamp": "2025-12-09T01:00:00",
+        "demand": 37
+      },
+      {
+        "timestamp": "2025-12-09T02:00:00",
+        "demand": 37
+      },
+      {
+        "timestamp": "2025-12-09T03:00:00",
+        "demand": 37
       }
     ]
   },
@@ -5356,36 +5356,24 @@
     "station_id": 54,
     "predictions": [
       {
-        "timestamp": "2025-12-08T01:00:00",
+        "timestamp": "2025-12-08T04:00:00",
         "demand": 10
       },
       {
-        "timestamp": "2025-12-08T02:00:00",
-        "demand": 1
-      },
-      {
-        "timestamp": "2025-12-08T03:00:00",
-        "demand": 5
-      },
-      {
-        "timestamp": "2025-12-08T04:00:00",
-        "demand": 9
-      },
-      {
         "timestamp": "2025-12-08T05:00:00",
-        "demand": 12
+        "demand": 13
       },
       {
         "timestamp": "2025-12-08T06:00:00",
-        "demand": 23
+        "demand": 25
       },
       {
         "timestamp": "2025-12-08T07:00:00",
-        "demand": 24
+        "demand": 26
       },
       {
         "timestamp": "2025-12-08T08:00:00",
-        "demand": 24
+        "demand": 22
       },
       {
         "timestamp": "2025-12-08T09:00:00",
@@ -5397,11 +5385,11 @@
       },
       {
         "timestamp": "2025-12-08T11:00:00",
-        "demand": 25
+        "demand": 24
       },
       {
         "timestamp": "2025-12-08T12:00:00",
-        "demand": 27
+        "demand": 26
       },
       {
         "timestamp": "2025-12-08T13:00:00",
@@ -5413,7 +5401,7 @@
       },
       {
         "timestamp": "2025-12-08T15:00:00",
-        "demand": 27
+        "demand": 26
       },
       {
         "timestamp": "2025-12-08T16:00:00",
@@ -5421,11 +5409,11 @@
       },
       {
         "timestamp": "2025-12-08T17:00:00",
-        "demand": 25
+        "demand": 27
       },
       {
         "timestamp": "2025-12-08T18:00:00",
-        "demand": 25
+        "demand": 27
       },
       {
         "timestamp": "2025-12-08T19:00:00",
@@ -5433,22 +5421,34 @@
       },
       {
         "timestamp": "2025-12-08T20:00:00",
-        "demand": 19
+        "demand": 21
       },
       {
         "timestamp": "2025-12-08T21:00:00",
-        "demand": 19
+        "demand": 21
       },
       {
         "timestamp": "2025-12-08T22:00:00",
-        "demand": 20
+        "demand": 21
       },
       {
         "timestamp": "2025-12-08T23:00:00",
-        "demand": 20
+        "demand": 21
       },
       {
         "timestamp": "2025-12-09T00:00:00",
+        "demand": 12
+      },
+      {
+        "timestamp": "2025-12-09T01:00:00",
+        "demand": 13
+      },
+      {
+        "timestamp": "2025-12-09T02:00:00",
+        "demand": 13
+      },
+      {
+        "timestamp": "2025-12-09T03:00:00",
         "demand": 12
       }
     ]
@@ -5457,40 +5457,28 @@
     "station_id": 55,
     "predictions": [
       {
-        "timestamp": "2025-12-08T01:00:00",
-        "demand": 19
-      },
-      {
-        "timestamp": "2025-12-08T02:00:00",
-        "demand": 4
-      },
-      {
-        "timestamp": "2025-12-08T03:00:00",
-        "demand": 7
-      },
-      {
         "timestamp": "2025-12-08T04:00:00",
-        "demand": 14
+        "demand": 15
       },
       {
         "timestamp": "2025-12-08T05:00:00",
-        "demand": 22
+        "demand": 23
       },
       {
         "timestamp": "2025-12-08T06:00:00",
-        "demand": 31
-      },
-      {
-        "timestamp": "2025-12-08T07:00:00",
-        "demand": 31
-      },
-      {
-        "timestamp": "2025-12-08T08:00:00",
         "demand": 32
       },
       {
-        "timestamp": "2025-12-08T09:00:00",
+        "timestamp": "2025-12-08T07:00:00",
+        "demand": 36
+      },
+      {
+        "timestamp": "2025-12-08T08:00:00",
         "demand": 30
+      },
+      {
+        "timestamp": "2025-12-08T09:00:00",
+        "demand": 31
       },
       {
         "timestamp": "2025-12-08T10:00:00",
@@ -5502,7 +5490,7 @@
       },
       {
         "timestamp": "2025-12-08T12:00:00",
-        "demand": 28
+        "demand": 29
       },
       {
         "timestamp": "2025-12-08T13:00:00",
@@ -5514,7 +5502,7 @@
       },
       {
         "timestamp": "2025-12-08T15:00:00",
-        "demand": 28
+        "demand": 27
       },
       {
         "timestamp": "2025-12-08T16:00:00",
@@ -5522,7 +5510,7 @@
       },
       {
         "timestamp": "2025-12-08T17:00:00",
-        "demand": 28
+        "demand": 29
       },
       {
         "timestamp": "2025-12-08T18:00:00",
@@ -5538,19 +5526,31 @@
       },
       {
         "timestamp": "2025-12-08T21:00:00",
-        "demand": 15
+        "demand": 16
       },
       {
         "timestamp": "2025-12-08T22:00:00",
-        "demand": 16
+        "demand": 15
       },
       {
         "timestamp": "2025-12-08T23:00:00",
-        "demand": 16
+        "demand": 14
       },
       {
         "timestamp": "2025-12-09T00:00:00",
-        "demand": 28
+        "demand": 26
+      },
+      {
+        "timestamp": "2025-12-09T01:00:00",
+        "demand": 27
+      },
+      {
+        "timestamp": "2025-12-09T02:00:00",
+        "demand": 25
+      },
+      {
+        "timestamp": "2025-12-09T03:00:00",
+        "demand": 25
       }
     ]
   },
@@ -5558,64 +5558,52 @@
     "station_id": 56,
     "predictions": [
       {
-        "timestamp": "2025-12-08T01:00:00",
-        "demand": 23
-      },
-      {
-        "timestamp": "2025-12-08T02:00:00",
-        "demand": 0
-      },
-      {
-        "timestamp": "2025-12-08T03:00:00",
-        "demand": 0
-      },
-      {
         "timestamp": "2025-12-08T04:00:00",
-        "demand": 0
+        "demand": 16
       },
       {
         "timestamp": "2025-12-08T05:00:00",
-        "demand": 5
+        "demand": 28
       },
       {
         "timestamp": "2025-12-08T06:00:00",
-        "demand": 38
+        "demand": 60
       },
       {
         "timestamp": "2025-12-08T07:00:00",
-        "demand": 38
+        "demand": 62
       },
       {
         "timestamp": "2025-12-08T08:00:00",
-        "demand": 37
+        "demand": 43
       },
       {
         "timestamp": "2025-12-08T09:00:00",
-        "demand": 34
+        "demand": 39
       },
       {
         "timestamp": "2025-12-08T10:00:00",
-        "demand": 38
+        "demand": 39
       },
       {
         "timestamp": "2025-12-08T11:00:00",
-        "demand": 40
+        "demand": 41
       },
       {
         "timestamp": "2025-12-08T12:00:00",
-        "demand": 45
+        "demand": 42
       },
       {
         "timestamp": "2025-12-08T13:00:00",
-        "demand": 46
+        "demand": 43
       },
       {
         "timestamp": "2025-12-08T14:00:00",
-        "demand": 45
+        "demand": 43
       },
       {
         "timestamp": "2025-12-08T15:00:00",
-        "demand": 46
+        "demand": 42
       },
       {
         "timestamp": "2025-12-08T16:00:00",
@@ -5623,35 +5611,47 @@
       },
       {
         "timestamp": "2025-12-08T17:00:00",
-        "demand": 42
+        "demand": 45
       },
       {
         "timestamp": "2025-12-08T18:00:00",
-        "demand": 40
+        "demand": 45
       },
       {
         "timestamp": "2025-12-08T19:00:00",
-        "demand": 41
+        "demand": 43
       },
       {
         "timestamp": "2025-12-08T20:00:00",
-        "demand": 17
+        "demand": 21
       },
       {
         "timestamp": "2025-12-08T21:00:00",
-        "demand": 17
+        "demand": 21
       },
       {
         "timestamp": "2025-12-08T22:00:00",
-        "demand": 19
+        "demand": 21
       },
       {
         "timestamp": "2025-12-08T23:00:00",
-        "demand": 19
+        "demand": 22
       },
       {
         "timestamp": "2025-12-09T00:00:00",
         "demand": 18
+      },
+      {
+        "timestamp": "2025-12-09T01:00:00",
+        "demand": 19
+      },
+      {
+        "timestamp": "2025-12-09T02:00:00",
+        "demand": 18
+      },
+      {
+        "timestamp": "2025-12-09T03:00:00",
+        "demand": 17
       }
     ]
   },
@@ -5659,44 +5659,32 @@
     "station_id": 57,
     "predictions": [
       {
-        "timestamp": "2025-12-08T01:00:00",
-        "demand": 19
-      },
-      {
-        "timestamp": "2025-12-08T02:00:00",
-        "demand": 0
-      },
-      {
-        "timestamp": "2025-12-08T03:00:00",
-        "demand": 7
-      },
-      {
         "timestamp": "2025-12-08T04:00:00",
-        "demand": 17
+        "demand": 16
       },
       {
         "timestamp": "2025-12-08T05:00:00",
-        "demand": 25
+        "demand": 26
       },
       {
         "timestamp": "2025-12-08T06:00:00",
-        "demand": 46
+        "demand": 47
       },
       {
         "timestamp": "2025-12-08T07:00:00",
-        "demand": 46
+        "demand": 52
       },
       {
         "timestamp": "2025-12-08T08:00:00",
-        "demand": 46
-      },
-      {
-        "timestamp": "2025-12-08T09:00:00",
         "demand": 44
       },
       {
+        "timestamp": "2025-12-08T09:00:00",
+        "demand": 45
+      },
+      {
         "timestamp": "2025-12-08T10:00:00",
-        "demand": 46
+        "demand": 45
       },
       {
         "timestamp": "2025-12-08T11:00:00",
@@ -5704,55 +5692,67 @@
       },
       {
         "timestamp": "2025-12-08T12:00:00",
-        "demand": 52
-      },
-      {
-        "timestamp": "2025-12-08T13:00:00",
-        "demand": 52
-      },
-      {
-        "timestamp": "2025-12-08T14:00:00",
-        "demand": 52
-      },
-      {
-        "timestamp": "2025-12-08T15:00:00",
-        "demand": 51
-      },
-      {
-        "timestamp": "2025-12-08T16:00:00",
-        "demand": 50
-      },
-      {
-        "timestamp": "2025-12-08T17:00:00",
         "demand": 49
       },
       {
+        "timestamp": "2025-12-08T13:00:00",
+        "demand": 50
+      },
+      {
+        "timestamp": "2025-12-08T14:00:00",
+        "demand": 50
+      },
+      {
+        "timestamp": "2025-12-08T15:00:00",
+        "demand": 49
+      },
+      {
+        "timestamp": "2025-12-08T16:00:00",
+        "demand": 49
+      },
+      {
+        "timestamp": "2025-12-08T17:00:00",
+        "demand": 51
+      },
+      {
         "timestamp": "2025-12-08T18:00:00",
-        "demand": 48
+        "demand": 51
       },
       {
         "timestamp": "2025-12-08T19:00:00",
-        "demand": 47
+        "demand": 49
       },
       {
         "timestamp": "2025-12-08T20:00:00",
-        "demand": 29
+        "demand": 33
       },
       {
         "timestamp": "2025-12-08T21:00:00",
-        "demand": 28
+        "demand": 33
       },
       {
         "timestamp": "2025-12-08T22:00:00",
-        "demand": 30
+        "demand": 33
       },
       {
         "timestamp": "2025-12-08T23:00:00",
-        "demand": 30
+        "demand": 32
       },
       {
         "timestamp": "2025-12-09T00:00:00",
         "demand": 26
+      },
+      {
+        "timestamp": "2025-12-09T01:00:00",
+        "demand": 27
+      },
+      {
+        "timestamp": "2025-12-09T02:00:00",
+        "demand": 25
+      },
+      {
+        "timestamp": "2025-12-09T03:00:00",
+        "demand": 24
       }
     ]
   },
@@ -5760,92 +5760,80 @@
     "station_id": 58,
     "predictions": [
       {
-        "timestamp": "2025-12-08T01:00:00",
-        "demand": 18
-      },
-      {
-        "timestamp": "2025-12-08T02:00:00",
-        "demand": 0
-      },
-      {
-        "timestamp": "2025-12-08T03:00:00",
-        "demand": 0
-      },
-      {
         "timestamp": "2025-12-08T04:00:00",
-        "demand": 2
+        "demand": 16
       },
       {
         "timestamp": "2025-12-08T05:00:00",
-        "demand": 8
+        "demand": 20
       },
       {
         "timestamp": "2025-12-08T06:00:00",
-        "demand": 28
+        "demand": 39
       },
       {
         "timestamp": "2025-12-08T07:00:00",
-        "demand": 28
+        "demand": 38
       },
       {
         "timestamp": "2025-12-08T08:00:00",
-        "demand": 29
+        "demand": 30
       },
       {
         "timestamp": "2025-12-08T09:00:00",
-        "demand": 27
+        "demand": 28
       },
       {
         "timestamp": "2025-12-08T10:00:00",
-        "demand": 29
+        "demand": 28
       },
       {
         "timestamp": "2025-12-08T11:00:00",
-        "demand": 30
+        "demand": 29
       },
       {
         "timestamp": "2025-12-08T12:00:00",
-        "demand": 33
+        "demand": 32
       },
       {
         "timestamp": "2025-12-08T13:00:00",
-        "demand": 34
+        "demand": 33
       },
       {
         "timestamp": "2025-12-08T14:00:00",
-        "demand": 32
+        "demand": 31
       },
       {
         "timestamp": "2025-12-08T15:00:00",
-        "demand": 32
-      },
-      {
-        "timestamp": "2025-12-08T16:00:00",
-        "demand": 31
-      },
-      {
-        "timestamp": "2025-12-08T17:00:00",
         "demand": 30
       },
       {
-        "timestamp": "2025-12-08T18:00:00",
+        "timestamp": "2025-12-08T16:00:00",
+        "demand": 30
+      },
+      {
+        "timestamp": "2025-12-08T17:00:00",
         "demand": 31
       },
       {
-        "timestamp": "2025-12-08T19:00:00",
+        "timestamp": "2025-12-08T18:00:00",
         "demand": 32
       },
       {
+        "timestamp": "2025-12-08T19:00:00",
+        "demand": 31
+      },
+      {
         "timestamp": "2025-12-08T20:00:00",
-        "demand": 10
+        "demand": 11
       },
       {
         "timestamp": "2025-12-08T21:00:00",
-        "demand": 10
+        "demand": 13
       },
       {
         "timestamp": "2025-12-08T22:00:00",
-        "demand": 12
+        "demand": 13
       },
       {
         "timestamp": "2025-12-08T23:00:00",
@@ -5853,7 +5841,19 @@
       },
       {
         "timestamp": "2025-12-09T00:00:00",
+        "demand": 11
+      },
+      {
+        "timestamp": "2025-12-09T01:00:00",
         "demand": 12
+      },
+      {
+        "timestamp": "2025-12-09T02:00:00",
+        "demand": 10
+      },
+      {
+        "timestamp": "2025-12-09T03:00:00",
+        "demand": 10
       }
     ]
   },
@@ -5861,20 +5861,8 @@
     "station_id": 59,
     "predictions": [
       {
-        "timestamp": "2025-12-08T01:00:00",
-        "demand": 22
-      },
-      {
-        "timestamp": "2025-12-08T02:00:00",
-        "demand": 1
-      },
-      {
-        "timestamp": "2025-12-08T03:00:00",
-        "demand": 6
-      },
-      {
         "timestamp": "2025-12-08T04:00:00",
-        "demand": 17
+        "demand": 15
       },
       {
         "timestamp": "2025-12-08T05:00:00",
@@ -5886,47 +5874,47 @@
       },
       {
         "timestamp": "2025-12-08T07:00:00",
-        "demand": 38
+        "demand": 45
       },
       {
         "timestamp": "2025-12-08T08:00:00",
-        "demand": 38
+        "demand": 36
       },
       {
         "timestamp": "2025-12-08T09:00:00",
-        "demand": 36
+        "demand": 37
       },
       {
         "timestamp": "2025-12-08T10:00:00",
-        "demand": 36
-      },
-      {
-        "timestamp": "2025-12-08T11:00:00",
         "demand": 38
       },
       {
+        "timestamp": "2025-12-08T11:00:00",
+        "demand": 39
+      },
+      {
         "timestamp": "2025-12-08T12:00:00",
-        "demand": 33
+        "demand": 35
       },
       {
         "timestamp": "2025-12-08T13:00:00",
-        "demand": 34
+        "demand": 35
       },
       {
         "timestamp": "2025-12-08T14:00:00",
-        "demand": 33
+        "demand": 34
       },
       {
         "timestamp": "2025-12-08T15:00:00",
-        "demand": 34
+        "demand": 33
       },
       {
         "timestamp": "2025-12-08T16:00:00",
-        "demand": 34
+        "demand": 33
       },
       {
         "timestamp": "2025-12-08T17:00:00",
-        "demand": 34
+        "demand": 35
       },
       {
         "timestamp": "2025-12-08T18:00:00",
@@ -5942,19 +5930,31 @@
       },
       {
         "timestamp": "2025-12-08T21:00:00",
-        "demand": 20
+        "demand": 21
       },
       {
         "timestamp": "2025-12-08T22:00:00",
-        "demand": 22
+        "demand": 20
       },
       {
         "timestamp": "2025-12-08T23:00:00",
-        "demand": 22
+        "demand": 19
       },
       {
         "timestamp": "2025-12-09T00:00:00",
-        "demand": 41
+        "demand": 38
+      },
+      {
+        "timestamp": "2025-12-09T01:00:00",
+        "demand": 39
+      },
+      {
+        "timestamp": "2025-12-09T02:00:00",
+        "demand": 37
+      },
+      {
+        "timestamp": "2025-12-09T03:00:00",
+        "demand": 37
       }
     ]
   },
@@ -5962,100 +5962,100 @@
     "station_id": 60,
     "predictions": [
       {
-        "timestamp": "2025-12-08T01:00:00",
-        "demand": 21
-      },
-      {
-        "timestamp": "2025-12-08T02:00:00",
-        "demand": 0
-      },
-      {
-        "timestamp": "2025-12-08T03:00:00",
-        "demand": 0
-      },
-      {
         "timestamp": "2025-12-08T04:00:00",
-        "demand": 1
+        "demand": 18
       },
       {
         "timestamp": "2025-12-08T05:00:00",
-        "demand": 9
+        "demand": 24
       },
       {
         "timestamp": "2025-12-08T06:00:00",
-        "demand": 35
+        "demand": 49
       },
       {
         "timestamp": "2025-12-08T07:00:00",
-        "demand": 35
+        "demand": 49
       },
       {
         "timestamp": "2025-12-08T08:00:00",
-        "demand": 36
+        "demand": 38
       },
       {
         "timestamp": "2025-12-08T09:00:00",
-        "demand": 34
-      },
-      {
-        "timestamp": "2025-12-08T10:00:00",
         "demand": 36
       },
       {
+        "timestamp": "2025-12-08T10:00:00",
+        "demand": 35
+      },
+      {
         "timestamp": "2025-12-08T11:00:00",
-        "demand": 37
+        "demand": 36
       },
       {
         "timestamp": "2025-12-08T12:00:00",
-        "demand": 43
-      },
-      {
-        "timestamp": "2025-12-08T13:00:00",
-        "demand": 43
-      },
-      {
-        "timestamp": "2025-12-08T14:00:00",
-        "demand": 42
-      },
-      {
-        "timestamp": "2025-12-08T15:00:00",
-        "demand": 42
-      },
-      {
-        "timestamp": "2025-12-08T16:00:00",
-        "demand": 40
-      },
-      {
-        "timestamp": "2025-12-08T17:00:00",
-        "demand": 39
-      },
-      {
-        "timestamp": "2025-12-08T18:00:00",
-        "demand": 40
-      },
-      {
-        "timestamp": "2025-12-08T19:00:00",
         "demand": 41
       },
       {
+        "timestamp": "2025-12-08T13:00:00",
+        "demand": 42
+      },
+      {
+        "timestamp": "2025-12-08T14:00:00",
+        "demand": 39
+      },
+      {
+        "timestamp": "2025-12-08T15:00:00",
+        "demand": 38
+      },
+      {
+        "timestamp": "2025-12-08T16:00:00",
+        "demand": 39
+      },
+      {
+        "timestamp": "2025-12-08T17:00:00",
+        "demand": 40
+      },
+      {
+        "timestamp": "2025-12-08T18:00:00",
+        "demand": 41
+      },
+      {
+        "timestamp": "2025-12-08T19:00:00",
+        "demand": 40
+      },
+      {
         "timestamp": "2025-12-08T20:00:00",
-        "demand": 14
+        "demand": 15
       },
       {
         "timestamp": "2025-12-08T21:00:00",
-        "demand": 14
+        "demand": 17
       },
       {
         "timestamp": "2025-12-08T22:00:00",
-        "demand": 16
+        "demand": 17
       },
       {
         "timestamp": "2025-12-08T23:00:00",
-        "demand": 16
+        "demand": 17
       },
       {
         "timestamp": "2025-12-09T00:00:00",
+        "demand": 16
+      },
+      {
+        "timestamp": "2025-12-09T01:00:00",
         "demand": 17
+      },
+      {
+        "timestamp": "2025-12-09T02:00:00",
+        "demand": 13
+      },
+      {
+        "timestamp": "2025-12-09T03:00:00",
+        "demand": 12
       }
     ]
   }
