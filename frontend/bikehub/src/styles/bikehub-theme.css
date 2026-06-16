@@ -2,16 +2,17 @@
 /* 设计理念：环保、科技、安全、高效 */
 
 :root {
+  --app-surface: #f4f7fb;
   /* === 核心品牌色 === */
   /* 主色：清新的蓝绿色系，体现环保科技 */
-  --brand-primary: rgb(107, 166, 198);
-  --brand-primary-light: #33b8d6;
-  --brand-primary-dark: #0088aa;
+  --brand-primary: #1f7a8c;
+  --brand-primary-light: #2f9aa8;
+  --brand-primary-dark: #13586a;
 
   /* 辅助色：活力橙，体现共享经济的活力 */
-  --brand-accent: #8e9297;
-  --brand-accent-light: #979b9f;
-  --brand-accent-dark:#74777b;
+  --brand-accent: #475569;
+  --brand-accent-light: #64748b;
+  --brand-accent-dark: #334155;
 
   /* 环保绿：突出可持续发展理念 */
   --brand-eco: #33cc88;
@@ -21,8 +22,8 @@
   /* === 功能性色彩 === */
   /* 背景色系 */
   --bg-primary: #ffffff;
-  --bg-secondary: #f7fbff;
-  --bg-tertiary: #eef5fa;
+  --bg-secondary: #f4f7fb;
+  --bg-tertiary: #e8eef5;
 
   /* 文字色彩 */
   --text-primary: #1a3a4a;
@@ -71,8 +72,8 @@
   /* 卡片和容器 */
   --card-bg: var(--bg-primary);
   --card-border: #e0e8ee;
-  --card-shadow: 0 2px 8px rgba(0, 168, 204, 0.08);
-  --card-hover-shadow: 0 4px 16px rgba(0, 168, 204, 0.12);
+  --card-shadow: 0 1px 2px rgba(15, 23, 42, 0.05);
+  --card-hover-shadow: 0 8px 20px rgba(15, 23, 42, 0.08);
 
   /* 导航栏 */
   --nav-bg: var(--bg-primary);
@@ -82,12 +83,12 @@
   --nav-item-active-text: var(--text-inverse);
 
   /* 侧边栏 */
-  --sidebar-bg: #1d2a44;
-  --sidebar-border: #233252;
-  --sidebar-foreground: #e0e8ee;
-  --sidebar-item-hover: #24365a;
-  --sidebar-item-active: #e0e8ee;     /* 选中按钮浅灰背景 */
-  --sidebar-item-active-text: #1f2a3d; /* 选中按钮深灰文字 */
+  --sidebar-bg: #13212b;
+  --sidebar-border: #1e3342;
+  --sidebar-foreground: #dce7ee;
+  --sidebar-item-hover: #1c3442;
+  --sidebar-item-active: #e8f3f6;
+  --sidebar-item-active-text: #13212b;
 
   /* 群聊 */
 
@@ -129,6 +130,7 @@
 
 /* === 深色主题 === */
 .dark {
+  --app-surface: #111827;
   /* 深色背景色系 */
   --bg-primary: #1a2333;
   --bg-secondary: #1f2a3d;

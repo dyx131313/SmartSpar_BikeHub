@@ -1,8 +1,8 @@
-import { ReactNode, useEffect, useState } from 'react'
+import { type ReactNode, useEffect, useState } from 'react'
 import { useNavigate } from '@tanstack/react-router'
 import { toast } from 'sonner'
 import { useAuthStore } from '@/stores/auth-store'
-import { apiGet } from '@/lib/api'
+import { apiGet, readToken } from '@/lib/api'
 
 export function RequireAuth({ children }: { children: ReactNode }) {
   const navigate = useNavigate()
@@ -15,6 +15,13 @@ export function RequireAuth({ children }: { children: ReactNode }) {
     async function check() {
       if (user) {
         if (mounted) setChecking(false)
+        return
+      }
+      if (!readToken()) {
+        if (!mounted) return
+        const redirect = typeof window !== 'undefined' ? window.location.pathname + window.location.search + window.location.hash : '/'
+        toast?.info?.('请先登录以继续')
+        navigate({ to: '/sign-in-2', search: { redirect }, replace: true })
         return
       }
       try {

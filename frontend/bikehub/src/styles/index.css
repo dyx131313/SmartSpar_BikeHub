@@ -24,10 +24,7 @@
   }
   body {
     @apply bg-background text-foreground has-[div[data-variant='inset']]:bg-sidebar min-h-svh w-full;
-    background:
-      radial-gradient(circle at 20% 20%, rgba(0, 168, 204, 0.12), transparent 42%),
-      radial-gradient(circle at 80% 0%, rgba(255, 136, 51, 0.12), transparent 38%),
-      var(--gradient-bg);
+    background: var(--app-surface);
     color: var(--text-primary);
   }
 

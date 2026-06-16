@@ -60,10 +60,6 @@ function AvatarDialog({ isOpen, onOpenChange, onAvatarChange }: AvatarDialogProp
       const formData = new FormData()
       formData.append('avatar', selectedFile)
 
-      console.log('DEBUG: FormData created:', formData)
-      console.log('DEBUG: FormData keys:', Array.from(formData.keys()))
-      console.log('DEBUG: FormData avatar:', formData.get('avatar'))
-
       const response = await apiPost('/api/users/avatar', formData)
 
       if (response.data?.avatar_url) {
@@ -190,16 +186,13 @@ export function AvatarUploader({ avatarUrl, fullName, onAvatarChange }: AvatarUp
           <Avatar className="w-24 h-24 ring-4 ring-primary/20 ring-offset-2 transition-all duration-200 group-hover:ring-primary/40 group-hover:scale-105">
             {avatarUrl ? (
               <>
-              {console.log('当前渲染的头像 URL:', buildStaticUrl(avatarUrl))}
               <AvatarImage
                 src={buildStaticUrl(avatarUrl)}
                 alt={fullName || '用户头像'}
                 className="object-cover"
                 onError={(e) => {
-                  console.error('图片加载失败，地址为:', e.currentTarget.src);
+                  e.currentTarget.style.display = 'none'
                 }}
-                
-                onLoad={() => console.log('Avatar image loaded successfully:', avatarUrl)}
               />
               </>
             ) : (

@@ -114,12 +114,21 @@ export function SignUpForm({
 
       if (token) {
         setAccessToken(token)
+        try { localStorage.setItem('access_token', typeof token === 'string' ? token : String(token)) } catch {}
       }
       if (resp?.user) {
         setUser(resp.user)
+        if (resp.user.role) {
+          const roleStr = typeof resp.user.role === 'string' ? resp.user.role : String(resp.user.role)
+          try {
+            localStorage.setItem('role', roleStr)
+            localStorage.setItem('user_role', roleStr)
+            localStorage.setItem('user-role', roleStr)
+          } catch {}
+        }
       }
 
-      navigate({ to: '/sign-in-2' })
+      navigate({ to: '/help-center', replace: true })
     } catch (err) {
       handleServerError(err)
     } finally {

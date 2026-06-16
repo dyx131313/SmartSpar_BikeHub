@@ -1,5 +1,5 @@
 import { apiGet, apiPost, apiPut, apiDelete, apiUpload } from '@/lib/api'
-import { Station, StationDashboardData } from './data/schema'
+import { type Station, type StationDashboardData } from './data/schema'
 
 // 定义后端返回的列表结构
 export interface StationListResponse {

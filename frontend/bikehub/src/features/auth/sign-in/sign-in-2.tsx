@@ -4,9 +4,11 @@ import dashboardDark from './assets/dashboard-dark.png'
 import dashboardLight from './assets/dashboard-light.png'
 import image from './assets/image.png'
 import { UserAuthForm } from './components/user-auth-form'
-import { Link } from '@tanstack/react-router'
+import { Link, useSearch } from '@tanstack/react-router'
 
 export function SignIn2() {
+  const { redirect } = useSearch({ from: '/(auth)/sign-in-2' })
+
   return (
     // <div className='relative container grid h-svh flex-col items-center justify-center lg:max-w-none lg:grid-cols-2 lg:px-0'>
     <div className='container relative flex min-h-svh flex-col items-center justify-center px-4'>
@@ -33,7 +35,7 @@ export function SignIn2() {
               </span>
             </p>
           </div>
-          <UserAuthForm />
+          <UserAuthForm redirectTo={redirect} />
           <p className='text-muted-foreground px-8 text-center text-sm'>
             点击登录即表示您同意我们的{' '}
             <a

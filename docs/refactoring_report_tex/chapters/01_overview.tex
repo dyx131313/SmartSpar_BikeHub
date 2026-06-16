@@ -1,0 +1,62 @@
+\chapter{重构总体思路}
+
+\section{重构原因}
+
+SmartSpar BikeHub 原项目已经覆盖共享单车调度平台的主要业务，但在工程质量和交付可复现性上存在以下问题：
+
+\begin{itemize}
+  \item 本地启动依赖分散，前端、后端、MySQL、预测模块之间缺少统一说明。
+  \item 后端部分路由函数过长，混合权限校验、参数解析、业务规则、数据库提交和响应拼装。
+  \item 预测模型文件、上传目录和静态资源路径存在硬编码，Windows 本地环境下容易出错。
+  \item 前端保留模板项目痕迹，登录、侧栏、仪表盘和表格页面风格不统一。
+  \item TypeScript 构建、ESLint、pytest 和浏览器验收缺少稳定基线。
+\end{itemize}
+
+因此，本次重构的目标不是推倒重写，而是在保持现有 API 契约和业务功能的前提下，修复高影响问题，降低后续维护成本，并为最终提交准备完整材料。
+
+\section{重构目标与执行范围对照}
+
+为了避免重构范围失控，本次先将原重构方案中的目标拆分为可交付、可验证和可后续演进三类。可交付项优先处理会影响本地运行、构建、测试和演示验收的问题；可验证项要求有命令行输出、接口结果或页面截图支撑；范围较大的完整策略模式和值对象体系则记录为后续演进。表 \ref{tab:coverage-matrix} 汇总原计划关注点与本次执行结果。
+
+\begin{longtable}{p{0.16\textwidth}p{0.28\textwidth}p{0.3\textwidth}p{0.1\textwidth}}
+\caption{原计划关注点与本次执行覆盖情况}
+\label{tab:coverage-matrix}\\
+\toprule
+关注点 & 原计划目标 & 本次执行证据 & 状态 \\
+\midrule
+\endfirsthead
+\toprule
+关注点 & 原计划目标 & 本次执行证据 & 状态 \\
+\midrule
+\endhead
+重复代码 & 抽取权限、响应和错误处理公共逻辑 & \code{response.py}、\code{decorators.py}、统一错误装饰器 & 完成 \\
+过长方法 & 拆分胖路由，将业务规则移入服务层 & \code{TaskService}、\code{DashboardService} & 完成 \\
+路径硬编码 & 集中管理路径和环境差异 & \code{Paths} 与 \code{PredictionModelRegistry} & 完成 \\
+霰弹式修改 & 新增模型时减少多处同步修改 & 轻量级预测模型注册表，训练策略模式列为后续优化 & 部分完成 \\
+测试保护 & 用测试确认外部行为不变 & lint、build、pytest、API smoke、浏览器验收 & 完成 \\
+代码检查 & 记录缺陷、风险和验证结果 & 重构记录、测试报告、已知 warning 列表 & 完成 \\
+界面可用性 & 改善工作流和阅读体验 & 运营中台风格页面与截图证据 & 完成 \\
+\bottomrule
+\end{longtable}
+
+\section{重构计划}
+
+本次重构分为四个阶段：
+
+\begin{enumerate}
+  \item 运行基线恢复：搭建本地 Node、Python、MySQL 环境，修复依赖安装、数据库初始化、测试账号、系统时间和预测数据问题。
+  \item 后端结构重构：抽取统一响应、角色权限装饰器、路径配置工具和服务层，减少路由层复杂度。
+  \item 前端体验重构：修复 TypeScript 构建，清理模板残留，调整界面为运营调度中台风格。
+  \item 测试与文档沉淀：执行 lint、build、pytest、浏览器验收和预测验收，整理运行手册、重构记录、测试报告和最终报告。
+\end{enumerate}
+
+\section{测试计划}
+
+测试采用命令行自动测试、接口烟测和浏览器验收结合的方式：
+
+\begin{itemize}
+  \item 前端：执行 \code{npm run lint} 和 \code{npm run build}，并访问登录页、仪表盘、站点管理、调度管理、需求管理和设置页面。
+  \item 后端：执行 \code{pytest}，覆盖 A* 路径规划、基础 API、数据库连接、用户搜索、聊天搜索、路由和集成测试。
+  \item 集成：同时启动前后端，使用 \code{admin/admin123} 登录，验证核心业务页面。
+  \item 预测：验证 \code{DLinear}、\code{TiDE}、\code{TimesNet} 标签可见，预测参数和 future 接口返回 200，页面正常渲染预测记录。
+\end{itemize}

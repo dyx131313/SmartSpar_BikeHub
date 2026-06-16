@@ -1,11 +1,11 @@
-/**
+﻿/**
  * 群聊列表组件
  */
 import React, { useEffect, useState } from 'react';
 import { Badge, Button, Input, ScrollArea, Avatar, AvatarFallback, AvatarImage, Tooltip, TooltipTrigger, TooltipContent, DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger, AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from '@/components/ui';
 import { Search, Plus, MoreVertical, Bell, BellOff, Settings, Users, MessageSquare, Crown, Shield, User, X, Trash2, AlertTriangle } from 'lucide-react';
 import { groupChatAPI } from '../api/group-chat-api';
-import { ChatGroup, MemberRole, ChatGroupMember } from '../data/group-chat-types';
+import { type ChatGroup, MemberRole, type ChatGroupMember } from '../data/group-chat-types';
 import { useAuthStore } from '@/stores/auth-store';
 import { toast } from 'sonner';
 import { useConfirm } from '@/components/confirm-provider'
@@ -149,7 +149,6 @@ export const GroupChatList: React.FC<GroupChatListProps> = ({
     // 假设当前用户的ID可以从localStorage或其他地方获取
     // 这里我们通过用户名来匹配（在实际应用中应该使用用户ID）
     const currentUserUsername = localStorage.getItem('username') || localStorage.getItem('user');
-    console.log('获取用户名用于匹配:', currentUserUsername);
     if (currentUserUsername) {
       return members.find(member => member.username === currentUserUsername)?.id;
     }
@@ -225,7 +224,6 @@ export const GroupChatList: React.FC<GroupChatListProps> = ({
         // 处理可能是字符串数组的情况
         userRole = Array.isArray(roleFromAuth) ? roleFromAuth[0] : String(roleFromAuth);
       }
-      console.log('从 auth store 获取的角色:', roleFromAuth);
     }
 
     // 只有管理员才能删除群聊
@@ -247,14 +245,6 @@ export const GroupChatList: React.FC<GroupChatListProps> = ({
                  localStorage.getItem('user-role') ||
                  '';
 
-    console.log('=== GroupChatList useEffect ===');
-    console.log('从 localStorage 获取的 role:', localStorage.getItem('role'));
-    console.log('从 localStorage 获取的 user_role:', localStorage.getItem('user_role'));
-    console.log('从 localStorage 获取的 user-role:', localStorage.getItem('user-role'));
-    console.log('最终使用的角色:', role);
-    console.log('role 类型:', typeof role);
-    console.log('localStorage 中的所有键:', Object.keys(localStorage));
-    console.log('localStorage 中的 access_token:', localStorage.getItem('access_token')?.substring(0, 50) + '...');
     setUserRole(role);
 
     loadGroups(1);
@@ -272,7 +262,6 @@ export const GroupChatList: React.FC<GroupChatListProps> = ({
     const checkRoleInterval = setInterval(() => {
       const role = localStorage.getItem('role');
       if (role && role !== userRole) {
-        console.log('检测到角色变化:', role);
         setUserRole(role);
       }
     }, 1000);

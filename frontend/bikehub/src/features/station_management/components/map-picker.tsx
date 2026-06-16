@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react'
+import React, { useCallback, useEffect, useRef, useState } from 'react'
 
 const AMAP_KEY = '1e1313769f138588c0dd985e6892cc27'
 // 默认中心设为同济大学嘉定校区 (lng, lat)
@@ -17,30 +17,7 @@ export default function MapPicker({ initial, height = 400, onSelect }: MapPicker
   const markerRef = useRef<any | null>(null)
   const isLoaded = useRef(false)
 
-  useEffect(() => {
-    if (typeof window.AMap !== 'undefined' || isLoaded.current) {
-      if (containerRef.current && !mapRef.current) initMap()
-      return
-    }
-
-    const script = document.createElement('script')
-    script.type = 'text/javascript'
-    script.src = `https://webapi.amap.com/maps?v=2.0&key=${AMAP_KEY}`
-    script.async = true
-    script.onload = () => {
-      isLoaded.current = true
-      initMap()
-    }
-    document.body.appendChild(script)
-    return () => {
-      if (mapRef.current) {
-        mapRef.current.destroy()
-        mapRef.current = null
-      }
-    }
-  }, [])
-
-  const initMap = () => {
+  const initMap = useCallback(() => {
     if (!containerRef.current || mapRef.current) return
     const AMap = (window as any).AMap
     if (!AMap) return
@@ -93,7 +70,30 @@ export default function MapPicker({ initial, height = 400, onSelect }: MapPicker
         } catch (e) {}
       }, 100)
     }
-  }
+  }, [initial, onSelect])
+
+  useEffect(() => {
+    if (typeof window.AMap !== 'undefined' || isLoaded.current) {
+      if (containerRef.current && !mapRef.current) initMap()
+      return
+    }
+
+    const script = document.createElement('script')
+    script.type = 'text/javascript'
+    script.src = `https://webapi.amap.com/maps?v=2.0&key=${AMAP_KEY}`
+    script.async = true
+    script.onload = () => {
+      isLoaded.current = true
+      initMap()
+    }
+    document.body.appendChild(script)
+    return () => {
+      if (mapRef.current) {
+        mapRef.current.destroy()
+        mapRef.current = null
+      }
+    }
+  }, [initMap])
 
   const heightValue = typeof height === 'number' ? `${height}px` : height
   return <div ref={containerRef} style={{ height: heightValue, width: '100%' }} className='rounded-lg border' />

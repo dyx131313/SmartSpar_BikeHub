@@ -7,11 +7,66 @@ from app import db
 from app.models.prediction import Prediction
 from app.models.station import Station
 from app.routes import api_bp
+from app.services.prediction_registry import prediction_model_registry
 from app.utils.permissions import require_dispatcher_or_admin
 from app.services.demand_predictor import (
     get_demand_predictor,
     predict_demand_for_station,
 )
+
+STATION_TYPE_CODES = {
+    "gate": 0,
+    "teaching": 1,
+    "dormitory": 2,
+    "sports": 3,
+    "transit": 3,
+}
+
+WEATHER_CODES = {
+    "sunny": 0,
+    "clear": 0,
+    "cloudy": 1,
+    "overcast": 1,
+    "rainy": 2,
+    "rain": 2,
+    "snowy": 2,
+}
+
+
+@api_bp.route("/predictions/models", methods=["GET"])
+@jwt_required()
+def list_prediction_models():
+    """List supported prediction models from the central registry."""
+    return jsonify(
+        {
+            "data": [
+                {
+                    "name": spec.name,
+                    "display_name": spec.display_name,
+                    "family": spec.family,
+                    "has_params": spec.params_path.exists(),
+                    "has_future": spec.future_path.exists(),
+                }
+                for spec in prediction_model_registry.all()
+            ]
+        }
+    )
+
+
+def _coerce_ai_prediction_input(data):
+    normalized = dict(data)
+    station_type = normalized.get("station_type")
+    weather = normalized.get("weather")
+
+    if isinstance(station_type, str):
+        normalized["station_type"] = STATION_TYPE_CODES.get(station_type.lower(), 0)
+    if isinstance(weather, str):
+        normalized["weather"] = WEATHER_CODES.get(weather.lower(), 0)
+
+    normalized["temp"] = float(normalized["temp"])
+    normalized["is_holiday"] = int(normalized["is_holiday"])
+    normalized["weekday"] = int(normalized["weekday"])
+    return normalized
 
 
 @api_bp.route("/predictions/models/<model_name>/params", methods=["GET"])
@@ -19,22 +74,16 @@ from app.services.demand_predictor import (
 def get_model_params(model_name):
     """获取模型参数"""
     try:
-        # 构建文件路径
-        base_path = os.path.join(
-            os.path.dirname(os.path.dirname(__file__)),
-            "services",
-            "time_series",
-            "checkpoints",
-        )
-        file_path = os.path.join(base_path, f"{model_name}_params.json")
+        model = prediction_model_registry.require(model_name)
+        file_path = model.params_path
 
-        if not os.path.exists(file_path):
+        if not file_path.exists():
             return (
                 jsonify({"error": "Model parameters not found", "exists": False}),
                 404,
             )
 
-        with open(file_path, "r", encoding="utf-8") as f:
+        with file_path.open("r", encoding="utf-8") as f:
             data = json.load(f)
 
         return jsonify({"data": data, "exists": True})
@@ -48,6 +97,7 @@ def get_model_params(model_name):
 def get_model_future(model_name):
     """获取模型预测的未来需求"""
     try:
+        model = prediction_model_registry.require(model_name)
         # 获取查询参数
         page = request.args.get("page", 1, type=int)
         per_page = min(request.args.get("per_page", 20, type=int), 100)
@@ -60,15 +110,9 @@ def get_model_future(model_name):
 
         system_time = time_service.get_current_time()
 
-        base_path = os.path.join(
-            os.path.dirname(os.path.dirname(__file__)),
-            "services",
-            "time_series",
-            "checkpoints",
-        )
-        file_path = os.path.join(base_path, f"{model_name}_future.json")
+        file_path = model.future_path
 
-        if not os.path.exists(file_path):
+        if not file_path.exists():
             return (
                 jsonify(
                     {
@@ -77,13 +121,13 @@ def get_model_future(model_name):
                         "pages": 0,
                         "current_page": page,
                         "per_page": per_page,
-                        "message": f"File not found: {file_path}",  # 增加调试信息
+                        "message": f"File not found: {file_path}",
                     }
                 ),
                 200,
             )
 
-        with open(file_path, "r", encoding="utf-8") as f:
+        with file_path.open("r", encoding="utf-8") as f:
             raw_data = json.load(f)
 
         # 获取所有站点类型映射
@@ -92,6 +136,7 @@ def get_model_future(model_name):
         station_name_map = {s.id: s.name for s in stations}
 
         all_results = []
+        archived_results = []
         for item in raw_data:
             station_id = item["station_id"]
             station_type = station_type_map.get(station_id, "Unknown")
@@ -103,17 +148,22 @@ def get_model_future(model_name):
 
             for pred in item["predictions"]:
                 pred_time = datetime.fromisoformat(pred["timestamp"])
+                result = {
+                    "id": f"{model_name}-{station_id}-{pred['timestamp']}",
+                    "time": pred["timestamp"],
+                    "station_id": station_id,
+                    "station_name": station_name,
+                    "station_type": station_type,
+                    "demand": pred["demand"],
+                }
+                archived_results.append(result)
                 if pred_time > system_time:
-                    all_results.append(
-                        {
-                            "id": f"{model_name}-{station_id}-{pred['timestamp']}",  # 生成一个临时ID
-                            "time": pred["timestamp"],
-                            "station_id": station_id,
-                            "station_name": station_name,
-                            "station_type": station_type,
-                            "demand": pred["demand"],
-                        }
-                    )
+                    all_results.append(result)
+
+        data_source = "future"
+        if not all_results and archived_results:
+            all_results = archived_results
+            data_source = "archived"
 
         # 排序：时间升序，站点ID升序
         all_results.sort(key=lambda x: (x["time"], x["station_id"]))
@@ -132,6 +182,7 @@ def get_model_future(model_name):
                 "pages": pages,
                 "current_page": page,
                 "per_page": per_page,
+                "data_source": data_source,
             }
         )
     except Exception as e:
@@ -339,13 +390,14 @@ def ai_predict_demand():
 
         # 调用AI预测服务
         try:
+            normalized_data = _coerce_ai_prediction_input(data)
             prediction_result = predict_demand_for_station(
-                station_type=data["station_type"],
-                temp=data["temp"],
-                is_holiday=data["is_holiday"],
-                weather=data["weather"],
-                weekday=data["weekday"],
-                date_str=data["date"],
+                station_type=normalized_data["station_type"],
+                temp=normalized_data["temp"],
+                is_holiday=normalized_data["is_holiday"],
+                weather=normalized_data["weather"],
+                weekday=normalized_data["weekday"],
+                date_str=normalized_data["date"],
             )
 
             return jsonify(
@@ -353,6 +405,7 @@ def ai_predict_demand():
                     "success": True,
                     "prediction": prediction_result,
                     "input": data,
+                    "normalized_input": normalized_data,
                     "message": "AI预测成功",
                 }
             )
@@ -384,7 +437,9 @@ def ai_predict_batch():
         if "predictions" not in data or not isinstance(data["predictions"], list):
             return jsonify({"error": "请求格式错误，需要predictions数组"}), 400
 
-        input_data_list = data["predictions"]
+        input_data_list = [
+            _coerce_ai_prediction_input(item) for item in data["predictions"]
+        ]
         predictor = get_demand_predictor()
 
         try:

@@ -4,7 +4,7 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { ScrollArea, Avatar, AvatarFallback, AvatarImage, Button, Input, DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui';
 import { Send, Reply, MoreVertical, Edit, Trash2, Copy, Download, RotateCcw, Check } from 'lucide-react';
-import { ChatGroup, ChatMessage, MessageType } from '../data/group-chat-types';
+import { type ChatGroup, type ChatMessage, MessageType } from '../data/group-chat-types';
 
 interface GroupChatMessagesProps {
   group: ChatGroup | null;

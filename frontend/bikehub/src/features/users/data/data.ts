@@ -1,6 +1,6 @@
 import { Shield, UserCheck, MapPin, Wrench } from 'lucide-react'
-import { type UserStatus } from './schema'
-import { M } from 'node_modules/@clerk/clerk-react/dist/useAuth-BAhNYMIt.d.mts'
+
+type UserStatus = '已激活' | '未激活' | '被暂停'
 
 export const callTypes = new Map<UserStatus, string>([
   ['已激活', 'bg-teal-100/30 text-teal-900 dark:text-teal-200 border-teal-200'],

@@ -1,5 +1,5 @@
 import { apiGet, apiPost, apiPut, apiDelete } from '@/lib/api'
-import { Task } from './data/schema'
+import { type Task } from './data/schema'
 
 export interface TaskListResponse {
     data: Task[]

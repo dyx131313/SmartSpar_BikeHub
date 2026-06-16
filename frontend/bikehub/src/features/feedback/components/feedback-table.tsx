@@ -22,7 +22,7 @@ import {
 } from '@/components/ui/table'
 import { DataTablePagination, DataTableToolbar } from '@/components/data-table'
 import { feedbackStatuses, feedbackCategories } from '../data/data'
-import { Feedback } from '../data/schema'
+import { type Feedback } from '../data/schema'
 import { feedbackColumns as columns } from './feedback-columns'
 
 interface FeedbackTableProps {

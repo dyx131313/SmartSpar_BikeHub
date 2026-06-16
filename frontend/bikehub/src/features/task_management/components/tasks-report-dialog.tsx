@@ -1,5 +1,5 @@
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from '@/components/ui/dialog'
-import { CreateFeedbackData, createFeedback } from '@/features/feedback/api'
+import { type CreateFeedbackData, createFeedback } from '@/features/feedback/api'
 import { useMutation } from '@tanstack/react-query'
 import { toast } from 'sonner'
 import { useTasks } from './tasks-provider'

@@ -8,7 +8,7 @@ import {
 import { AnalyticsChart } from './analytics-chart'
 import { ListTodo, HelpCircle, Timer, CheckCircle, Circle } from 'lucide-react'
 import { priorities, statuses } from '@/features/task_management/data/data'
-import { Task } from '@/features/task_management/data/schema'
+import { type Task } from '@/features/task_management/data/schema'
 
 interface AnalyticsProps {
   data: Task[]
@@ -114,7 +114,7 @@ export function Analytics({ data: tasks }: AnalyticsProps) {
             <SimpleBarList
               items={priorities.map((p) => ({
                 name: p.label,
-                value: tasks.filter((t) => t.priority === p.value).length,
+                value: tasks.filter((t) => String(t.priority) === p.value).length,
               }))}
               barClass='bg-muted-foreground'
               valueFormatter={(n) => `${n}`}

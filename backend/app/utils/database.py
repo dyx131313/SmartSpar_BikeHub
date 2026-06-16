@@ -4,11 +4,16 @@
 import pymysql
 from flask import current_app
 import logging
+from sqlalchemy.engine.url import make_url
 
 logger = logging.getLogger(__name__)
-from app import db
-import pymysql
-from flask import current_app
+
+
+def _database_name(config):
+    uri = config.get("SQLALCHEMY_DATABASE_URI")
+    if uri:
+        return make_url(uri).database
+    return config.get("MYSQL_DATABASE") or config.get("MYSQL_DB") or "bikehub_dev"
 
 def get_db_connection():
     """
@@ -25,7 +30,7 @@ def get_db_connection():
         host = config.get('MYSQL_HOST') or 'localhost'
         user = config.get('MYSQL_USER') or 'root'
         password = config.get('MYSQL_PASSWORD') or ''
-        database = config.get('MYSQL_DB')
+        database = _database_name(config)
         port = int(config.get('MYSQL_PORT') or 3306)
         
         # 如果没有配置数据库名称，抛出明确错误
@@ -62,7 +67,7 @@ def get_db_connection_without_dict():
         host = config.get('MYSQL_HOST') or 'localhost'
         user = config.get('MYSQL_USER') or 'root'
         password = config.get('MYSQL_PASSWORD') or ''
-        database = config.get('MYSQL_DB')
+        database = _database_name(config)
         port = int(config.get('MYSQL_PORT') or 3306)
         
         if not database:

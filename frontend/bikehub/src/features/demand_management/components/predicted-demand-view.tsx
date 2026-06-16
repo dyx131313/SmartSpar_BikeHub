@@ -40,8 +40,8 @@ import {
     useReactTable,
     getCoreRowModel,
     flexRender,
-    PaginationState,
-    ColumnDef,
+    type PaginationState,
+    type ColumnDef,
 } from '@tanstack/react-table'
 import { DataTablePagination } from '@/components/data-table'
 import { stationTypes } from '../data/data'

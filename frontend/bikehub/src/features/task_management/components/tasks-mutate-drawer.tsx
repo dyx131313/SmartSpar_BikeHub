@@ -59,7 +59,7 @@ export function TasksMutateDrawer({
   const queryClient = useQueryClient()
 
   const form = useForm<TaskForm>({
-    resolver: zodResolver(formSchema),
+    resolver: zodResolver(formSchema) as any,
     defaultValues: {
       task_name: '',
       from_station_id: 0,
@@ -75,7 +75,7 @@ export function TasksMutateDrawer({
   useEffect(() => {
     if (currentRow) {
       form.reset({
-        task_name: currentRow.task_name || currentRow.title || '', // 兼容不同字段名
+        task_name: currentRow.task_name || '',
         from_station_id: currentRow.from_station_id || 0,
         to_station_id: currentRow.to_station_id || 0,
         bike_count: currentRow.bike_count || 0,

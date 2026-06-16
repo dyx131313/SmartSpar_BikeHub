@@ -123,7 +123,7 @@ export const tasksColumns: ColumnDef<Task>[] = [
     meta: { title: '优先级', className: 'ps-1', tdClassName: 'ps-3' },
     cell: ({ row }) => {
       const priority = priorities.find(
-        (priority) => priority.value === row.getValue('priority')
+        (priority) => priority.value === String(row.getValue('priority'))
       )
 
       if (!priority) {
@@ -140,7 +140,7 @@ export const tasksColumns: ColumnDef<Task>[] = [
       )
     },
     filterFn: (row, id, value) => {
-      return value.includes(row.getValue(id))
+      return value.includes(String(row.getValue(id)))
     },
   },
   {

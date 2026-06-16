@@ -39,7 +39,7 @@ function parseCookieValue(v?: string | undefined): string {
 export const useAuthStore = create<AuthState>()((set) => {
   // 优先读取配置名的 cookie，若不存在则尝试迁移 legacy 名称
   const newCookie = getCookie(ACCESS_TOKEN_COOKIE)
-  let initToken = parseCookieValue(newCookie)
+  const initToken = parseCookieValue(newCookie)
   return {
     auth: {
       user: null,

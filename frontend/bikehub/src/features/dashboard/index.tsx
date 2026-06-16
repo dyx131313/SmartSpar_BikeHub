@@ -50,7 +50,7 @@ export function Dashboard() {
   }, [])
 
   // 获取真实调度任务数据
-  const { data: tasksData } = useQuery({
+  const { data: tasksData, isLoading: tasksLoading } = useQuery({
     queryKey: ['tasks'],
     queryFn: () => getTasks({ per_page: 100 }),
   })
@@ -79,7 +79,7 @@ export function Dashboard() {
   }
 
   // 获取仪表盘站点数据 (包含实时单车量和预测需求)
-  const { data: dashboardData, error: dashboardError } = useQuery({
+  const { data: dashboardData, error: dashboardError, isLoading: stationsLoading } = useQuery({
     queryKey: ['dashboardStations'],
     queryFn: () => getDashboardStations(),
   })
@@ -89,7 +89,6 @@ export function Dashboard() {
   }
 
   const stations = dashboardData?.data || []
-  console.log('Dashboard stations loaded:', stations.length, stations[0])
 
   // 获取真实用户数据
   const { data: userData } = useQuery({
@@ -140,11 +139,16 @@ export function Dashboard() {
 
         {/* ===== Main ===== */}
         <Main>
-          <div className='mb-2 flex items-center justify-between space-y-2'>
-            <div className='flex items-center gap-4'>
-              <h1 className='text-2xl font-bold tracking-tight'>数据展示面板</h1>
+          <div className='mb-4 flex flex-wrap items-start justify-between gap-3'>
+            <div className='space-y-1'>
+              <h1 className='text-2xl font-semibold tracking-tight'>运营总览</h1>
+              <p className='text-muted-foreground text-sm'>
+                聚合调度任务、站点单车量与预测需求，辅助调度员快速判断供需状态。
+              </p>
+            </div>
+            <div className='flex items-center gap-3'>
               {systemTime && (
-                <div className='flex items-center space-x-2 rounded-md bg-muted px-3 py-1'>
+                <div className='border-border/70 bg-background flex items-center space-x-2 rounded-md border px-3 py-2 shadow-sm'>
                   <span className='text-sm font-medium text-muted-foreground'>
                     系统时间:
                   </span>
@@ -173,7 +177,7 @@ export function Dashboard() {
             </div>
             <TabsContent value='overview' className='space-y-4'>
               <div className='grid gap-4 sm:grid-cols-2 lg:grid-cols-4'>
-                <Card className='gap-3'>
+                <Card className='gap-3 border-border/70 shadow-sm'>
                   <CardHeader className='flex flex-row items-center justify-between space-y-0 pb-1'>
                     <CardTitle className='text-lg font-medium'>
                       总调度数
@@ -181,13 +185,11 @@ export function Dashboard() {
                     <ListTodo className='text-muted-foreground h-5 w-5' />
                   </CardHeader>
                   <CardContent>
-                    <div className='text-4xl font-extrabold md:text-5xl'>{totalTasks}</div>
-                    <p className='text-muted-foreground text-xs'>
-                      {/* +20.1% from last day */}
-                    </p>
+                    <div className='text-3xl font-semibold tabular-nums'>{tasksLoading ? '-' : totalTasks}</div>
+                    <p className='text-muted-foreground text-xs'>当前可见任务总量</p>
                   </CardContent>
                 </Card>
-                <Card className='gap-3'>
+                <Card className='gap-3 border-border/70 shadow-sm'>
                   <CardHeader className='flex flex-row items-center justify-between space-y-0 pb-1'>
                     <CardTitle className='text-lg font-medium'>
                       待办调度数
@@ -195,25 +197,21 @@ export function Dashboard() {
                     <Circle className='text-muted-foreground h-5 w-5' />
                   </CardHeader>
                   <CardContent>
-                    <div className='text-4xl font-extrabold md:text-5xl'>{todoTasks}</div>
-                    <p className='text-muted-foreground text-xs'>
-                      {/* +180.1% from last day */}
-                    </p>
+                    <div className='text-3xl font-semibold tabular-nums'>{tasksLoading ? '-' : todoTasks}</div>
+                    <p className='text-muted-foreground text-xs'>等待派发或接收</p>
                   </CardContent>
                 </Card>
-                <Card className='gap-3'>
+                <Card className='gap-3 border-border/70 shadow-sm'>
                   <CardHeader className='flex flex-row items-center justify-between space-y-0 pb-1'>
                     <CardTitle className='text-lg font-medium'>正在进行调度数</CardTitle>
                     <Timer className='text-muted-foreground h-5 w-5' />
                   </CardHeader>
                   <CardContent>
-                    <div className='text-4xl font-extrabold md:text-5xl'>{inProgressTasks}</div>
-                    <p className='text-muted-foreground text-xs'>
-                      {/* +19% from last day */}
-                    </p>
+                    <div className='text-3xl font-semibold tabular-nums'>{tasksLoading ? '-' : inProgressTasks}</div>
+                    <p className='text-muted-foreground text-xs'>运维员执行中</p>
                   </CardContent>
                 </Card>
-                <Card className='gap-3'>
+                <Card className='gap-3 border-border/70 shadow-sm'>
                   <CardHeader className='flex flex-row items-center justify-between space-y-0 pb-1'>
                     <CardTitle className='text-lg font-medium'>
                       已完成调度数
@@ -221,16 +219,14 @@ export function Dashboard() {
                     <CheckCircle className='text-muted-foreground h-5 w-5' />
                   </CardHeader>
                   <CardContent>
-                    <div className='text-4xl font-extrabold md:text-5xl'>{completedTasks}</div>
-                    <p className='text-muted-foreground text-xs'>
-                      {/* +201 since last day */}
-                    </p>
+                    <div className='text-3xl font-semibold tabular-nums'>{tasksLoading ? '-' : completedTasks}</div>
+                    <p className='text-muted-foreground text-xs'>已完成闭环任务</p>
                   </CardContent>
                 </Card>
               </div>
               <div className='grid grid-cols-1 gap-4 lg:grid-cols-7'>
                 <Card className='col-span-1 lg:col-span-4'>
-                  <CardContent className='pt-6'>
+                  <CardContent className='pt-5'>
                     <Tabs defaultValue='combined' className='space-y-4'>
                       <div className='w-full overflow-x-auto pb-2'>
                         <TabsList>
@@ -241,16 +237,16 @@ export function Dashboard() {
                         </TabsList>
                       </div>
                       <TabsContent value='combined' className='ps-2'>
-                        <AmapComponent mode='combined' data={stations} />
+                        <AmapComponent mode='combined' height={460} data={stations} />
                       </TabsContent>
                       <TabsContent value='heatmap' className='ps-2'>
-                        <AmapComponent mode='heatmap' data={stations} />
+                        <AmapComponent mode='heatmap' height={460} data={stations} />
                       </TabsContent>
                       <TabsContent value='real_demand_heatmap' className='ps-2'>
-                        <AmapComponent mode='real_demand_heatmap' data={stations} />
+                        <AmapComponent mode='real_demand_heatmap' height={460} data={stations} />
                       </TabsContent>
                       <TabsContent value='markers' className='ps-2'>
-                        <AmapComponent mode='markers' data={stations} />
+                        <AmapComponent mode='markers' height={460} data={stations} />
                       </TabsContent>
                     </Tabs>
                   </CardContent>
@@ -269,8 +265,9 @@ export function Dashboard() {
                         <TabsTrigger value='demand'>预测需求量</TabsTrigger>
                       </TabsList>
                       <TabsContent value='bikes'>
-                        <SimpleBarList
-                          items={bikesTop5}
+                      <SimpleBarList
+                        items={bikesTop5}
+                        loading={stationsLoading}
                           barClass='bg-blue-500'
                           valueFormatter={(n) => `${n} 辆`}
                         />
@@ -324,6 +321,7 @@ export function Dashboard() {
                     <CardContent>
                       <SimpleBarList
                         items={demandTop5}
+                        loading={stationsLoading}
                         barClass='bg-primary'
                         valueFormatter={(n) => `${n}`}
                       />
@@ -425,13 +423,21 @@ const topNav = [
 
 function SimpleBarList({
   items,
+  loading = false,
   valueFormatter,
   barClass,
 }: {
   items: { name: string; value: number }[]
+  loading?: boolean
   valueFormatter: (n: number) => string
   barClass: string
 }) {
+  if (loading) {
+    return <div className='text-muted-foreground rounded-md border border-dashed p-6 text-center text-sm'>数据加载中...</div>
+  }
+  if (items.length === 0) {
+    return <div className='text-muted-foreground rounded-md border border-dashed p-6 text-center text-sm'>暂无可展示数据</div>
+  }
   const max = Math.max(...items.map((i) => i.value), 1)
   return (
     <ul className='space-y-3'>

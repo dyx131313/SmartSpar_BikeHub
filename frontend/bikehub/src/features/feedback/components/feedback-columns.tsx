@@ -1,8 +1,8 @@
-import { ColumnDef } from '@tanstack/react-table'
+import { type ColumnDef } from '@tanstack/react-table'
 import { Badge } from '@/components/ui/badge'
 import { Checkbox } from '@/components/ui/checkbox'
 import { DataTableColumnHeader } from '@/components/data-table/column-header'
-import { Feedback } from '../data/schema'
+import { type Feedback } from '../data/schema'
 import { feedbackStatuses, feedbackCategories } from '../data/data'
 import { DataTableRowActions } from './data-table-row-actions'
 

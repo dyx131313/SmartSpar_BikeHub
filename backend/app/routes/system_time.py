@@ -1,7 +1,6 @@
 from flask import jsonify
 from app.routes import api_bp
 from app.services.time_service import time_service
-from datetime import datetime
 
 
 @api_bp.route("/system/time", methods=["GET"])
@@ -14,7 +13,7 @@ def get_system_time():
     return jsonify(
         {
             "current_time": current_time,
-            "timezone": "UTC+8",
-            "mode": "dynamic",  # static or dynamic
+            "timezone": time_service.timezone_name,
+            "mode": time_service.mode,
         }
     )

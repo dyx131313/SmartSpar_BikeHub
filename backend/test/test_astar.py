@@ -9,10 +9,6 @@ import os
 sys.path.append(os.path.dirname(os.path.abspath(__file__)))
 
 from app.utils.astar_planner import AStarPlanner
-import matplotlib.pyplot as plt
-import matplotlib.patches as patches
-from matplotlib.lines import Line2D
-import numpy as np
 
 def test_astar_algorithm():
     """测试A*算法基本功能"""
@@ -102,7 +98,6 @@ def test_astar_algorithm():
         print(f"  站点类型分布: {stats['station_types']}")
 
     print("\n=== 测试完成 ===")
-    return True
 
 def test_edge_cases():
     """测试边界情况"""

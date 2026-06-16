@@ -36,7 +36,7 @@ def test_search_function():
                 ('admin', 'admin@bikehub.com', 'admin', '系统管理员'),
                 ('testuser1', 'test1@bikehub.com', 'user', '测试用户1'),
                 ('testuser2', 'test2@bikehub.com', 'user', '测试用户2'),
-                ('testoperator', 'operator@bikehub.com', 'operator', '测试运维员'),
+                ('testoperator', 'testoperator@bikehub.com', 'operator', '测试运维员'),
                 ('john', 'john@bikehub.com', 'user', 'John Smith'),
                 ('jane', 'jane@bikehub.com', 'user', 'Jane Doe'),
             ]
@@ -124,12 +124,13 @@ def test_search_function():
             # 测试搜索函数
             from app.routes.chat import search_chat_users
             from unittest.mock import Mock, patch
+            search_chat_users_view = getattr(search_chat_users, "__wrapped__", search_chat_users)
 
             # 模拟Flask请求和上下文
             with app.test_request_context():
                 with app.test_client() as client:
                     # 模拟JWT身份验证
-                    with patch('flask_jwt_extended.get_jwt_identity', return_value=admin_user.id):
+                    with patch('app.routes.chat.get_jwt_identity', return_value=str(admin_user.id)):
 
                         # 测试各种搜索查询
                         test_queries = [
@@ -167,7 +168,7 @@ def test_search_function():
                                 mock_args.side_effect = args_get
 
                                 try:
-                                    result, status_code = search_chat_users()
+                                    result, status_code = search_chat_users_view()
 
                                     if status_code == 200:
                                         data = result.get_json() if hasattr(result, 'get_json') else result
@@ -248,7 +249,7 @@ def test_search_function():
                             }.get(key, default)
 
                             try:
-                                result, status_code = search_chat_users()
+                                result, status_code = search_chat_users_view()
                                 if status_code == 200:
                                     data = result.get_json() if hasattr(result, 'get_json') else result
                                     if isinstance(data, dict):

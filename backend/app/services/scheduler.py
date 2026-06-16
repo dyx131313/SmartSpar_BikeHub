@@ -1,15 +1,14 @@
 import threading
 import time
 import json
-import os
 import pandas as pd
 import numpy as np
 from datetime import datetime, timedelta
-from app import db, create_app
 from app.models.demand_data import DemandData
 from app.models.station import Station
+from app.config.paths import Paths
+from app.services.prediction_registry import prediction_model_registry
 from app.services.time_service import time_service
-from app.services.time_series.inference import TimeSeriesInference
 from sklearn.preprocessing import StandardScaler, LabelEncoder
 
 
@@ -79,7 +78,7 @@ class BikeScheduler:
             self.app = create_app()
 
         with self.app.app_context():
-            models = [model_name] if model_name else ["DLinear", "TiDE", "TimesNet"]
+            models = [model_name] if model_name else prediction_model_registry.names()
 
             # 初始化状态
             for m in models:
@@ -260,12 +259,18 @@ class BikeScheduler:
 
         # 加载模型
         try:
+            from app.services.time_series.inference import TimeSeriesInference
+
             inference = TimeSeriesInference(
                 model_name,
-                checkpoint_dir=os.path.join(
-                    os.path.dirname(__file__), "time_series", "checkpoints"
-                ),
+                checkpoint_dir=str(Paths.MODEL_CHECKPOINTS),
             )
+        except ImportError as e:
+            print(
+                "Time series dependencies are not installed. "
+                "Install the optional torch stack before running prediction jobs."
+            )
+            raise RuntimeError(f"预测依赖未安装: {e}") from e
         except Exception as e:
             print(f"Could not load model {model_name}: {e}")
             return
@@ -363,14 +368,9 @@ class BikeScheduler:
             )
 
         # 保存结果到文件
-        save_path = os.path.join(
-            os.path.dirname(__file__),
-            "time_series",
-            "checkpoints",
-            f"{model_name}_future.json",
-        )
+        save_path = Paths.model_file(model_name, "future.json")
 
-        with open(save_path, "w", encoding="utf-8") as f:
+        with save_path.open("w", encoding="utf-8") as f:
             json.dump(future_results, f, ensure_ascii=False, indent=2)
 
         print(f"Saved predictions for {model_name} to {save_path}")

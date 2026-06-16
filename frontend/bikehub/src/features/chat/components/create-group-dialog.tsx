@@ -1,4 +1,4 @@
-/**
+﻿/**
  * 创建群聊对话框组件
  */
 import React, { useState, useEffect, useCallback } from 'react';
@@ -6,7 +6,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from '
 import { Button, Input, Textarea, Select, SelectContent, SelectItem, SelectTrigger, SelectValue, Avatar, AvatarFallback, AvatarImage, Badge, ScrollArea } from '@/components/ui';
 import { Users, Search } from 'lucide-react';
 import { groupChatAPI } from '../api/group-chat-api';
-import { CreateGroupForm, GroupType, UserInfo } from '../data/group-chat-types';
+import { type CreateGroupForm, GroupType, type UserInfo } from '../data/group-chat-types';
 import { api } from '@/lib/api';
 import { toast } from 'sonner';
 
@@ -31,8 +31,6 @@ const CreateGroupDialog: React.FC<CreateGroupDialogProps> = React.memo(({
 
   // 监控 selectedUsers 的变化
   useEffect(() => {
-    console.log('🔄 selectedUsers 状态更新，当前数量:', selectedUsers.length, '时间戳:', Date.now());
-    console.log('🔄 selectedUsers 内容:', selectedUsers.map(u => u.full_name));
   }, [selectedUsers]);
   const [availableUsers, setAvailableUsers] = useState<UserInfo[]>([]);
   const [loading, setLoading] = useState(false);
@@ -41,13 +39,10 @@ const CreateGroupDialog: React.FC<CreateGroupDialogProps> = React.memo(({
 
   // 加载可用用户
   const loadUsers = useCallback(async () => {
-    console.log('🔍 loadUsers 函数被调用');
     try {
       setSearching(true);
-      console.log('🔍 正在加载用户列表...');
       // 直接使用 API 获取用户，不使用 getAllAvailableUsers
       const response = await api.get(`/api/chat/users/search?q=&limit=50`);
-      console.log('🔍 用户加载完成，数量:', response.users?.length);
       setAvailableUsers(response.users);
     } catch (error) {
       console.error('加载用户列表失败:', error);
@@ -58,14 +53,11 @@ const CreateGroupDialog: React.FC<CreateGroupDialogProps> = React.memo(({
 
   // 搜索用户
   const handleSearchUsers = useCallback(async (query: string) => {
-    console.log('🔍 handleSearchUsers 被调用 - query:', query);
     setSearchQuery(query);
     if (query.trim()) {
       try {
         setSearching(true);
-        console.log('🔍 正在搜索用户:', query);
         const users = await groupChatAPI.searchUsers(query, 20);
-        console.log('🔍 搜索完成，结果数量:', users?.length);
         setAvailableUsers(users);
       } catch (error) {
         console.error('搜索用户失败:', error);
@@ -73,7 +65,6 @@ const CreateGroupDialog: React.FC<CreateGroupDialogProps> = React.memo(({
         setSearching(false);
       }
     } else {
-      console.log('🔍 搜索框为空，重置为所有用户');
       // 当搜索框为空时，重置为所有用户
       loadUsers();
     }
@@ -81,27 +72,19 @@ const CreateGroupDialog: React.FC<CreateGroupDialogProps> = React.memo(({
 
   // 处理用户选择
   const handleUserToggle = useCallback((user: UserInfo) => {
-    console.log('👤 handleUserToggle 被调用 - user:', user.full_name, 'ID:', user.id, '时间戳:', Date.now());
     setSelectedUsers(prev => {
-      console.log('👤 setSelectedUsers 开始执行 - prev.length:', prev.length, '时间戳:', Date.now());
       const isSelected = prev.some(u => u.id === user.id);
-      console.log('👤 用户选择状态:', isSelected, '当前已选数量:', prev.length);
       if (isSelected) {
-        console.log('👤 取消选择用户:', user.full_name);
         const newSelected = prev.filter(u => u.id !== user.id);
-        console.log('👤 返回新的选中列表，长度:', newSelected.length, '时间戳:', Date.now());
         return newSelected;
       } else {
         // 使用函数式获取最新的 formData
         const currentMaxMembers = 100; // 默认值，确保不会出错
         if (prev.length >= currentMaxMembers - 1) {
-          console.log('👤 已达到最大选择数量限制');
           toast.error(`最多只能选择 ${currentMaxMembers - 1} 个成员`);
           return prev;
         }
-        console.log('👤 添加用户到选择列表:', user.full_name);
         const newSelected = [...prev, { ...user }];
-        console.log('👤 返回新的选中列表，长度:', newSelected.length, '时间戳:', Date.now());
         return newSelected;
       }
     });
@@ -150,26 +133,19 @@ const CreateGroupDialog: React.FC<CreateGroupDialogProps> = React.memo(({
 
   // 关闭对话框 - 保留状态，只调用 onClose
   const handleClose = useCallback(() => {
-    console.log('🚪 handleClose 函数被调用');
-    console.log('🚪 延迟调用 onClose');
     onClose();
   }, [onClose]);
 
   useEffect(() => {
-    console.log('⚡ useEffect 运行 - open:', open, 'loadUsers:', !!loadUsers);
     if (open) {
-      console.log('⚡ open 为 true，调用 loadUsers');
       loadUsers();
     } else {
-      console.log('⚡ open 为 false，不加载用户');
     }
   }, [open]); // 只依赖 open，避免 loadUsers 变化导致重新执行
 
   return (
     <Dialog open={open} onOpenChange={(newOpen) => {
-      console.log('🎭 Dialog onOpenChange 被调用 - old open:', open, 'new open:', newOpen);
       if (!newOpen) {
-        console.log('🎭 Dialog 关闭，调用 handleClose');
         handleClose();
       }
     }}>

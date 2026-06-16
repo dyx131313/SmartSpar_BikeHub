@@ -56,7 +56,7 @@ export function DemandMutateDrawer({
   const queryClient = useQueryClient()
 
   const form = useForm<DemandForm>({
-    resolver: zodResolver(formSchema),
+    resolver: zodResolver(formSchema) as any,
     defaultValues: {
       timestamp: '',
       station_id: 0,

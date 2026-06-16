@@ -1,5 +1,7 @@
-from datetime import datetime, timedelta
+from datetime import datetime
+import os
 import threading
+from zoneinfo import ZoneInfo
 
 
 class TimeService:
@@ -18,27 +20,33 @@ class TimeService:
         if self._initialized:
             return
 
-        # 初始虚拟时间：2025-12-08 00:00:00
-        self.base_virtual_time = datetime(2025, 12, 8, 0, 0, 0)
-        # 记录服务启动时的真实时间
+        self.timezone_name = os.getenv("SYSTEM_TIMEZONE", "Asia/Shanghai")
+        self.timezone = ZoneInfo(self.timezone_name)
+        self.mode = os.getenv("SYSTEM_TIME_MODE", "real").strip().lower()
+        self.base_virtual_time = self._read_base_virtual_time()
         self.start_real_time = datetime.now()
-        # 时间流逝倍率 (1.0 = 真实时间流逝, 60.0 = 1分钟顶1小时)
-        # 用户要求"按真实时间流逝"，所以设为 1.0
-        self.time_scale = 1.0
+        self.time_scale = float(os.getenv("SYSTEM_TIME_SCALE", "1.0"))
 
         self._initialized = True
 
+    def _read_base_virtual_time(self) -> datetime:
+        raw_value = os.getenv("SYSTEM_BASE_TIME", "").strip()
+        if raw_value:
+            return datetime.fromisoformat(raw_value.replace("Z", "+00:00")).replace(tzinfo=None)
+        return datetime.now(self.timezone).replace(tzinfo=None)
+
     def get_current_time(self) -> datetime:
-        """获取当前虚拟时间"""
+        """Return current application time as a naive local datetime."""
+        if self.mode == "real":
+            return datetime.now(self.timezone).replace(tzinfo=None)
+
         now_real = datetime.now()
         elapsed_real = now_real - self.start_real_time
         elapsed_virtual = elapsed_real * self.time_scale
         return self.base_virtual_time + elapsed_virtual
 
     def get_current_time_str(self) -> str:
-        """获取ISO格式的当前虚拟时间字符串"""
         return self.get_current_time().isoformat(timespec="seconds")
 
 
-# 全局单例
 time_service = TimeService()

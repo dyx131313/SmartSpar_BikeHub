@@ -1,5 +1,5 @@
 import { Area, AreaChart, ResponsiveContainer, XAxis, YAxis, Tooltip, CartesianGrid } from 'recharts'
-import { Task } from '@/features/task_management/data/schema'
+import { type Task } from '@/features/task_management/data/schema'
 
 interface AnalyticsChartProps {
   data: Task[]

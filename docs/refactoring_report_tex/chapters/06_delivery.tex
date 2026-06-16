@@ -1,0 +1,42 @@
+\chapter{源码、文档与贡献}
+
+\section{重构后源码}
+
+重构后源码仓库链接：
+
+\begin{quote}
+\url{https://github.com/dyx131313/SmartSpar_BikeHub}
+\end{quote}
+
+主要目录：
+
+\begin{itemize}
+  \item 后端入口：\code{backend/run.py}
+  \item 后端应用：\code{backend/app}
+  \item 后端服务层：\code{backend/app/services}
+  \item 后端工具：\code{backend/app/utils}
+  \item 前端入口：\code{frontend/bikehub/src}
+  \item 前端页面：\code{frontend/bikehub/src/features}
+\end{itemize}
+
+\section{文档清单}
+
+本次交付文档包括：
+
+\begin{itemize}
+  \item \code{docs/LOCAL_RUNBOOK.md}：本地运行手册。
+  \item \code{docs/REFACTORING_RECORD.md}：重构过程记录。
+  \item \code{docs/TEST_REPORT.md}：测试报告。
+  \item \code{docs/REFACTORING_REPORT_DRAFT.md}：Markdown 版报告草稿。
+  \item \code{docs/refactoring_report_tex/}：基于同济 TeX 模板的正式报告工程。
+  \item \code{docs/refactoring_report_tex/figures/evidence/}：页面截图、架构图、覆盖矩阵和命令行验证图。
+  \item \code{docs/refactoring_report_tex/evidence/}：lint、build、pytest、接口烟测的原始输出。
+\end{itemize}
+
+\section{贡献说明}
+
+小组名称为“葫芦娃除BUG”。成员分工和贡献度已单独整理在封面后的“小组贡献说明”页，作为报告第二页展示。
+
+\section{总结}
+
+本次重构将 SmartSpar BikeHub 从一个可以演示但工程基线不稳定的项目，整理为可以本地启动、可以构建、可以测试、可以说明的提交版本。后端通过服务层、权限装饰器、统一响应和路径配置降低了维护复杂度；前端通过构建修复、运营中台化设计和关键路由修复提升了可用性；测试和文档则保证重构结果可复现、可验收。

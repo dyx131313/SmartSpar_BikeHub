@@ -40,10 +40,16 @@ const IS_DEV = import.meta.env.DEV ?? false
 
 function buildUrl(path: string) {
   if (/^https?:\/\//.test(path)) return path
-  if (IS_DEV && API_BASE) {
+  if (API_BASE) {
     return `${API_BASE}${path}`
   }
-  return IS_DEV ? `http://localhost:5000${path}` : `${API_BASE}${path}`
+  if (IS_DEV) {
+    const host = typeof window !== 'undefined' && window.location.hostname
+      ? window.location.hostname
+      : 'localhost'
+    return `http://${host}:5000${path}`
+  }
+  return path
 }
 
 function buildStaticUrl(path: string) {
@@ -104,9 +110,8 @@ async function fetchWithAuth(url: string, options: RequestInit = {}, retry = tru
 
 export async function apiPost(path: string, body: any = null) {
   const url = buildUrl(path)
-  console.log('API POST:', url, body)
 
-  let headers: Record<string, string> = {}
+  const headers: Record<string, string> = {}
   let requestBody: any = body
 
   // 如果是 FormData（文件上传），不要设置 Content-Type，让浏览器自动设置
@@ -133,13 +138,6 @@ export async function apiPost(path: string, body: any = null) {
   }
 
   if (!res.ok) {
-    console.error('API Error:', {
-      url,
-      status: res.status,
-      statusText: res.statusText,
-      data
-    })
-
     const err: any = new Error(data?.error || data?.message || res.statusText || 'Request failed')
     err.status = res.status
     err.data = data
@@ -191,18 +189,7 @@ export async function apiPut(path: string, body: any) {
 
 export async function apiDelete(path: string) {
   const url = buildUrl(path)
-  console.log('DELETE 请求:', {
-    path,
-    url: buildUrl(path),
-    apiBase: import.meta.env.VITE_API_BASE,
-    isDev: import.meta.env.DEV
-  })
   const res = await fetchWithAuth(url, { method: 'DELETE' })
-  console.log('DELETE 响应:', {
-    status: res.status,
-    statusText: res.statusText,
-    url: res.url
-  })
   const data = await res.json().catch(() => ({}))
   if (!res.ok) {
     const err: any = new Error(data?.error || data?.message || 'Request failed')
@@ -244,3 +231,4 @@ export const api = {
 
 // 导出buildStaticUrl函数
 export { buildStaticUrl }
+

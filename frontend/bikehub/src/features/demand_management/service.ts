@@ -1,5 +1,5 @@
 import { apiGet, apiPost, apiPut, apiDelete, apiUpload } from '@/lib/api'
-import { Demand } from './data/schema'
+import { type Demand } from './data/schema'
 
 export interface DemandListResponse {
     data: Demand[]

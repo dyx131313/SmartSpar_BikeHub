@@ -26,7 +26,7 @@ from app.utils.email_utils import send_verification_email
 def register():
     """User registration"""
     try:
-        data = request.get_json()
+        data = request.get_json(silent=True)
 
         # Validate required fields
         required_fields = ["username", "email", "password"]
@@ -104,7 +104,7 @@ def register():
 def login():
     """User login (supports username or email + password)"""
     try:
-        data = request.get_json() or {}
+        data = request.get_json(silent=True) or {}
 
         identifier = (data.get("username") or data.get("email") or data.get("identifier") or "").strip()
         password = data.get("password")
@@ -286,6 +286,7 @@ def forgot_password_request():
             email=user.email,
             code=code,
             type="reset_password",
+            expires_in_minutes=10,
         )
         db.session.add(verification)
         db.session.commit()
@@ -294,6 +295,12 @@ def forgot_password_request():
         body = (
             f" 你的“重置密码”验证码是：{code}\n\n"
             f" 该验证码将在1分钟后过期，请尽快使用。如果您未请求重置密码，请忽略此邮件。"
+        )
+
+        body = (
+            f"Your password reset verification code is: {code}\n\n"
+            "This code will expire in 10 minutes. "
+            "If you did not request a password reset, please ignore this email."
         )
 
         if not send_verification_email(user.email, subject, body):
@@ -313,7 +320,7 @@ def forgot_password_request():
 def forgot_password_reset():
     """Forgot password: verify code and reset password"""
     try:
-        data = request.get_json() or {}
+        data = request.get_json(silent=True) or {}
         identifier = (data.get("identifier") or "").strip()
         code = (data.get("code") or "").strip()
         new_password = data.get("new_password") or ""

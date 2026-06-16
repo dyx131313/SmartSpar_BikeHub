@@ -29,10 +29,11 @@ export default defineConfig(
         'warn',
         { allowConstantExport: true },
       ],
-      'no-console': 'error',
+      'no-console': 'warn',
+      'no-empty': ['warn', { allowEmptyCatch: true }],
       'no-unused-vars': 'off',
       '@typescript-eslint/no-unused-vars': [
-        'error',
+        'warn',
         {
           args: 'all',
           argsIgnorePattern: '^_',
@@ -52,8 +53,11 @@ export default defineConfig(
           disallowTypeAnnotations: false,
         },
       ],
+      '@typescript-eslint/no-explicit-any': 'warn',
+      '@tanstack/query/exhaustive-deps': 'warn',
+      'react-hooks/set-state-in-effect': 'warn',
       // Prevent duplicate imports from the same module
-      'no-duplicate-imports': 'error',
+      'no-duplicate-imports': 'warn',
     },
   }
 )

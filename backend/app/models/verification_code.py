@@ -13,7 +13,7 @@ class VerificationCode(db.Model):
     expires_at = db.Column(db.DateTime, nullable=False)
     created_at = db.Column(db.TIMESTAMP, default=datetime.utcnow)
 
-    def __init__(self, email, code, type, expires_in_minutes=1):
+    def __init__(self, email, code, type, expires_in_minutes=10):
         self.email = email
         self.code = code
         self.type = type

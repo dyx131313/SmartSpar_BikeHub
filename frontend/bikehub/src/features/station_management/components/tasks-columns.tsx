@@ -46,7 +46,7 @@ export const tasksColumns: ColumnDef<Station>[] = [
     ),
     meta: { title: '站点名称', className: 'ps-1', tdClassName: 'ps-4' },
     cell: ({ row }) => (
-      <div className='max-w-40 truncate text-sm text-gray-700'>
+      <div className='max-w-40 truncate text-sm text-foreground'>
         {row.getValue('name') ?? '—'}
       </div>
     ),
@@ -62,7 +62,7 @@ export const tasksColumns: ColumnDef<Station>[] = [
       const option = station_type.find((t) => t.value === val)
       const label = option ? option.label : val ?? '—'
       return (
-        <div className='max-w-40 truncate text-sm text-gray-700'>
+        <div className='max-w-40 truncate text-sm text-foreground'>
           {label}
         </div>
       )
@@ -75,7 +75,7 @@ export const tasksColumns: ColumnDef<Station>[] = [
     ),
     meta: { title: '纬度', className: 'ps-1', tdClassName: 'ps-4' },
     cell: ({ row }) => (
-      <div className='max-w-40 truncate text-sm text-gray-700'>
+      <div className='max-w-40 truncate text-sm text-foreground'>
         {row.getValue('latitude') ?? '—'}
       </div>
     ),
@@ -87,7 +87,7 @@ export const tasksColumns: ColumnDef<Station>[] = [
     ),
     meta: { title: '经度', className: 'ps-1', tdClassName: 'ps-4' },
     cell: ({ row }) => (
-      <div className='max-w-40 truncate text-sm text-gray-700'>
+      <div className='max-w-40 truncate text-sm text-foreground'>
         {row.getValue('longitude') ?? '—'}
       </div>
     ),
@@ -99,7 +99,7 @@ export const tasksColumns: ColumnDef<Station>[] = [
     ),
     meta: { title: '容量', className: 'ps-1', tdClassName: 'ps-4' },
     cell: ({ row }) => (
-      <div className='max-w-40 truncate text-sm text-gray-700'>
+      <div className='max-w-40 truncate text-sm text-foreground'>
         {row.getValue('capacity') ?? '—'}
       </div>
     ),
@@ -111,7 +111,7 @@ export const tasksColumns: ColumnDef<Station>[] = [
     ),
     meta: { title: '现存单车量', className: 'ps-1', tdClassName: 'ps-4' },
     cell: ({ row }) => (
-      <div className='max-w-40 truncate text-sm text-gray-700'>
+      <div className='max-w-40 truncate text-sm text-foreground'>
         {row.getValue('current_bikes') ?? '—'}
       </div>
     ),
@@ -123,7 +123,7 @@ export const tasksColumns: ColumnDef<Station>[] = [
     ),
     meta: { title: '描述', className: 'ps-1', tdClassName: 'ps-4' },
     cell: ({ row }) => (
-      <div className='max-w-40 truncate text-sm text-gray-700'>
+      <div className='max-w-40 truncate text-sm text-foreground'>
         {row.getValue('description') ?? '—'}
       </div>
     ),

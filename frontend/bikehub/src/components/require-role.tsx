@@ -1,4 +1,4 @@
-import { ReactNode } from 'react'
+import { type ReactNode } from 'react'
 import { Navigate } from '@tanstack/react-router'
 import { useAuthStore } from '@/stores/auth-store'
 import { RequireAuth } from './require-auth'

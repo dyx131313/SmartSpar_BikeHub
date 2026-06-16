@@ -1,0 +1,98 @@
+﻿PS> Invoke-WebRequest http://127.0.0.1:5000/api/system/time
+{
+    "current_time":  "2026-06-15T17:25:32",
+    "mode":  "real",
+    "timezone":  "Asia/Shanghai"
+}
+
+PS> POST /api/auth/login admin/admin123
+status=200, token_length=408
+
+PS> GET /api/predictions/models
+status=200
+{
+    "data":  [
+                 {
+                     "display_name":  "DLinear",
+                     "family":  "time_series",
+                     "has_future":  true,
+                     "has_params":  true,
+                     "name":  "DLinear"
+                 },
+                 {
+                     "display_name":  "TiDE",
+                     "family":  "time_series",
+                     "has_future":  true,
+                     "has_params":  true,
+                     "name":  "TiDE"
+                 },
+                 {
+                     "display_name":  "TimesNet",
+                     "family":  "time_series",
+                     "has_future":  true,
+                     "has_params":  true,
+                     "name":  "TimesNet"
+                 }
+             ]
+}
+
+PS> GET /api/predictions/models/DLinear/params
+status=200, bytes=379
+{
+  "data": {
+    "batch_size": 32,
+    "c_out": 6,
+    "d_ff": 128,
+    "d_layers": 1,
+    "d_model": 64,
+    "data_path": "../../../data/api_demands.json",
+    "dropout": 0.1,
+    "e_layers": 2,
+    "enc_in": 6,
+    "epochs": 10,
+    "learning_rate": 0.001,
+    "model": "DLinear",
+    "pred_len": 24,
+    "save_dir": "./checkpoints",
+    "seq_len": 96
+  },
+  "exists": true
+}
+
+
+PS> GET /api/predictions/models/DLinear/future?page=1&per_page=3
+status=200, bytes=816
+{
+  "current_page": 1,
+  "data": [
+    {
+      "demand": 29,
+      "id": "DLinear-1-2026-06-15T18:00:00",
+      "station_id": 1,
+      "station_name": "\u5609\u5b9a\u6821\u533a\u5357\u95e8\u7ad9",
+      "station_type": "gate",
+      "time": "2026-06-15T18:00:00"
+    },
+    {
+      "demand": 28,
+      "id": "DLinear-2-2026-06-15T18:00:00",
+      "station_id": 2,
+      "station_name": "\u56fe\u4e66\u9986\u4e1c\u4fa7\u7ad9",
+      "station_type": "teaching",
+      "time": "2026-06-15T18:00:00"
+    },
+    {
+      "demand": 31,
+      "id": "DLinear-3-2026-06-15T18:00:00",
+      "station_id": 3,
+      "station_name": "\u7efc\u5408\u697c\u5e7f\u573a\u7ad9",
+      "station_type": "teaching",
+      "time": "2026-06-15T18:00:00"
+    }
+  ],
+  "data_source": "future",
+  "pages": 48,
+  "per_page": 3,
+  "total": 144
+}
+

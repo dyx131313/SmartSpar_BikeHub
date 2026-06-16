@@ -1,0 +1,48 @@
+\documentclass[
+  oneside,
+  degree=bachelor,
+  field=science,
+  fullwidthstop=circle,
+  fontset=windows,
+  times=false,
+  minted=false,
+  biblatex=false,
+]{tongjithesis}
+
+\usepackage{booktabs}
+\usepackage{longtable}
+\usepackage{tabularx}
+\usepackage{array}
+\usepackage{enumitem}
+\usepackage{url}
+\usetikzlibrary{positioning}
+
+\setlist[itemize]{leftmargin=2em}
+\setlist[enumerate]{leftmargin=2em}
+\DeclareRobustCommand{\code}[1]{\texttt{\detokenize{#1}}}
+\renewcommand{\tjcovertext}{软件重构报告}
+\renewcommand{\tjheadertext}{SmartSpar BikeHub 重构报告}
+
+\begin{document}
+
+\input{chapters/metadata}
+\MakeCover
+\input{chapters/contribution}
+\cleardoublepage
+\tjbindinglinefalse
+
+\frontmatter
+\tableofcontents
+\cleardoublepage
+
+\mainmatter
+\input{chapters/01_overview}
+\input{chapters/02_architecture}
+\input{chapters/03_low_level}
+\input{chapters/04_frontend}
+\input{chapters/05_testing}
+\input{chapters/06_delivery}
+
+\input{chapters/appendix}
+
+\end{document}

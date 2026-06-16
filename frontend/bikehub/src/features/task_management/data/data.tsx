@@ -56,22 +56,22 @@ export const statuses = [
 export const priorities = [
   {
     label: '低',
-    value: 1,
+    value: '1',
     icon: ArrowDown,
   },
   {
     label: '中',
-    value: 2,
+    value: '2',
     icon: ArrowRight,
   },
   {
     label: '高',
-    value: 3,
+    value: '3',
     icon: ArrowUp,
   },
   {
     label: '紧急',
-    value: 4,
+    value: '4',
     icon: AlertCircle,
   },
 ]

@@ -66,7 +66,9 @@ def create_app(config_name=None):
     # 启动后台调度器 (仅在主进程中运行)
     # 可通过环境变量 DISABLE_SCHEDULER=1 禁用（例如在运行迁移或单元测试时）
     disable_scheduler = os.environ.get("DISABLE_SCHEDULER", "0") == "1"
-    if not disable_scheduler and (not app.debug or os.environ.get("WERKZEUG_RUN_MAIN") == "true"):
+    if (not app.testing) and (not disable_scheduler) and (
+        not app.debug or os.environ.get("WERKZEUG_RUN_MAIN") == "true"
+    ):
         try:
             from app.services.scheduler import scheduler
 

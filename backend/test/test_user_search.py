@@ -47,7 +47,7 @@ def test_search_endpoint():
             test_users = [
                 ('testuser1', 'test1@bikehub.com', '测试用户1'),
                 ('testuser2', 'test2@bikehub.com', '测试用户2'),
-                ('testoperator', 'operator@bikehub.com', '测试运维员')
+                ('testoperator', 'testoperator_search@bikehub.com', '测试运维员')
             ]
 
             for username, email, full_name in test_users:
@@ -67,7 +67,7 @@ def test_search_endpoint():
 
             # 获取JWT token
             with app.test_request_context():
-                access_token = create_access_token(identity=admin.id)
+                access_token = create_access_token(identity=str(admin.id))
                 print("JWT token 获取成功")
 
             # 测试搜索接口
@@ -225,7 +225,7 @@ def test_search_endpoint_with_group():
                 print(f"创建测试群聊，ID: {group_id}")
                 group_id = group_id
             else:
-                group_id = group[0]
+                group_id = group['id']
                 print(f"使用现有群聊，ID: {group_id}")
 
             cursor.close()
@@ -233,7 +233,7 @@ def test_search_endpoint_with_group():
 
             # 测试群聊内搜索
             with app.test_client() as client:
-                access_token = create_access_token(identity=admin.id)
+                access_token = create_access_token(identity=str(admin.id))
                 headers = {'Authorization': f'Bearer {access_token}'}
 
                 # 测试群聊内搜索

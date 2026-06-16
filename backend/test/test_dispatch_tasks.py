@@ -6,6 +6,11 @@ import requests
 import json
 import time
 
+import pytest
+
+
+pytestmark = pytest.mark.skip(reason="manual external-server smoke test")
+
 # 基础URL
 BASE_URL = "http://localhost:5000/api"
 

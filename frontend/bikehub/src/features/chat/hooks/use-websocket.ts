@@ -3,7 +3,7 @@
  */
 import { useEffect, useRef, useCallback, useState } from 'react';
 import { readToken } from '@/lib/api';
-import { ChatNotificationMessage, WebSocketMessage } from '../data/group-chat-types';
+import { type ChatNotificationMessage, type WebSocketMessage } from '../data/group-chat-types';
 
 interface UseWebSocketOptions {
   onConnect?: () => void;
@@ -61,6 +61,7 @@ export const useWebSocket = (options: UseWebSocketOptions = {}) => {
   const reconnectTimeoutRef = useRef<NodeJS.Timeout | null>(null);
   const pingIntervalRef = useRef<NodeJS.Timeout | null>(null);
   const messageQueueRef = useRef<any[]>([]);
+  const connectRef = useRef<(() => void) | null>(null);
 
   // WebSocket服务器地址
   const wsUrl = `${import.meta.env.VITE_WS_URL || 'ws://localhost:8765'}?token=${readToken()}`;
@@ -187,7 +188,7 @@ export const useWebSocket = (options: UseWebSocketOptions = {}) => {
           }));
 
           reconnectTimeoutRef.current = setTimeout(() => {
-            connect();
+            connectRef.current?.();
           }, reconnectInterval * Math.pow(2, state.reconnectCount)); // 指数退避
         }
       };
@@ -236,6 +237,10 @@ export const useWebSocket = (options: UseWebSocketOptions = {}) => {
   ]);
 
   // 断开连接
+  useEffect(() => {
+    connectRef.current = connect;
+  }, [connect]);
+
   const disconnect = useCallback(() => {
     if (reconnectTimeoutRef.current) {
       clearTimeout(reconnectTimeoutRef.current);
@@ -363,11 +368,11 @@ export const useWebSocket = (options: UseWebSocketOptions = {}) => {
 export const useChatWebSocket = (currentGroupId?: number) => {
   const [typingUsers, setTypingUsers] = useState<Set<number>>(new Set());
   const [unreadCount, setUnreadCount] = useState(0);
+  const typingTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
   const ws = useWebSocket({
     onNewMessage: (message) => {
       // 可以触发全局通知
-      console.log('收到新消息:', message);
 
       // 更新未读数量
       setUnreadCount(prev => prev + 1);
@@ -386,22 +391,18 @@ export const useChatWebSocket = (currentGroupId?: number) => {
     },
 
     onMemberJoined: (data) => {
-      console.log('成员加入群聊:', data);
       // 可以刷新群聊成员列表
     },
 
     onMemberLeft: (data) => {
-      console.log('成员离开群聊:', data);
       // 可以刷新群聊成员列表
     },
 
     onUserStatusChanged: (data) => {
-      console.log('用户状态变化:', data);
       // 可以更新用户在线状态
     },
 
     onGroupUpdated: (data) => {
-      console.log('群聊信息更新:', data);
       // 可以更新群聊信息
     },
   });
@@ -420,26 +421,19 @@ export const useChatWebSocket = (currentGroupId?: number) => {
   }, [currentGroupId, ws.connected]);
 
   // 防抖处理正在输入状态
-  const sendTypingDebounced = useCallback(
-    ((delay = 1000) => {
-      let timeoutId: NodeJS.Timeout;
+  const sendTypingDebounced = useCallback((isTyping: boolean) => {
+    if (typingTimeoutRef.current) {
+      clearTimeout(typingTimeoutRef.current);
+    }
 
-      return (isTyping: boolean) => {
-        if (timeoutId) {
-          clearTimeout(timeoutId);
-        }
-
-        if (isTyping) {
-          timeoutId = setTimeout(() => {
-            ws.sendTyping(currentGroupId!, false);
-          }, delay);
-        } else {
-          ws.sendTyping(currentGroupId!, false);
-        }
-      };
-    })(),
-    [ws, currentGroupId]
-  );
+    if (isTyping) {
+      typingTimeoutRef.current = setTimeout(() => {
+        ws.sendTyping(currentGroupId!, false);
+      }, 1000);
+    } else {
+      ws.sendTyping(currentGroupId!, false);
+    }
+  }, [ws, currentGroupId]);
 
   return {
     ...ws,

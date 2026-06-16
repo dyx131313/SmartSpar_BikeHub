@@ -18,10 +18,9 @@ export function SignIn() {
     <AuthLayout>
       <Card className='gap-4'>
         <CardHeader>
-          <CardTitle className='text-lg tracking-tight'>Sign in</CardTitle>
+          <CardTitle className='text-lg tracking-tight'>登录系统</CardTitle>
           <CardDescription>
-            Enter your email and password below to <br />
-            log into your account
+            使用管理员、调度员或运维员账号进入平台。
           </CardDescription>
         </CardHeader>
         <CardContent>
@@ -29,21 +28,7 @@ export function SignIn() {
         </CardContent>
         <CardFooter>
           <p className='text-muted-foreground px-8 text-center text-sm'>
-            By clicking sign in, you agree to our{' '}
-            <a
-              href='/terms'
-              className='hover:text-primary underline underline-offset-4'
-            >
-              Terms of Service
-            </a>{' '}
-            and{' '}
-            <a
-              href='/privacy'
-              className='hover:text-primary underline underline-offset-4'
-            >
-              Privacy Policy
-            </a>
-            .
+            建议使用测试账号：admin / dispatcher / operator。
           </p>
         </CardFooter>
       </Card>

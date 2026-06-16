@@ -1,5 +1,5 @@
-import React, { useEffect, useRef, useState } from 'react'
-import { StationDashboardData } from '@/features/station_management/data/schema'
+import React, { useCallback, useEffect, useRef, useState } from 'react'
+import { type StationDashboardData } from '@/features/station_management/data/schema'
 
 const AMAP_KEY = '1e1313769f138588c0dd985e6892cc27'
 const AMAP_SECURITY_KEY = '3a617c0365076abeea276731d5453887'
@@ -26,37 +26,12 @@ export function AmapComponent({ mode = 'combined', height = 400, data = [] }: Am
     const heatmapRef = useRef<any>(null)
     const markersRef = useRef<any[]>([])
     const isMapLoaded = useRef(false)
+    const baseMapReadyRef = useRef(false)
     const [mapReady, setMapReady] = useState(false)
+    const [baseMapReady, setBaseMapReady] = useState(false)
+    const [useFallbackMap, setUseFallbackMap] = useState(false)
 
-    useEffect(() => {
-        if (typeof window.AMap !== 'undefined' || isMapLoaded.current) {
-            if (mapContainerRef.current && !mapInstanceRef.current) {
-                initMap()
-            }
-            return
-        }
-
-        const script = document.createElement('script')
-        script.type = 'text/javascript'
-        script.src = `https://webapi.amap.com/maps?v=2.0&key=${AMAP_KEY}`
-        script.async = true
-
-        script.onload = () => {
-            isMapLoaded.current = true
-            initMap()
-        }
-
-        document.body.appendChild(script)
-
-        return () => {
-            if (mapInstanceRef.current) {
-                mapInstanceRef.current.destroy()
-                mapInstanceRef.current = null
-            }
-        }
-    }, [])
-
-    const initMap = () => {
+    const initMap = useCallback(() => {
         if (mapContainerRef.current && !mapInstanceRef.current) {
             const AMap = window.AMap
 
@@ -65,6 +40,11 @@ export function AmapComponent({ mode = 'combined', height = 400, data = [] }: Am
                     viewMode: '2D',
                     zoom: 11,
                     center: defaultCenter,
+                })
+                map.on('complete', () => {
+                    baseMapReadyRef.current = true
+                    setBaseMapReady(true)
+                    setUseFallbackMap(false)
                 })
 
                 mapInstanceRef.current = map
@@ -78,15 +58,51 @@ export function AmapComponent({ mode = 'combined', height = 400, data = [] }: Am
                 setMapReady(true)
             }
         }
-    }
+    }, [])
+
+    useEffect(() => {
+        const fallbackTimer = window.setTimeout(() => {
+            if (!baseMapReadyRef.current) {
+                setUseFallbackMap(true)
+            }
+        }, 4500)
+
+        if (typeof window.AMap !== 'undefined' || isMapLoaded.current) {
+            if (mapContainerRef.current && !mapInstanceRef.current) {
+                initMap()
+            }
+            return () => window.clearTimeout(fallbackTimer)
+        }
+
+        const script = document.createElement('script')
+        script.type = 'text/javascript'
+        script.src = `https://webapi.amap.com/maps?v=2.0&key=${AMAP_KEY}`
+        script.async = true
+
+        script.onload = () => {
+            isMapLoaded.current = true
+            initMap()
+        }
+        script.onerror = () => {
+            setUseFallbackMap(true)
+        }
+
+        document.body.appendChild(script)
+
+        return () => {
+            window.clearTimeout(fallbackTimer)
+            if (mapInstanceRef.current) {
+                mapInstanceRef.current.destroy()
+                mapInstanceRef.current = null
+            }
+        }
+    }, [initMap])
 
     useEffect(() => {
         if (!mapReady || !mapInstanceRef.current || !window.AMap) return
 
         const map = mapInstanceRef.current
         const AMap = window.AMap
-
-        console.log('AmapComponent update:', { mode, dataLength: data.length, dataSample: data[0] })
 
         // Clear existing visualizations
         if (heatmapRef.current) {
@@ -120,7 +136,6 @@ export function AmapComponent({ mode = 'combined', height = 400, data = [] }: Am
                         lat: station.latitude,
                         count: station.real_demand || 0,
                     }))
-                    console.log('Real demand points:', points.slice(0, 5))
                 } else {
                     // 预测需求热力图 (默认)
                     points = data.map((station) => ({
@@ -128,11 +143,9 @@ export function AmapComponent({ mode = 'combined', height = 400, data = [] }: Am
                         lat: station.latitude,
                         count: station.predicted_demand || 0,
                     }))
-                    console.log('Predicted demand points:', points.slice(0, 5))
                 }
 
                 const max = Math.max(...points.map((p) => p.count), 10)
-                console.log('Heatmap max:', max)
 
                 heatmapRef.current.setDataSet({
                     data: points,
@@ -176,7 +189,6 @@ export function AmapComponent({ mode = 'combined', height = 400, data = [] }: Am
                 let hideTimer: any = null
 
                 const showLabel = () => {
-                    console.log('Show label:', station.name)
                     if (hideTimer) {
                         clearTimeout(hideTimer)
                         hideTimer = null
@@ -190,10 +202,8 @@ export function AmapComponent({ mode = 'combined', height = 400, data = [] }: Am
                 }
 
                 const hideLabel = () => {
-                    console.log('Mouse out, schedule hide:', station.name)
                     // 2秒后隐藏，除非期间再次触发 showLabel
                     hideTimer = setTimeout(() => {
-                        console.log('Hiding label now:', station.name)
                         marker.setLabel({ content: '' }) // 使用空内容来隐藏
                         marker.setTop(false)
                     }, 2000)
@@ -216,10 +226,75 @@ export function AmapComponent({ mode = 'combined', height = 400, data = [] }: Am
     const heightValue = typeof height === 'number' ? `${height}px` : height
     return (
         <div
-            ref={mapContainerRef}
             style={{ height: heightValue, width: '100%' }}
-            className="rounded-lg border"
-        />
+            className="border-border/70 relative min-h-[360px] overflow-hidden rounded-md border bg-muted shadow-sm"
+        >
+            <div
+                ref={mapContainerRef}
+                className={useFallbackMap ? 'hidden' : 'h-full w-full'}
+            />
+            {useFallbackMap && <FallbackCampusMap data={data} />}
+            {!useFallbackMap && !baseMapReady && (
+                <div className="pointer-events-none absolute inset-x-4 bottom-4 rounded-md border border-border/70 bg-background/90 px-3 py-2 text-xs text-muted-foreground shadow-sm">
+                    正在加载高德地图，若 Key 或网络不可用将自动切换为本地站点图。
+                </div>
+            )}
+        </div>
+    )
+}
+
+function FallbackCampusMap({ data }: { data: StationDashboardData[] }) {
+    if (data.length === 0) {
+        return (
+            <div className="flex h-full items-center justify-center bg-muted text-sm text-muted-foreground">
+                暂无站点坐标数据
+            </div>
+        )
+    }
+
+    const longitudes = data.map((station) => Number(station.longitude))
+    const latitudes = data.map((station) => Number(station.latitude))
+    const minLng = Math.min(...longitudes)
+    const maxLng = Math.max(...longitudes)
+    const minLat = Math.min(...latitudes)
+    const maxLat = Math.max(...latitudes)
+    const lngSpan = Math.max(maxLng - minLng, 0.001)
+    const latSpan = Math.max(maxLat - minLat, 0.001)
+
+    const project = (station: StationDashboardData) => {
+        const x = 8 + ((Number(station.longitude) - minLng) / lngSpan) * 84
+        const y = 10 + ((maxLat - Number(station.latitude)) / latSpan) * 78
+        return { left: `${x}%`, top: `${y}%` }
+    }
+
+    return (
+        <div className="relative h-full w-full overflow-hidden bg-[linear-gradient(0deg,rgba(148,163,184,0.12)_1px,transparent_1px),linear-gradient(90deg,rgba(148,163,184,0.12)_1px,transparent_1px)] bg-[size:28px_28px] bg-slate-950">
+            <div className="absolute left-4 top-4 rounded-md border border-white/10 bg-slate-900/85 px-3 py-2 text-xs text-slate-300 shadow-sm">
+                高德底图不可用，已切换本地站点分布图
+            </div>
+            <div className="absolute inset-x-8 top-1/2 h-px bg-cyan-300/20" />
+            <div className="absolute bottom-8 left-1/2 top-8 w-px bg-cyan-300/20" />
+            {data.map((station) => {
+                const position = project(station)
+                const bikes = station.current_bikes || 0
+                const demand = station.real_demand || station.predicted_demand || 0
+                const pressure = demand > bikes ? 'border-rose-300 bg-rose-500' : 'border-emerald-300 bg-emerald-500'
+
+                return (
+                    <div
+                        key={station.id}
+                        className="absolute -translate-x-1/2 -translate-y-1/2"
+                        style={position}
+                    >
+                        <div className={`h-4 w-4 rounded-full border-2 shadow-lg shadow-black/30 ${pressure}`} />
+                        <div className="mt-1 min-w-28 rounded-md border border-white/10 bg-slate-900/90 px-2 py-1 text-xs text-white shadow-sm">
+                            <div className="truncate font-medium">{station.name}</div>
+                            <div className="text-slate-300">车 {bikes} / 需 {demand}</div>
+                        </div>
+                    </div>
+                )
+            })}
+        </div>
     )
 }
 

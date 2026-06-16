@@ -98,11 +98,10 @@
           const resp = await apiGet('/api/users/profile')
           // 兼容后端直接返回 user 或 { user: ... }
           setFetchedUser(resp.data)
-          console.log('[NavUser] resp data:', resp.data)
-          console.log('[NavUser] fetched user:', fetchedUser)
-        } catch (err) {
-          console.warn('fetch current user failed', err)
+        } catch {
+          setFetchedUser(null)
         } finally {
+          setLoadingUser(false)
         }
       })()
       return () => {
@@ -189,12 +188,6 @@
 
     const initials = getInitials(displayName)
 
-    console.log('NavUser displayUserName:', displayUserName)
-    console.log('NavUser displayName:', displayName)
-    console.log('NavUser displayEmail:', displayEmail)
-    console.log('NavUser avatarSrc:', avatarSrc)
-    console.log('NavUser initials:', initials)
-
     return (
       <>
         <SidebarMenu>
@@ -212,15 +205,8 @@
                         alt={displayName}
                         crossOrigin="anonymous"
                         onError={(e) => {
-                          console.error('Nav avatar error:', e)
-                          console.error('Avatar URL being used:', avatarSrc)
-                          console.error('Full URL:', buildStaticUrl(avatarSrc))
-                          console.error('Natural width:', e.currentTarget.naturalWidth)
-                          console.error('Complete:', e.currentTarget.complete)
-                          console.error('Error:', e.currentTarget.onerror)
                           e.currentTarget.style.display = 'none'
                         }}
-                        onLoad={() => console.log('Nav avatar loaded:', avatarSrc)}
                       />
                     ) : (
                       <AvatarFallback className='rounded-lg'>{initials}</AvatarFallback>

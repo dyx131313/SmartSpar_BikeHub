@@ -1,0 +1,62 @@
+\clearpage
+\section*{附录：常用运行命令与验收清单}
+\addcontentsline{toc}{section}{附录：常用运行命令与验收清单}
+
+\subsection*{常用运行命令}
+
+\begin{verbatim}
+cd frontend\bikehub
+npm ci
+npm run dev -- --host 127.0.0.1 --port 5173
+npm run lint
+npm run build
+\end{verbatim}
+
+\begin{verbatim}
+cd backend
+.\.venv\Scripts\python.exe -m flask --app run.py run `
+  --host 127.0.0.1 --port 5000 --debug
+.\.venv\Scripts\python.exe -m pytest
+\end{verbatim}
+
+\subsection*{本地账号与接口}
+
+\begin{longtable}{p{0.28\textwidth}p{0.52\textwidth}}
+\toprule
+项目 & 内容 \\
+\midrule
+前端地址 & \code{http://127.0.0.1:5173/} \\
+后端地址 & \code{http://127.0.0.1:5000/} \\
+管理员账号 & \code{admin/admin123} \\
+调度员账号 & \code{dispatcher/dispatcher123} \\
+运维账号 & \code{operator/operator123} \\
+系统时间接口 & \code{/api/system/time} \\
+预测模型接口 & \code{/api/predictions/models} \\
+预测数据接口 & \code{/api/predictions/models/DLinear/future} \\
+\bottomrule
+\end{longtable}
+
+\subsection*{提交材料检查清单}
+
+\begin{longtable}{p{0.32\textwidth}p{0.42\textwidth}p{0.12\textwidth}}
+\toprule
+材料 & 位置或说明 & 状态 \\
+\midrule
+重构后源码 & 项目根目录，包含前端、后端和测试代码 & 已准备 \\
+运行手册 & \code{docs/LOCAL_RUNBOOK.md} & 已准备 \\
+重构记录 & \code{docs/REFACTORING_RECORD.md} & 已准备 \\
+测试报告 & \code{docs/TEST_REPORT.md} 与本文第 5 章 & 已准备 \\
+正式报告 & \code{docs/refactoring_report_tex/main.pdf} & 已准备 \\
+命令行证据 & \code{docs/refactoring_report_tex/evidence/} & 已准备 \\
+页面截图 & \code{figures/evidence/}，包含登录、仪表盘、站点、需求和设置页截图 & 已准备 \\
+源码仓库链接 & \url{https://github.com/dyx131313/SmartSpar_BikeHub} & 已准备 \\
+\bottomrule
+\end{longtable}
+
+\subsection*{已知限制}
+
+\begin{itemize}
+  \item 高德地图依赖网络、Key 和安全码，本地不可用时会自动切换为站点分布图。
+  \item 前端 lint 当前为 0 errors，但仍保留历史 warning，后续可按模块逐步清理。
+  \item 重新训练深度学习预测模型需要单独准备 torch 相关环境；本次验收重点为已生成预测数据的读取和展示。
+\end{itemize}

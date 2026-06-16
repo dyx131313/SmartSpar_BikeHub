@@ -1,5 +1,5 @@
 import { apiGet, apiPost, apiPut, apiDelete } from '@/lib/api'
-import { User } from './data/schema'
+import { type User } from './data/schema'
 
 export interface UserListResponse {
     data: User[]

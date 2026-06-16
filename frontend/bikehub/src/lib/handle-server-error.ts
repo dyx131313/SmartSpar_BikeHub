@@ -2,10 +2,16 @@ import { AxiosError } from 'axios'
 import { toast } from 'sonner'
 
 export function handleServerError(error: unknown) {
-  // eslint-disable-next-line no-console
-  console.log(error)
-
   let errMsg = 'Something went wrong!'
+
+  if (error instanceof Error && error.message) {
+    errMsg = error.message
+  }
+
+  if (error && typeof error === 'object' && 'data' in error) {
+    const data = (error as { data?: { error?: string; message?: string; title?: string } }).data
+    errMsg = data?.error || data?.message || data?.title || errMsg
+  }
 
   if (
     error &&

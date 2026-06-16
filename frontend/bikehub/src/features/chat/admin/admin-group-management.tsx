@@ -5,7 +5,7 @@ import React, { useState, useEffect } from 'react';
 import { Button, Input, Badge, Table, TableBody, TableCell, TableHead, TableHeader, TableRow, Card, CardContent, CardDescription, CardHeader, CardTitle, Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter, Select, SelectContent, SelectItem, SelectTrigger, SelectValue, ScrollArea, Avatar, AvatarFallback, AvatarImage, Tooltip, DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui';
 import { Search, Plus, Users, Settings, Eye, Edit, Trash2, Shield, Ban, Check, X, MoreVertical, Crown, Filter } from 'lucide-react';
 import { groupChatAPI } from '../api/group-chat-api';
-import { ChatGroup, GroupType, MemberRole, ChatGroupMember } from '../data/group-chat-types';
+import { type ChatGroup, GroupType, MemberRole, type ChatGroupMember } from '../data/group-chat-types';
 import { toast } from 'sonner';
 import { useConfirm } from '@/components/confirm-provider'
 
@@ -114,13 +114,9 @@ export const AdminGroupManagement: React.FC<AdminGroupManagementProps> = ({ onGr
       max_members: formData.max_members
     };
 
-    console.log('Creating group with data:', requestData);
-    console.log('Group type value:', requestData.group_type);
-    console.log('Group type typeof:', typeof requestData.group_type);
 
     try {
       const response = await groupChatAPI.createGroup(requestData);
-      console.log('Create group response:', response);
       setGroups(prev => [response.group, ...prev]);
       setCreateDialogOpen(false);
       resetForm();
@@ -167,7 +163,6 @@ export const AdminGroupManagement: React.FC<AdminGroupManagementProps> = ({ onGr
 
   // 删除群聊
   const handleDeleteGroup = async (group: ChatGroup) => {
-    const confirmFn = useConfirm()
     const ok = await confirmFn({ title: '删除群聊', desc: `确定要删除群聊"${group.name}"吗？此操作不可恢复！`, confirmText: '删除', cancelBtnText: '取消', destructive: true })
     if (!ok) {
       return;
@@ -296,8 +291,6 @@ export const AdminGroupManagement: React.FC<AdminGroupManagementProps> = ({ onGr
       type: filterType,
       status: filterStatus,
     });
-    console.log("🧨 CreateGroupDialog mounted");
-    return () => console.log("🧨 CreateGroupDialog unmounted");
   }, [currentPage, pageSize, searchQuery, filterType, filterStatus]);
 
   return (

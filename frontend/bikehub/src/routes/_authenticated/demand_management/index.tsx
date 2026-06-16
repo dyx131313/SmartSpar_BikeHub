@@ -1,7 +1,5 @@
 import { z } from 'zod'
-import { createFileRoute } from '@tanstack/react-router'
-import { DemandManagement } from '@/features/demand_management'
-import { RequireRole } from '@/components/require-role'
+import { createFileRoute, redirect } from '@tanstack/react-router'
 
 const demandSearchSchema = z.object({
   page: z.number().optional().catch(1),
@@ -17,11 +15,12 @@ const demandSearchSchema = z.object({
   filter: z.string().optional().catch(''),
 })
 
-// Force update
 export const Route = createFileRoute('/_authenticated/demand_management/')({
-  component: () => (
-    <RequireRole roles={['admin', 'dispatcher', 'operator']}>
-      <DemandManagement />
-    </RequireRole>
-  ),
+  validateSearch: demandSearchSchema,
+  beforeLoad: ({ search }) => {
+    throw redirect({
+      to: '/demand-management',
+      search,
+    })
+  },
 })

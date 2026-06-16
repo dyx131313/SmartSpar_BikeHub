@@ -1,0 +1,133 @@
+\chapter{低层重构：代码味道、设计模式与 Bug 修复}
+
+\section{统一响应与错误处理}
+
+重构前，不同接口自行拼装 JSON 响应，错误字段不统一，前端只能显示泛化错误信息。重构后新增统一响应工具：
+
+\begin{itemize}
+  \item \code{success_response}
+  \item \code{error_response}
+  \item 分页响应工具
+  \item 通用路由错误处理装饰器
+\end{itemize}
+
+该改动减少了重复代码，使前端可以稳定读取后端返回的 \code{error} 或 \code{message} 字段。
+
+\begin{lstlisting}[language=Python, caption={统一响应工具片段}]
+def success_response(data=None, message="success", status_code=200, **extra):
+    payload = {"success": True, "message": message}
+    if data is not None:
+        payload["data"] = data
+    payload.update(extra)
+    return jsonify(payload), status_code
+
+def error_response(message, status_code=400, error_code=None, **extra):
+    payload = {"success": False, "error": message}
+    if error_code:
+        payload["error_code"] = error_code
+    payload.update(extra)
+    return jsonify(payload), status_code
+\end{lstlisting}
+
+\section{角色权限装饰器}
+
+原项目中，管理员、调度员、运维人员的角色判断散落在多个路由中。重构后新增角色装饰器：
+
+\begin{itemize}
+  \item \code{require_roles}
+  \item \code{require_admin}
+  \item \code{require_dispatcher_or_admin}
+\end{itemize}
+
+通过装饰器将权限逻辑集中维护，避免不同接口权限判断不一致。
+
+\begin{lstlisting}[language=Python, caption={角色权限装饰器使用方式}]
+@users_bp.route("/users", methods=["GET"])
+@jwt_required()
+@require_admin
+@handle_route_errors
+def get_users():
+    users = User.query.all()
+    return success_response([user.to_dict() for user in users])
+\end{lstlisting}
+
+\section{服务层抽取}
+
+\code{dispatch_tasks.py} 原本存在典型胖路由问题，任务创建、更新、删除、派发和库存历史维护都放在路由函数中。重构后新增 \code{TaskService}，将调度任务业务规则从路由层移出。
+
+类似地，仪表盘聚合逻辑迁移到 \code{DashboardService}，负责聚合站点、预测、库存和任务状态数据。这样 Route 层只负责请求响应，业务规则更容易测试和复用。
+
+\section{路径配置集中化}
+
+预测文件路径、上传路径和静态资源路径原来存在硬编码。重构后新增 \code{backend/app/config/paths.py}，统一管理：
+
+\begin{itemize}
+  \item 时间序列 checkpoint 路径。
+  \item 上传目录。
+  \item 静态资源目录。
+\end{itemize}
+
+该改动减少了相对路径错误，也方便在 Windows 本地和最终提交环境之间迁移。
+
+\section{预测模块降级启动}
+
+原后台 scheduler 在缺少 \code{torch} 时可能导致 Flask 无法启动。重构后改为可选依赖降级：
+
+\begin{itemize}
+  \item Web 服务可以在未安装深度学习栈时先启动。
+  \item 缺少训练依赖时跳过预测训练任务，并记录清晰日志。
+  \item 已生成的 future JSON 仍可被预测接口读取并展示。
+\end{itemize}
+
+\section{预测模型注册表}
+
+原重构方案指出，新增预测模型时容易同时修改路由、调度器、训练逻辑和前端组件，属于典型的霰弹式修改。本次重构在保持接口兼容的前提下补充了轻量级模型注册表 \code{PredictionModelRegistry}：
+
+\begin{itemize}
+  \item 集中维护 \code{DLinear}、\code{TiDE}、\code{TimesNet} 等模型的名称和文件位置。
+  \item 预测参数和 future 数据接口不再自行拼接模型文件路径，而是通过注册表获取模型规格。
+  \item 调度器默认运行的模型列表由注册表提供，后续新增模型时首先修改注册表。
+  \item 新增 \code{/api/predictions/models} 接口，便于前端或验收脚本读取当前支持的模型列表。
+\end{itemize}
+
+由于项目周期有限，本次没有完整重写深度学习训练代码为策略模式或工厂模式；但注册表已经把最容易散落的模型清单和路径规则收拢，降低了后续继续演进为完整策略模式的成本。
+
+\begin{lstlisting}[language=Python, caption={预测模型注册表片段}]
+@dataclass(frozen=True)
+class PredictionModelSpec:
+    name: str
+    family: str = "time_series"
+
+class PredictionModelRegistry:
+    def __init__(self, models=None):
+        self._models = {model.name: model for model in models or DEFAULT_MODELS}
+
+    def names(self):
+        return list(self._models.keys())
+
+    def require(self, name):
+        if name not in self._models:
+            raise ValueError(f"Unsupported prediction model: {name}")
+        return self._models[name]
+\end{lstlisting}
+
+\section{关键 Bug 修复}
+
+\subsection{需求管理旧路由崩溃}
+
+修复前，访问 \code{/demand_management} 会触发 TanStack Router 的 active match 错误，页面进入错误边界。
+
+原因是项目中同时存在下划线和短横线两套路由，组件使用的是短横线路由 API。修复后，旧路径作为兼容入口跳转到 \code{/demand-management}。
+
+\subsection{Hook 规则修复}
+
+修复内容包括：
+
+\begin{itemize}
+  \item 将 \code{useConfirm} 调用限制在 React 组件顶层。
+  \item WebSocket 重连逻辑使用 ref 保存连接函数，避免闭包和 hook 规则问题。
+  \item 输入状态防抖改为 \code{useRef + useCallback}。
+  \item 地图初始化函数改为 \code{useCallback} 并在 effect 前定义。
+\end{itemize}
+
+修复后，\code{npm run lint} 不再存在阻塞 error。

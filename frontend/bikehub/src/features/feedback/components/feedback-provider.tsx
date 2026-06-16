@@ -1,5 +1,5 @@
-import { createContext, useContext, useState, ReactNode } from 'react'
-import { Feedback } from '../data/schema'
+import { createContext, useContext, useState, type ReactNode } from 'react'
+import { type Feedback } from '../data/schema'
 
 interface FeedbackContextType {
   open: string | null

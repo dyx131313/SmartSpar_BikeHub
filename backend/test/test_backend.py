@@ -187,7 +187,7 @@ def test_backend_api():
 
             test_user = User(
                 username='test_operator',
-                email='operator@bikehub.com',
+                email='api_operator@bikehub.com',
                 role='operator',
                 full_name='测试运维员'
             )
@@ -246,13 +246,23 @@ def test_with_server():
 
         # 启动Flask服务器
         server_process = subprocess.Popen([
-            'python', 'run.py'
+            sys.executable, 'run.py'
         ], env={**os.environ, 'FLASK_ENV': 'testing', 'SECRET_KEY': 'test-secret-key-for-testing-only', 'JWT_SECRET_KEY': 'test-jwt-secret-key-for-testing-only'},
         stdout=subprocess.PIPE, stderr=subprocess.PIPE)
 
         time.sleep(3)  # 等待服务器启动
 
         # 测试登录
+        for _ in range(20):
+            try:
+                requests.get("http://localhost:5000/api/system/time", timeout=1)
+                break
+            except requests.exceptions.RequestException:
+                time.sleep(1)
+        else:
+            print("HTTP服务器启动超时")
+            return False
+
         login_data = {
             "username": "admin",
             "password": "admin123"

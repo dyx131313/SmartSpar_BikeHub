@@ -55,7 +55,7 @@ export function OtpForm({ className, ...props }: OtpFormProps) {
     defaultValues: { otp: '', password: '', confirmPassword: '' },
   })
 
-  // eslint-disable-next-line react-hooks/incompatible-library
+   
   const otp = form.watch('otp')
 
   async function onSubmit(data: z.infer<typeof formSchema>) {
@@ -92,7 +92,6 @@ export function OtpForm({ className, ...props }: OtpFormProps) {
       navigate({ to: '/sign-in', replace: true })
     } catch (err) {
       handleServerError(err)
-      toast.error('Invalid code or error occurred while resetting password')
     } finally {
       setIsLoading(false)
     }

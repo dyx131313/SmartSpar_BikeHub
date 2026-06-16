@@ -6,6 +6,11 @@ import requests
 import os
 from datetime import datetime
 
+import pytest
+
+
+pytestmark = pytest.mark.skip(reason="manual external-server smoke test")
+
 # 配置
 API_BASE = "http://localhost:5000"
 TEST_IMAGE_PATH = "test_avatar.jpg"

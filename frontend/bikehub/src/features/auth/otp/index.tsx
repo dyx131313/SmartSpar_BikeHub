@@ -16,11 +16,10 @@ export function Otp() {
       <Card className='gap-4'>
         <CardHeader>
           <CardTitle className='text-base tracking-tight'>
-            Two-factor Authentication
+            密码重置验证
           </CardTitle>
           <CardDescription>
-            Please enter the authentication code. <br /> We have sent the
-            authentication code to your email.
+            请输入邮件中的 6 位验证码，并设置新的登录密码。
           </CardDescription>
         </CardHeader>
         <CardContent>
@@ -28,12 +27,12 @@ export function Otp() {
         </CardContent>
         <CardFooter>
           <p className='text-muted-foreground px-8 text-center text-sm'>
-            Haven't received it?{' '}
+            没有收到验证码？{' '}
             <Link
-              to='/sign-in'
+              to='/forgot-password'
               className='hover:text-primary underline underline-offset-4'
             >
-              Resend a new code.
+              重新发送
             </Link>
             .
           </p>

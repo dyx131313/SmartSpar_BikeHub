@@ -1,0 +1,78 @@
+\chapter{高层重构：体系结构调整}
+
+\section{后端分层调整}
+
+原项目中，部分 Flask 路由函数承担了过多职责。以调度任务和仪表盘接口为例，路由函数中同时包含身份判断、角色判断、参数校验、业务计算、库存更新、数据库提交和响应格式处理。这种结构不利于测试和维护。
+
+重构后，后端按如下职责划分：
+
+\begin{itemize}
+  \item Route 层：负责 HTTP 请求入口、参数接收、权限入口和响应返回。
+  \item Service 层：承载调度任务、仪表盘聚合等业务逻辑。
+  \item Utils 层：提供统一响应、权限装饰器和错误处理。
+  \item Config 层：集中管理模型 checkpoint、上传目录和静态资源路径。
+\end{itemize}
+
+重点新增模块包括：
+
+\begin{itemize}
+  \item \code{backend/app/utils/response.py}
+  \item \code{backend/app/utils/decorators.py}
+  \item \code{backend/app/config/paths.py}
+  \item \code{backend/app/services/task_service.py}
+  \item \code{backend/app/services/dashboard_service.py}
+  \item \code{backend/app/services/prediction_registry.py}
+\end{itemize}
+
+\begin{figure}[H]
+  \centering
+  \resizebox{\textwidth}{!}{%
+  \begin{tikzpicture}[
+    node distance=1.6cm,
+    layer/.style={draw, rounded corners=6pt, align=left, minimum width=3.4cm, minimum height=2.15cm, inner sep=8pt},
+    arrow/.style={->, >=stealth, line width=1pt}
+  ]
+    \node[layer, fill=blue!8] (route) {\textbf{Route 层}\\HTTP 入口\\参数读取\\响应返回};
+    \node[layer, fill=green!10, right=2.0cm of route] (service) {\textbf{Service 层}\\TaskService\\DashboardService\\PredictionModelRegistry};
+    \node[layer, fill=yellow!15, right=2.0cm of service] (model) {\textbf{Model / DB 层}\\SQLAlchemy Models\\MySQL\\JSON Checkpoints};
+    \node[layer, fill=purple!10, below=1.45cm of service, xshift=-2.5cm] (utils) {\textbf{Utils 层}\\统一响应\\错误处理\\角色装饰器};
+    \node[layer, fill=cyan!10, below=1.45cm of service, xshift=2.5cm] (config) {\textbf{Config 层}\\路径配置\\上传目录\\模型文件位置};
+
+    \draw[arrow] (route) -- node[above]{业务调用} (service);
+    \draw[arrow] (service) -- node[above]{数据访问} (model);
+    \draw[arrow] (utils) -- node[left]{横切能力} (service);
+    \draw[arrow] (config) -- node[right]{路径规则} (service);
+    \draw[arrow] (config) -- node[right]{文件位置} (model);
+  \end{tikzpicture}
+  }
+  \caption{重构后的后端分层结构}
+\end{figure}
+
+\section{前端结构调整}
+
+前端保留 React、TanStack Router、TanStack Query、TanStack Table 和 shadcn/ui 技术栈，但将模板后台改造为运营调度中台：
+
+\begin{itemize}
+  \item 登录页和侧栏替换为 SmartSpar BikeHub 业务文案。
+  \item 仪表盘突出任务数量、站点状态、预测需求和地图视图。
+  \item 设置页面整合主题、侧栏、布局和阅读方向选项。
+  \item 站点、任务、需求等表格页面统一搜索、筛选、按钮和表格密度。
+\end{itemize}
+
+\section{运行架构}
+
+本地验证环境如下：
+
+\begin{longtable}{p{0.25\textwidth}p{0.55\textwidth}}
+\toprule
+组件 & 地址或配置 \\
+\midrule
+前端 Vite 服务 & \code{http://127.0.0.1:5173/} \\
+后端 Flask 服务 & \code{http://127.0.0.1:5000/} \\
+MySQL 本地实例 & \code{127.0.0.1:3307} \\
+开发数据库 & \code{bikehub_test_dev} \\
+测试数据库 & \code{bikehub_test_test} \\
+\bottomrule
+\end{longtable}
+
+本地运行手册见 \code{docs/LOCAL_RUNBOOK.md}。
