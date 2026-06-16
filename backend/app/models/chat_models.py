@@ -2,6 +2,7 @@
 群聊相关数据模型 (SQLAlchemy ORM)
 """
 from datetime import datetime
+from dataclasses import dataclass, field
 from enum import Enum
 from app import db
 from sqlalchemy import func
@@ -25,6 +26,22 @@ class MemberRole(str, Enum):
     owner = "owner"
     admin = "admin"
     member = "member"
+
+
+@dataclass
+class ChatGroupCreate:
+    """创建群聊请求数据。"""
+
+    name: str
+    description: str = ""
+    group_type: GroupType | str = GroupType.public
+    max_members: int = 100
+    initial_members: list[int] = field(default_factory=list)
+    welcome_message: str | None = None
+
+    def __post_init__(self):
+        if isinstance(self.group_type, str):
+            self.group_type = GroupType(self.group_type)
 
 class ChatGroup(db.Model):
     """群聊模型"""
