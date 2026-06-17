@@ -19,6 +19,26 @@
 
 \setlist[itemize]{leftmargin=2em}
 \setlist[enumerate]{leftmargin=2em}
+\setlength{\textfloatsep}{10pt plus 2pt minus 2pt}
+\setlength{\floatsep}{8pt plus 2pt minus 2pt}
+\setlength{\intextsep}{8pt plus 2pt minus 2pt}
+\setlength{\abovecaptionskip}{4pt}
+\setlength{\belowcaptionskip}{2pt}
+\raggedbottom
+\ctexset{
+  chapter = {
+    beforeskip = 0pt,
+    afterskip = 20pt
+  },
+  section = {
+    beforeskip = 1.0ex plus .2ex minus .2ex,
+    afterskip = 0.8ex plus .2ex minus .2ex
+  },
+  subsection = {
+    beforeskip = 0.8ex plus .2ex minus .2ex,
+    afterskip = 0.5ex plus .2ex minus .2ex
+  }
+}
 \DeclareRobustCommand{\code}[1]{\texttt{\detokenize{#1}}}
 \renewcommand{\tjcovertext}{软件重构报告}
 \renewcommand{\tjheadertext}{SmartSpar BikeHub 重构报告}

@@ -33,6 +33,23 @@
   \item \code{docs/refactoring_report_tex/evidence/}：lint、build、pytest、接口烟测的原始输出。
 \end{itemize}
 
+\section{原设计文档与使用说明修订}
+
+作业要求中的“文档：修订原设计文档和使用说明书”已在本次交付中单独落实。原后端文档原本分散在 \code{backend/docs/} 下，部分接口说明与当前服务层、权限控制和预测模块不一致；重构后统一整理到根目录 \code{docs/}，并按提交材料用途拆分为设计说明、接口说明、运行手册和预测指南。
+
+\begin{longtable}{p{0.24\textwidth}p{0.34\textwidth}p{0.28\textwidth}}
+\toprule
+文档类型 & 修订后文件 & 修订内容 \\
+\midrule
+原设计文档 & \code{docs/SmartSpar BikeHub 后端系统完整文档.md} & 补充分层架构、服务层职责、权限装饰器、统一响应、预测注册表和调度服务说明。 \\
+接口设计说明 & \code{docs/智慧共享单车调度系统 - 后端API文档.md} & 更新登录、用户、站点、任务、需求预测、系统时间和反馈接口的当前路径与返回结构。 \\
+使用说明书 & \code{docs/LOCAL_RUNBOOK.md} & 补充 Windows 本地启动、MySQL 3307 初始化、测试账号、前后端端口和常见故障处理。 \\
+预测使用说明 & \code{docs/需求预测运行指南.md} & 说明模型文件位置、future 数据读取、训练依赖降级和预测接口验收方式。 \\
+\bottomrule
+\end{longtable}
+
+因此，最终提交不仅包含重构报告，也包含修订后的设计文档和使用说明书；第 5 章测试报告和附录命令清单用于支撑这些文档的可复现性。
+
 \section{贡献说明}
 
 小组名称为“葫芦娃除BUG”。成员分工和贡献度已单独整理在封面后的“小组贡献说明”页，作为报告第二页展示。
