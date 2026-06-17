@@ -39,6 +39,18 @@
     afterskip = 0.5ex plus .2ex minus .2ex
   }
 }
+\newcommand{\reportchapter}[1]{%
+  \par\addvspace{1.2em}%
+  \refstepcounter{chapter}%
+  \setcounter{section}{0}%
+  \setcounter{subsection}{0}%
+  \setcounter{figure}{0}%
+  \setcounter{table}{0}%
+  \phantomsection%
+  \addcontentsline{toc}{chapter}{\protect\numberline{\thechapter}#1}%
+  {\centering\zihao{3}\bfseries \thechapter\quad #1\par}%
+  \addvspace{1.0em}%
+}
 \DeclareRobustCommand{\code}[1]{\texttt{\detokenize{#1}}}
 \renewcommand{\tjcovertext}{软件重构报告}
 \renewcommand{\tjheadertext}{SmartSpar BikeHub 重构报告}
